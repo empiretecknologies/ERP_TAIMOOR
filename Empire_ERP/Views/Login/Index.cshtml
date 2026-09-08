@@ -1,0 +1,391 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="~/images/Favicon.png" />
+    <!-- toster styles -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- font-family: 'Poppins', sans-serif; -->
+    <link rel="stylesheet" href="~/css/poppins-font.css" />
+
+    <!-- font awesome -->
+    <link rel="stylesheet" href="~/css/font-awesome-all.css" />
+
+    <!-- themify-icons -->
+    <link rel="stylesheet" href="~/css/themify-icons.css" />
+
+    <!-- icofont-icons -->
+    <link rel="stylesheet" href="~/css/icofont.css">
+    <!-- dev extreme -->
+    <!-- ImportantLinks-->
+    <link href="~/css/vendors/toastr.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/vendors/sweetalert2.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/vendors/datatables.css" asp-append-version="true" />
+    <!-- select2 -->
+    <link href="~/css/select2.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dx.common.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/dx.generic.custom-scheme.css" asp-append-version="true">
+
+    <!-- main -->
+    <link href="~/css/main.css" rel="stylesheet" asp-append-version="true">
+    <!-- mtstyle -->
+    <link href="~/css/mtstyles.css" rel="stylesheet" asp-append-version="true">
+    <link href="~/css/tautocomplete.css" rel="stylesheet" asp-append-version="true">
+    <!-- Custom styles for this template -->
+    <link href="~/css/style.css" rel="stylesheet" asp-append-version="true">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <link rel="shortcut icon" href="~/@ViewBag.Icon" />
+    <link href="~/lib/toast-notification/build/toastr.css" rel="stylesheet" />
+    <link href="~/lib/toast-notification/build/toastr.min.css" rel="stylesheet" />
+
+    <style>
+        #Loader {
+            top: 0;
+            left: 0;
+            z-index: 1;
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(255 255 255 / 57%);
+        }
+
+        .input-group {
+            height: 34px !important;
+        }
+
+        .criteria {
+            color: red;
+        }
+
+        .complete {
+            color: green;
+        }
+
+        form .input-field {
+            flex-direction: row;
+            column-gap: 10px;
+        }
+
+        .input-field input {
+            height: 45px;
+            width: 42px;
+            border-radius: 6px;
+            outline: none;
+            font-size: 1.125rem;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+            .input-field input:focus {
+                box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+            }
+
+            .input-field input::-webkit-inner-spin-button,
+            .input-field input::-webkit-outer-spin-button {
+                display: none;
+            }
+
+        form button {
+            width: 100%;
+            color: #fff;
+            font-size: 1rem;
+            border: none;
+            padding: 9px 0;
+            cursor: pointer;
+            border-radius: 6px;
+            background: #6e93f7;
+            transition: all 0.2s ease;
+        }
+
+            form button.active {
+                background: #4070f4;
+                pointer-events: auto;
+            }
+
+            form button:hover {
+                background: #0e4bf1;
+            }
+    </style>
+    @* <script src="~/js/jquery-3.6.4.min.js" asp-append-version="true"></script> *@
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous" asp-append-version="true"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
+</head>
+<body>
+    <div class="loader-box" id="Loader">
+        <div class="loader-1"></div>
+    </div>
+    <div class="login_wrap" style="background-image: url(../@ViewBag.Background)">
+        <!-- login page start-->
+        <div class="container-fluid p-0">
+            <div class="row m-0">
+                <div class="col-12 p-0">
+                    <div class="login-card">
+                        <div>
+                            <div class="login-main">
+                                <a class="logo" href="javascript:;">
+                                    <img class="img-fluid for-light" src="~/@ViewBag.Logo" alt="looginpage">
+                                </a>
+                                <span class="productname">@ViewBag.c_name</span>
+                                <form class="theme-form">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" required="" id="username" placeholder="User Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-input position-relative">
+                                            <div class="input-group" style="min-height:32px !important">
+                                                <input class="form-control" type="password" maxlength="8" id="password" required="" placeholder="Password">
+                                                <div class="input-group-append">
+                                                    <a href="javascript:;" class="input-group-text" id="show_loginpassword" onclick="ShowPassword($('#password'),this)">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            @* <div class="show-hide"><i class="ti-eye"></i></div> *@
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <div class="checkbox p-0">
+                                            <input id="checkbox1" type="checkbox" @(ViewBag.IsRememberMe != true ? "checked=checked" : "")>
+                                            <label class="text-muted mt-0 mb-1" for="checkbox1">Remember password</label>
+                                        </div>
+                                        <div class="text-end mt-2">
+                                            <button class="btn btn-primary btn-block w-100" type="button" id="loginattempt"><i class="ti-shift-right"></i>Sign in></button>
+                                        </div>
+                                        <a class="link Forget" id="BtnForgotPassword">Forgot password?</a>
+                                    </div>
+                                </form>
+                                <div class="row" id="ForgetFormSubmit" style="display: none;">
+                                    <div class="col-xl-12">
+                                        <label class="form-label" for="ForgotUsername">Username</label>
+                                        <input class="form-control" type="text" required="" readonly id="ForgotUsername">
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <div class="mt-3">
+                                            <a id="BtnBack" class="btn btn-light btn-block w-30">
+                                                <i class="ti-arrow-left"></i> Back
+                                            </a>
+                                            <button type="button" id="BtnResetPassword" class="btn btn-primary btn-block w-30 float-end">
+                                                <i class="fa-regular fa-paper-plane"></i> Send Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <img class="loginftr" src="~/@ViewBag.pb_image">
+
+        <div class="loginfooter">
+            <div class="row" style="--bs-gutter-x:0rem;">
+                <div class="col-sm-4">
+                    <p>@ViewBag.COPY_RIGHTS</p>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <ul>
+                        <li>
+                            <a href="https://wa.me/message/MBZKFCKSDP6LB1" target="_blank"><i class="fa-brands fa-whatsapp"></i> @ViewBag.TEL</a>
+                        </li>
+                        <li>
+                            <a href="@ViewBag.WEBSITE_LINK" target="_blank"><i class="fa-solid fa-globe"></i> @ViewBag.WEBSITE</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 text-end about-links">
+                    <ul>
+                        <li>
+                            <a target="_blank" href="@ViewBag.ABOUT_LINK">@ViewBag.ABOUT_LABEL</a>
+                            <a target="_blank" href="@ViewBag.CONTACT_LINK">@ViewBag.CONTACT_LABEL</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Verification Pending</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="message"></p>
+                    <div class="row mt-1">
+                        <div class="col-xl-12">
+                            <label class="form-label" for="OTP">OTP:</label>
+                            <div id="otptextbox" class="mb-3">
+                                <div id="otp" class="input-field">
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <input class="otpclass" type="number" />
+                                        </div>
+                                        <div class="col-2">
+                                            <input class="otpclass" type="number" disabled />
+                                        </div>
+
+                                        <div class="col-2">
+                                            <input class="otpclass" type="number" disabled />
+                                        </div>
+
+                                        <div class="col-2">
+                                            <input class="otpclass" type="number" disabled />
+                                        </div>
+
+                                        <div class="col-2">
+                                            <input class="otpclass" type="number" disabled />
+                                        </div>
+
+                                        <div class="col-2">
+                                            <input class="otpclass" type="number" disabled />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="OTPCode" class="form-control" />
+                            <div id="timer"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="BtnVerify" class="btn btn-primary btn-verify" type="button" disabled><i class="fa-regular fa-circle-check"></i> Verify</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="NewModal" tabindex="-1" role="dialog" aria-labelledby="NewModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="NewModalLabel">New Password</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Create a new password</p>
+                    <div class="row">
+                        <div class="col-xl-12 position-relative mb-2">
+                            <label class="form-label" for="password">Password:</label>
+                            <div class="input-group">
+                                <input class="form-control" id="newpassword" maxlength="8" type="password" autocomplete="off">
+                                <div class="input-group-append">
+                                    <a href="javascript:;" class="input-group-text" id="show_loginpassword" onclick="ShowPassword($('#newpassword'),this)">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="upass pswrd_option" style="display: none;">
+                                <span class="criteria password_length">Minimum 8 characters</span><br>
+                                <span class="criteria password_uppercase">At least 1 uppercase letter</span><br>
+                                <span class="criteria password_lowercase">At least 1 lowercase letter</span><br>
+                                <span class="criteria password_number">At least 1 number</span><br>
+                                <span class="criteria password_special">At least 1 special character</span><br>
+                            </div>
+                        </div>
+                        <div class="col-xl-12 mb-1 position-relative">
+                            <label class="form-label" for="Conpassword">Confirm Password:</label>
+                            <div class="input-group">
+                                <input class="form-control" id="Conpassword" maxlength="8" type="password" autocomplete="off">
+                                <div class="input-group-append">
+                                    <a href="javascript:;" class="input-group-text" id="show_loginpassword" onclick="ShowPassword($('#Conpassword'),this)">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="cpass pswrd_option" style="display: none;">
+                                <span class="criteria password_match">Passwords matched.</span><br>
+                            </div>
+                        </div>
+                        <div class="col-xl-12 text-end mt-2">
+                            <button id="BtnChangePassword" class="btn btn-primary btn-change" type="button"><i class="fa-regular fa-key"></i> Change Password</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-ui.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-ui/jquery-ui-1.10.0.custom.min.js" asp-append-version="true"></script>
+    <script src="~/js/toastr.min.js" asp-append-version="true"></script>
+    <script src="~/js/toastr.script.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
+            asp-append-version="true"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js" asp-append-version="true"></script>
+    <script src="~/js/perfect-scrollbar.min.js" asp-append-version="true"></script>
+    <script src="~/js/sweetalert2.min.js" asp-append-version="true"></script>
+    <script src="~/js/sweetalert.script.min.js" asp-append-version="true"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
+    <script src="~/js/parsley.min.js" type="text/javascript" asp-append-version="true"></script>
+    <script src="~/js/input-mask.js" asp-append-version="true"></script>
+    <script src="~/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/js/select2.min.js" asp-append-version="true"></script>
+    <!-- data table -->
+    <script src="~/js/datatable/datatables/jquery.dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/js/datatable/datatables/datatable.custom.js" asp-append-version="true"></script>
+    <script src="~/js/tautocomplete.js" asp-append-version="true"></script>
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.12.1/polyfill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script src="~/lib/toast-notification/build/toastr.min.js"></script>
+    <script src="~/js/customjs/empr_helper.js"></script>
+
+    <script src="~/dx/ati_dxhelper.js"></script>
+    <script src="~/dx/ajaxhelper.js"></script>
+    <script src="~/js/customjs/empr_Login.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        $(function () {
+            empr_Login.InitEvents();
+
+            empr_Login.getLocalIP(function (ip) {
+                console.log('Your local IP: ' + ip);
+                empr_Login.ipAddress = ip;
+            });
+
+
+        });
+        function fetchPublicIP() {
+            return fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(`Your public IP address is: ${data.ip}`);
+                    return data.ip;
+                })
+                .catch(error => console.error('Error fetching IP:', error));
+        }
+
+        function fetchHostname(ip) {
+            return fetch(`https://ipinfo.io/${ip}/json?token=6a2a1099d13193`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    return data.hostname;
+                })
+                .catch(error => console.error('Error fetching hostname:', error));
+        }
+
+        fetchPublicIP()
+            .then(ip => {
+                return fetchHostname(ip);
+            });
+    </script>
+</body>
+</html>

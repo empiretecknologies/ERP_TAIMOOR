@@ -1,0 +1,51 @@
+﻿<div class="card">
+    <div class="card-header">
+        <input type="hidden" id="MasterId" />
+        <div class="d-flex" style="justify-content: space-between;width: 100%;gap: 10px;">
+            @* <label class="form-label" for="EducatioID">Employee:</label> *@
+            <input type="hidden" id="ACT_GROUP_hidden" />
+            <input type="hidden" id="displayExprAccGroup" />
+            <div style="width:600px;height:20px;padding: 4px;"><div id="ENAME"></div></div>
+            
+            <button type="button" id="BtnNew" class="btn btn-primary btn-new waves-effect waves-light " style="height: 24px;width: 85px;margin-top: 3px;">
+                ->| GO
+            </button>
+            <button type="button" id="resetForm" class="btn btn-primary btn-new waves-effect waves-light " style="height: 24px ;margin-left: 165px;margin-top: 3px;">
+                Add New
+            </button>
+            <button class="btn btn-primary btn-refresh" id="refresh" style="    width: 100px;height: 23px;margin-top: 2px;padding: 2px;">
+                <i class="fa fa-refresh"></i>
+                Refresh
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="tab-content" id="pills-warningtabContent">
+                <div class="tab-pane fade show active" id="pills-warninghome" role="tabpanel"
+                     aria-labelledby="pills-warninghome-tab">
+                    <div class="table-responsive">
+                        <div id="DetailContainer" style="max-width: 100% !important;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-12 text-end pt-5 pb-5 pr-10">
+                <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section LinkScriptSection{
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        var EmpMasterInfoTables = @Html.Raw(Json.Serialize(ViewBag.EmpMasterInfoTables));
+        var EducationRecords = @Html.Raw(Json.Serialize(ViewBag.EducationRecords));
+        var Branches = @Html.Raw(Json.Serialize(ViewBag.Branches));
+    </script>
+    <script src="~/js/customjs/empr_EmpTransferEntry.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        $(function () {
+            empr_EmpTransferEntry.initEvents();
+        });
+    </script>
+}

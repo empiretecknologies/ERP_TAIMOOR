@@ -1,0 +1,177 @@
+﻿<div class="card">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card-header">
+                <button id="quicksearch" type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl"><i class="fa fa-search"></i> Quick Search</button>
+                <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="resetall" style="display:block"><i class="fa fa-plus"></i> Add New</button>
+            </div>
+            <div class="card-body pt-1 Record">
+                <div class="row theme-form">
+                    <input id="ID" hidden />
+                    <input id="ADD_USER_ID" hidden />
+                    <input id="ADD_DATE" hidden />
+                    <input id="ADD_COMPUTER_NAME" hidden />
+                    <input id="ADD_IP_ADDRESS" hidden />
+                    <input id="ADD_POSTALCODE" hidden />
+                    <input id="MENU_ID" hidden />
+                    <input id="ACT_GR_CODE" hidden />
+                    <input type="hidden" id="activestatushidden" />
+                    <input type="hidden" id="typehidden" />
+                    <input type="hidden" id="currencyhidden" />
+                    <input type="hidden" id="chequehidden" />
+                    <div class="col-xl-4">
+                        <label class="form-label" for="Code">Code :</label>
+                        <input class="form-control" readonly id="Code" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-4">
+                        <label class="form-label" for="ASTATUS">Status :</label>
+                        <div id="ASTATUS"></div>
+                    </div>
+                    <div class="col-xl-4">
+                        <label class="form-label pe-2" for="ACT_TYPE">Type :</label>
+                        <div id="ACT_TYPE"></div>
+                    </div>
+                    <div class="col-xl-12">
+                        <label class="form-label" for="ACT_NAME">Account Name:</label>
+                        <input class="form-control" id="ACT_NAME" type="text" autocomplete="off">
+                    </div>
+                    <span class="span name-validation"></span>
+                    <div class="col-xl-12 mb-1">
+                        <label class="form-label" for="ACT_PARENT_CODE">Control Name :</label>
+                        <input type="hidden" id="ACT_PARENT_CODE" />
+                        <input type="hidden" id="ACT_PARENT_CODE_hidden" />
+                        <input type="hidden" id="displayExprAccParent" />
+                        <div id="controlgridBox"></div>
+                    </div>
+                    <span class="span parent-validation"></span>
+                    <div class="col-xl-6 mb-1">
+                        <label class="form-label" for="ACT_GROUP">Account Group :</label>
+                        <input type="hidden" id="ACT_GROUP_hidden" />
+                        <input type="hidden" id="displayExprAccGroup" />
+                        <div id="accountgroupgrdiBox"></div>
+                    </div>
+                    <div class="col-xl-6 mb-1">
+                        <label class="form-label" for="ACT_NATURE">Account Nature :</label>
+                        <input type="hidden" id="ACT_NATURE" />
+                        <input type="hidden" id="ACT_nature_hidden" />
+                        <input type="hidden" id="displayExprAccnature" />
+                        <div id="accountnaturegridBox"></div>
+                    </div>
+                    <div class="col-xl-3 mb-1">
+                        <label class="form-label" for="ACT_SNAME">Short Name :</label>
+                        <input class="form-control" id="ACT_SNAME" type="text" autocomplete="off">
+                    </div>
+
+                    <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="ChartType">Chart Type</label>
+                        <div id="CHART_TYPE"></div>
+                    </div>
+                    <div class="col-xl-5 mb-1">
+                        <div class="row theme-form">
+                            <div class="col-xl-8 mb-1" id="preifex" style="display:none">
+                                <label class="form-label" for="PREFIX">Prefix :</label>
+                                <input class="form-control" id="PREFIX" type="text" maxlength="20" autocomplete="off">
+                            </div>
+                            <div class="col-xl-4 mb-1">
+                                <label class="form-label" for="COSTCENTER">Cost Center :</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-xl-6 mb-1" id="PassDiv">
+                        <label class="form-label" for="PASS">Password :</label>
+                        <div class="input-group">
+                            <input class="form-control" maxlength="8" id="PASS" type="password" autocomplete="new-password" value="" onfocus="this.value='';">
+                            <div class="input-group-append">
+                                <a href="javascript:;" class="input-group-text" id="show_loginpassword" onclick="ShowPassword($('#PASS'),this)">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <span class="span prefiex-validation"></span>
+                    <div class="col-xl-6 mb-1" id="bankaccount" style="display:none">
+                        <label class="form-label" for="ACCOUNT_NO">Bank Account:</label>
+                        <input class="form-control" id="ACCOUNT_NO" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-6 mb-1" id="accounttitle" style="display:none">
+                        <label class="form-label" for="TITTLE">Account Title:</label>
+                        <input class="form-control" id="TITTLE" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-6 mb-1" id="accountswift" style="display:none">
+                        <label class="form-label" for="SWIFT">Swift :</label>
+                        <input class="form-control" id="SWIFT" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-6 mb-1" id="Cheqformat" style="display:none">
+                        <label class="form-label" for="CHQ_ID">Cheque Format:</label>
+                        <div id="CHQ_ID"></div>
+                    </div>
+                    <div class="col-xl-6 mb-1" id="accountcurrecny" style="display:none">
+                        <label class="form-label" for="CURRENCY">Currency :</label>
+                        <div id="CURRENCY"></div>
+                    </div>
+
+
+
+                    <div class="col-xl-12 text-end">
+                        <button class="btn btn-danger btn-delete" style="display:none"><i class="fa fa-trash"></i> Delete</button>
+                        <button class="btn btn-primary btn-save" id="saveAttempt"><i class="fa fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="treeListContainer"></div>
+                        @* <div id="treeListContainer" style="overflow-x: auto; white-space: nowrap; width: 600px;"></div> *@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <div id="gridContainer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+</div>
+
+
+@section LinkScriptSection {
+    <script type="text/javascript">
+        var Cheque = @Html.Raw(Json.Serialize(ViewBag.Cheque));
+        var Currency = @Html.Raw(Json.Serialize(ViewBag.Currency));
+        var ChartType = @Html.Raw(Json.Serialize(ViewBag.ChartType));
+        var branchData = "";
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            empr_ChartOfAccount.initEvents();
+        });
+    </script>
+    <script src="~/js/customjs/empr_ChartOfAccount.js"></script>
+}

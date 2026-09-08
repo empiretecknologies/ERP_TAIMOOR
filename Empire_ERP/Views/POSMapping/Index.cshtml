@@ -1,0 +1,429 @@
+﻿<div class="card">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card-header">
+				<button id="quicksearch" type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl"><i class="fa fa-search"></i> Quick Search</button>
+				<button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="resetall" style="display:none"><i class="fa fa-plus"></i> Add New</button>
+			</div>
+			<div class="card-body pt-1 Record">
+				<div class="row theme-form">
+					<input id="TRAN_ID" hidden />
+					<input id="ADD_USER_ID" hidden />
+					<input id="ADD_DATE" hidden />
+					<input id="ADD_COMPUTER_NAME" hidden />
+					<input id="ADD_IP_ADDRESS" hidden />
+					<input id="ADD_POSTALCODE" hidden />
+					<input id="MENU_ID" hidden />
+					<input id="unitcode_hidden" type="hidden" />
+					<input id="displayExpr_unitcode" type="hidden" />
+					<input id="lotcode_hidden" type="hidden" />
+					<input id="displayExpr_lotcode" type="hidden" />
+					<input type="hidden" id="activestatushidden" />
+					<div class="col-xl-3">
+						<label class="form-label" for="Code">Code :</label>
+						<input class="form-control" readonly id="Code" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="GROUP_NAME">Group Name :</label>
+						<input class="form-control" id="GROUP_NAME" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="CACCOUNT">Cash Account :</label>
+						<div id="CACCOUNT"></div>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="CASH_TAX">Cash Tax :</label>
+						<input class="form-control" id="CASH_TAX" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="BACCOUNT">Bank Account :</label>
+						<div id="BACCOUNT"></div>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="BANK_TAX">Bank Tax :</label>
+						<input class="form-control" id="BANK_TAX" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="BANK_CHARGES">Bank Charges :</label>
+						<input class="form-control" id="BANK_CHARGES" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="BRANCH">Branch :</label>
+						<div id="BRANCH"></div>
+					</div>
+					@* <div class="col-xl-3">
+                        <label class="form-label" for="PAY_ACTCODE">Pay Account :</label>
+                        <div id="PAY_ACTCODE"></div>
+                    </div> *@
+					<div class="col-xl-3">
+						<label class="form-label" for="PARTY_TAX">Party Tax :</label>
+						<input class="form-control" id="PARTY_TAX" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="SER_CHARGES">Service Charges :</label>
+						<input type="text" id="SER_CHARGES" name="SER_CHARGES" class="form-control" autocomplete="off" />
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="SRB_NAME">SRB Name :</label>
+						<input class="form-control" id="SRB_NAME" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="SRB_NTN">SRB NTN :</label>
+						<input class="form-control" id="SRB_NTN" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="POS_USER">SRB User :</label>
+						<input class="form-control" id="POS_USER" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="POS_PASS">SRB Password :</label>
+						<input class="form-control" id="POS_PASS" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="SRB_ID">SRB ID :</label>
+						<input class="form-control" id="SRB_ID" type="text" autocomplete="off" />
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="SRB_URL">SRB URL :</label>
+						<input type="url" id="SRB_URL" name="SRB_URL" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3 d-flex">
+						<div class="form-check" style="margin-top: 15px;margin-left: 5px;">
+							<label class="form-label" for="SRB_SEND">SRB Send</label>
+							<input class="form-check-input" type="checkbox" id="srbcheck">
+						</div>
+						@* <div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+							<label class="form-label" for="RATE">Rate</label>
+							<input class="form-check-input" type="checkbox" id="RATE">
+						</div> *@
+						<div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+							<label class="form-label" for="QR Code">QR Code</label>
+							<input class="form-check-input" type="checkbox" id="QR_CODE">
+						</div>
+						<div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+							<label class="form-label" for="P_WINDOW ">Print Window : </label>
+							<input class="form-check-input" type="checkbox" id="P_WINDOW">
+						</div>
+					</div>
+					<div class="col-xl-3 d-flex">
+						<div class="form-check" style="margin-top: 15px;margin-left: 5px;">
+							<label class="form-label" for="PAY_MODAL">Pay Modal</label>
+							<input class="form-check-input" type="checkbox" id="PAY_MODAL">
+						</div>
+						@* <div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+							<label class="form-label" for="RATE">Rate</label>
+							<input class="form-check-input" type="checkbox" id="RATE">
+						</div> *@
+						<div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+							<label class="form-label" for="PRE_MODAL">Pre Print</label>
+							<input class="form-check-input" type="checkbox" id="PRE_MODAL">
+						</div>
+						<div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+							<label class="form-label" for="DUP_MODAL ">Dup Window</label>
+							<input class="form-check-input" type="checkbox" id="DUP_MODAL">
+						</div>
+					</div>
+				
+					<div class="col-xl-3">
+						<label class="form-label" for="PAY_COPY"> Pay Copies :</label>
+						<input type="number" id="PAY_COPY" name="PAY_COPY" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="PRE_COPY"> Pre Copies :</label>
+						<input type="number" id="PRE_COPY" name="PRE_COPY" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="DUP_COPY"> Dup Copies :</label>
+						<input type="number" id="DUP_COPY" name="DUP_COPY" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="P_PRINTER"> Pay Printer :</label>
+						<input type="text" id="P_PRINTER" name="P_PRINTER" class="form-control" autocomplete="off">
+					</div>
+					@* ///herer *@
+					<div class="col-xl-3">
+						<label class="form-label" for="LOC_SNAME">Location Short Name :</label>
+						<input type="text" id="LOC_SNAME" name="LOC_SNAME" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="S_IMG">Sticker Image :</label>
+						<input type="hidden" id="S_IMG" name="S_IMG" />
+						<div class="input-group">
+							<input class="form-control" id="SImg" type="file" onchange=" empr_POSMapping.UploadStickerImg()" accept="image/*" autocomplete="off">
+							<div class="input-group-append">
+								<a href="javascript:;" class="input-group-text" id="OpenStickerImage" onclick=" empr_POSMapping.OpenStickerImg()">
+									<i class="fa fa-eye"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="POS_PRINT_L">Logo Image :</label>
+						<input type="hidden" id="POS_PRINT_L" name="POS_PRINT_L" />
+						<div class="input-group">
+							<input class="form-control" id="POSPRINTL" type="file" onchange=" empr_POSMapping.UploadLogoImg()" accept="image/*" autocomplete="off">
+
+							@* <input class="form-control" id="POSPRINTL"onchange=" empr_POSMapping.UploadLogoImg()" type="file" accept="image/*" autocomplete="off"> *@
+							<div class="input-group-append">
+								<a href="javascript:;" class="input-group-text" id="OpenLogoImage" onclick="empr_POSMapping.OpenLogoImg()">
+									<i class="fa fa-eye"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				
+					<div class="col-xl-3">
+						<label class="form-label" for="FB_LINK">Facebook URL :</label>
+						<input type="url" id="FB_LINK" name="FB_LINK" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="INSTA_LINK">Instagram URL :</label>
+						<input type="url" id="INSTA_LINK" name="INSTA_LINK" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="WEB_LINK">Website URL :</label>
+						<input type="url" id="WEB_LINK" name="WEB_LINK" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="TIKTOK_LINK">Tiktok URL :</label>
+						<input type="url" id="TIKTOK_LINK" name="TIKTOK_LINK" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="YOUTUBE_LINK">Youtube URL :</label>
+						<input type="url" id="YOUTUBE_LINK" name="YOUTUBE_LINK" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="WIFI_NAME">Wifi Name :</label>
+						<input type="text" id="WIFI_NAME" name="WIFI_NAME" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="WIFI_PASSWORD">Wifi Password :</label>
+						<input type="password" id="WIFI_PASSWORD" name="WIFI_PASSWORD" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="WHATSAPP_URL">WhatsApp API URL :</label>
+						<input type="text" id="WHATSAPP_URL" name="WHATSAPP_URL" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="WHATSAPP_TOKEN">WhatsApp API Token :</label>
+						<input type="text" id="WHATSAPP_TOKEN" name="WHATSAPP_TOKEN" class="form-control" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="WHATSAPP_ADV">WhatsApp Adv Msg :</label>
+						<textarea type="text" id="WHATSAPP_ADV" name="WHATSAPP_ADV" rows="1" class="form-control" autocomplete="off"></textarea>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="WHATSAPP_RTN">WhatsApp Return Msg :</label>
+						<textarea type="text" id="WHATSAPP_RTN" name="WHATSAPP_RTN" rows="1" class="form-control" autocomplete="off"></textarea>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="WHATSAPP_CC">WhatsApp Company Msg :</label>
+						<textarea type="text" id="WHATSAPP_CC" name="WHATSAPP_CC" rows="1" class="form-control" autocomplete="off"></textarea>
+					</div>
+					<div class="col-xl-6">
+						<label class="form-label" for="WHATSAPP_MSG">WhatsApp Cst Msg :</label>
+						<textarea type="text" id="WHATSAPP_MSG" name="WHATSAPP_MSG" rows="1" class="form-control" autocomplete="off"></textarea>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="WHT_ADV_COM">WhatsApp Adv Com Msg :</label>
+						<textarea type="text" id="WHT_ADV_COM" name="WHT_ADV_COM" rows="1" class="form-control" autocomplete="off"></textarea>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="WHT_PARTY_MSG">WhatsApp Party Msg :</label>
+						<textarea type="text" id="WHT_PARTY_MSG" name="WHT_PARTY_MSG" rows="1" class="form-control" autocomplete="off"></textarea>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="Group_IMG">Group Image :</label>
+						<input type="hidden" id="Group_IMG" name="Group_IMG" />
+						<div class="input-group">
+							<input class="form-control" id="GroupImage" type="file" accept="image/*" autocomplete="off">
+							<div class="input-group-append">
+								<a href="javascript:;" class="input-group-text" id="OpenGroupImage" onclick="empr_POSMapping.OpenGroupImage()">
+									<i class="fa fa-eye"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="Item_IMG">Item Image :</label>
+						<input type="hidden" id="Item_IMG" name="Item_IMG" />
+						<div class="input-group">
+							<input class="form-control" id="ItemImage" type="file" accept="image/*" autocomplete="off">
+							<div class="input-group-append">
+								<a href="javascript:;" class="input-group-text" id="OpenItemImage" onclick="empr_POSMapping.OpenItemImage()">
+									<i class="fa fa-eye"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="Waiter_IMG">Waiter Image :</label>
+						<input type="hidden" id="Waiter_IMG" name="Waiter_IMG" />
+						<div class="input-group">
+							<input class="form-control" id="WaiterImage" type="file" accept="image/*" autocomplete="off">
+							<div class="input-group-append">
+								<a href="javascript:;" class="input-group-text" id="OpenWaiterImage" onclick="empr_POSMapping.OpenWaiterImage()">
+									<i class="fa fa-eye"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="Table_IMG">Table Image :</label>
+						<input type="hidden" id="Table_IMG" name="Table_IMG" />
+						<div class="input-group">
+							<input class="form-control" id="TableImage" type="file" accept="image/*" autocomplete="off">
+							<div class="input-group-append">
+								<a href="javascript:;" class="input-group-text" id="OpenTableImage" onclick="eempr_POSMapping.OpenTableImage()">
+									<i class="fa fa-eye"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-9 d-flex" style="gap: 44px;margin-top: 23px;">
+						<div class="form-check">
+							<label class="form-label" for="CASH_TAB">Advance</label>
+							<input class="form-check-input" type="checkbox" id="advancecheck">
+						</div>
+						<div class="form-check">
+							<label class="form-label" for="CASH_TAB">Cash Tab</label>
+							<input class="form-check-input" type="checkbox" id="cashcheck">
+						</div>
+						<div class="form-check">
+							<label class="form-label" for="CASH_TAB">Bank Tab</label>
+							<input class="form-check-input" type="checkbox" id="bankcheck">
+						</div>
+						<div class="form-check">
+							<label class="form-label" for="CASH_TAB">Party Tab</label>
+							<input class="form-check-input" type="checkbox" id="partycheck">
+						</div>
+						<div class="form-check">
+							<label class="form-label" for="CASH_TAB">Split Tab</label>
+							<input class="form-check-input" type="checkbox" id="splitcheck">
+						</div>
+						<div class="form-check">
+							<label class="form-label" for="CASH_TAB">Advance Btn</label>
+							<input class="form-check-input" type="checkbox" id="advancebtn">
+						</div>
+						<div class="form-check">
+							<label class="form-label" for="CASH_TAB">Kot Btn</label>
+							<input class="form-check-input" type="checkbox" id="kotbtn">
+						</div>
+						<div class="form-check">
+							<label class="form-label" for="CASH_TAB">Salesman Required</label>
+							<input class="form-check-input" type="checkbox" id="salesmanReq">
+						</div>
+					</div>
+					<div class="col-xl-12 text-end mt-5">
+						<button type="button" style="display:none" class="btn btn-success btn-print waves-effect waves-light float-end mx-1" id="BtnPrint">
+							<i class="fa fa-print"></i> Print
+						</button>
+						<button class="btn btn-danger btn-delete" style="display:none"><i class="fa fa-trash"></i> Delete</button>
+						<button type="button" class="btn btn-primary mr-5 d-none" data-bs-toggle="modal" id="BtnSodaPick">
+							<i class="fa fa-search"></i> Pick Data
+						</button>
+						<button class="btn btn-primary btn-save" id="saveAttempt"><i class="fa fa-save"></i> Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12">
+						<div class="card text-left">
+							<div class="card-body">
+								<div class="table-responsive">
+									<div id="gridContainer"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+
+	<div class="modal fade" id="SodaPickModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="myExtraLargeModalLabel">Pick Soda</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12">
+						<div class="card text-left">
+							<div class="card-body customHighlightForModifiedCells">
+								<div class="table-responsive">
+									<div id="SodaPickGridContainer"></div>
+								</div>
+								<div class="pt-3 text-end">
+									<button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="BtnAddSodaToDelivery">
+										<i class="fa fa-plus"></i> Add
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+
+	<div class="modal fade bs-example-modal-xl" id="ShowReportModal" style="display:none" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="myExtraLargeModalLabel">Print Report</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-10">
+						<div class="row">
+							<div class="col-xl-4">
+								<label class="form-label" for="ReportType">ReportType:</label>
+								<div id="ReportType"></div>
+							</div>
+							<div class="col-xl-2 mt-20">
+								<button type="button" class="btn btn-primary mr-5" data-bs-toggle="modal" id="BtnGenerateReport">
+									<i class="fa fa-file-arrow-down"></i> Get Report
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 mt-3">
+						<div class="card text-left" id="ModalBody"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section LinkScriptSection {
+	<script type="text/javascript">
+		var branchData = "";
+		var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+		var CashAccount = @Html.Raw(Json.Serialize(ViewBag.CashAccount));
+		var BankAccount = @Html.Raw(Json.Serialize(ViewBag.BankAccount));
+		var PartyAccount = @Html.Raw(Json.Serialize(ViewBag.PartAccount));
+		var Branch = @Html.Raw(Json.Serialize(ViewBag.Branch));
+		var todayDate = '@DateTime.Now.Date.ToString("yyyy-MM-dd")';
+	</script>
+	<script type="text/javascript">
+		$(function () {
+			empr_POSMapping.initEvents();
+		});
+	</script>
+	<script src="~/js/customjs/empr_POSMapping.js"></script>
+	<script src="~/js/customjs/empr_Cropper.js" asp-append-version="true"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js" integrity="sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+}

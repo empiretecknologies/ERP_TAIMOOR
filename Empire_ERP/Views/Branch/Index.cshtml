@@ -1,0 +1,118 @@
+﻿<div class="card">
+    <div class="card-header">
+        <button type="button" id="BtnNew" style="display:none" class="btn btn-primary btn-new waves-effect waves-light float-end"><i class="fa fa-plus"></i> Add New</button>
+    </div>
+    <div class="card-body Record">
+        <input type="hidden" id="companyhidden" />
+        <div class="row">
+            <div class="col-xl-2">
+                <label class="form-label" for="Code">Code</label>
+                <input class="form-control" id="Code" readonly type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2">
+                <label class="form-label" for="ASTATUS">Status</label>
+                <div id="ASTATUS"></div>
+            </div>
+            <div class="col-xl-8 mb-1">
+                <label class="form-label" for="B_NAME">Name</label>
+                <input class="form-control" id="B_NAME" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="B_SHORT_NAME">Short Name</label>
+                <input class="form-control" id="B_SHORT_NAME" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-6 mb-1">
+                <label class="form-label" for="CCODE">Company</label>
+                <div id="CCODE"></div>
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="BARCODE">Bar Code</label>
+                <input class="form-control" id="BARCODE" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="B_TEL">Telephone</label>
+                <input class="form-control" id="B_TEL" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="B_GST">GST #</label>
+                <input class="form-control" id="B_GST" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="B_NTN">NTN #</label>
+                <input class="form-control" id="B_NTN" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="TIME_IN">Time In</label>
+                <input class="form-control" id="TIME_IN" type="time" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="TIME_OUT">Time Out</label>
+                <input class="form-control" id="TIME_OUT" type="time" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="Image">Branch Logo</label>
+                <input type="hidden" id="GROUP_PIC" name="GROUP_PIC" />
+                <input class="form-control" id="Image" type="file" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="CONTACT_NAME1">Contact Name</label>
+                <input class="form-control" id="CONTACT_NAME1" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="CONTACT_NO1">Contact No</label>
+                <input class="form-control" id="CONTACT_NO1" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="CONTACT_NAME2">Secondary Contact Name</label>
+                <input class="form-control" id="CONTACT_NAME2" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="CONTACT_NO2">Secondary Contact No</label>
+                <input class="form-control" id="CONTACT_NO2" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="CONTACT_NAME3">Third Contact Name</label>
+                <input class="form-control" id="CONTACT_NAME3" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="CONTACT_NO3">Third Contact No</label>
+                <input class="form-control" id="CONTACT_NO3" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1">
+                <label class="form-label" for="RT_TYPE">RT TYPE</label>
+                <div id="RT_TYPE"></div>
+            </div>
+            <div class="col-xl-9 mb-1">
+                <label class="form-label" for="B_ADDRESS">Address</label>
+                <input class="form-control" id="B_ADDRESS" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-12 text-end">
+                <button class="btn btn-danger btn-delete" style="display:none" id="BtnDelete"><i class="fa fa-trash"></i> Delete</button>
+                <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="gridContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section LinkScriptSection{
+    <script src="~/js/customjs/empr_Branch.js" asp-append-version="true"></script>
+    <script src="~/js/customjs/empr_Cropper.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js" integrity="sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        var Company = @Html.Raw(Json.Serialize(ViewBag.Companyy));
+        $(function () {
+            empr_Branch.initEvents();
+        });
+    </script>
+}

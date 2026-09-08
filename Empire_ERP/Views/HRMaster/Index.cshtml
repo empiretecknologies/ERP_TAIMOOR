@@ -1,0 +1,134 @@
+﻿<div class="card">
+    <div class="card-header">
+        <input type="hidden" id="MasterId" />
+        <div class="d-flex" style="justify-content: space-between;width: 100%;gap: 10px;">
+            <div style="width:300px;height:20px;padding: 4px;"><div id="TNAME"></div></div>
+            <button type="button" id="BtnNew" class="btn btn-primary btn-new waves-effect waves-light " style="height: 24px;width: 80px;margin-top: 3px;">
+                ->| GO
+            </button>
+            <button type="button" id="resetForm" class="btn btn-primary btn-new waves-effect waves-light " style="height: 24px ;margin-left: 465px;margin-top: 3px;">
+                Add New
+            </button>
+            <button class="btn btn-primary btn-refresh" id="refresh" style="    width: 100px;height: 23px;margin-top: 2px;padding: 2px;">
+                <i class="fa fa-refresh"></i>
+                Refresh
+            </button>
+        </div>
+    </div>
+    <div class="card-body Record">
+        <div class="row">
+            <div class="col-xl-2  mb-1 Code">
+                <label class="form-label" for="Code">Code:</label>
+                <input class="form-control" id="Code" readonly type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1 Status">
+                <label class="form-label" for="ASTATUS">Status:</label>
+                <div id="ASTATUS"></div>
+            </div>
+            <div class="col-xl-4 mb-1" id="GROUP_NAMES">
+                <label class="form-label" for="GROUP_NAME">Name:</label>
+                <input class="form-control" id="GROUP_NAME" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3 mb-1" id="Leavess">
+                <label class="form-label" for="Leaves">Leaves:</label>
+                <input class="form-control" id="Leaves" type="number" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="TimeIns">
+                <label class="form-label" for="TimeIn">Time IN:</label>
+                <input class="form-control" id="TimeIn" type="time" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="TimeOuts">
+                <label class="form-label" for="TimeOut">Time Out:</label>
+                <input class="form-control" id="TimeOut" type="time" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="WHRS">
+                <label class="form-label" for="WHR">Working Hours:</label>
+                <input class="form-control" id="WHR" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="GTimeIns">
+                <label class="form-label" for="GTimeIn">Gross Time IN:</label>
+                <input class="form-control" id="GTimeIn" type="time" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="GTimeOuts">
+                <label class="form-label" for="GTimeOut">Gross Time Out:</label>
+                <input class="form-control" id="GTimeOut" type="time" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="BTimeIns">
+                <label class="form-label" for="BTimeIn">Break Time In:</label>
+                <input class="form-control" id="BTimeIn" type="time" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="BTimeOuts">
+                <label class="form-label" for="BTimeOut">Break Time Out:</label>
+                <input class="form-control" id="BTimeOut" type="time" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="NightShifts">
+                <label class="form-label" for="NightShift">Night Shift:</label>
+                <input class="form-control" id="NightShift" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-4 mb-1" id="Drivers">
+                <label class="form-label" for="Driver">Driver:</label>
+                <input class="form-control" id="Driver" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="Capacitys">
+                <label class="form-label" for="Capacity">Capacity:</label>
+                <input class="form-control" id="Capacity" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="Vehicles">
+                <label class="form-label" for="Vehicle">Vehicle:</label>
+                <input class="form-control" id="Vehicle" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="Routes">
+                <label class="form-label" for="Route">Route:</label>
+                <input class="form-control" id="Route" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="BSalarys">
+                <label class="form-label" for="BSalary">Basic Salary:</label>
+                <input class="form-control" id="BSalary" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="GSalarys">
+                <label class="form-label" for="GSalary">Gross Salary:</label>
+                <input class="form-control" id="GSalary" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="AnnualPcts">
+                <label class="form-label" for="AnnualPct">Annual %:</label>
+                <input class="form-control" id="AnnualPct" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="Annualamts">
+                <label class="form-label" for="Annualamt">Annual Amount:</label>
+                <input class="form-control" id="Annualamt" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1" id="MaximumSalarys">
+                <label class="form-label" for="MaximumSalary">Maximum Salary:</label>
+                <input class="form-control" id="MaximumSalary" type="text" autocomplete="off">
+            </div>
+            <span class="span name-validation"></span>
+            <div class="col-xl-12 text-end">
+                <button class="btn btn-danger btn-delete" style="display:none" id="BtnDelete"><i class="fa fa-trash"></i> Delete</button>
+                <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="gridContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section LinkScriptSection{
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        var HRMasterTables = @Html.Raw(Json.Serialize(ViewBag.HRMasterTables));
+    </script>
+    <script src="~/js/customjs/empr_HRMaster.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        $(function () {
+            empr_HRMaster.initEvents();
+        });
+    </script>
+}

@@ -1,0 +1,135 @@
+﻿@model Empire_ERP.Core.Entities.ClosingViewModal
+
+<style>
+    .ls {
+        letter-spacing: 0.7px !important;
+    }
+
+    .ls-wide {
+        letter-spacing: 1.5px !important;
+    }
+</style>
+<div style="border: 1px solid black; width: 72mm; font-size: 0.8rem; font-family: 'Poppins', sans-serif;">
+
+    <div style="text-align: center;width: auto;">
+        <img src="~/Client/Company/@Model.Clogo" alt="Company Logo" style="width: 180px;"><br />
+        @* <b>@Model.BName</b><br /> *@
+        <span>@Model.BAddress</span><br />
+        <span>SNTN: @Model.BNTN</span><br />
+        <span>@Model.BPhone</span>
+    </div>
+
+    <div style="width: auto; background-color: black !important;color: white; text-align: center;">
+        <span style="font-weight: 600; font-size: 12px;">@Model.HeadingName</span>
+    </div>
+    <div style="font-size:0.8rem !important;width: auto;padding:3px;">
+        <div style="width: 100%; display: flex; justify-content: space-between;">
+            <span style="text-align: left;font-weight:bold;">From:</span>
+            <span style="text-align: left;margin-left:2px">@Model.FromDate</span>
+            <span style="text-align: right;font-weight:bold;">To:</span>
+            <span style="text-align: right;margin-right:2px">@Model.ToDate</span>
+        </div>
+    </div>
+    <div>
+
+        @foreach (var group in Model.GroupedItems)
+        {
+            <table class="slip" style="margin: 0; border-top: 0.5px solid black; border-collapse: collapse;">
+                <thead style="font-size: 0.8rem !important; border-bottom: 1px dotted #5a5a5a; background: linear-gradient(to right, #ff7e5f, #feb47b)">
+                    <tr style="line-height: 1; margin: 0; position: relative;">
+                        @if (group.PosType == "Products")
+                        {
+                            <th style="margin: 3px; padding: 2px; text-align: left;">Description</th>
+                            <th style="margin: 3px; padding: 2px; text-align: left;">Qty</th>
+                            <th style="margin: 3px; padding: 2px; text-align: left;">Rate</th>
+                            <th style="margin: 3px; padding: 2px; text-align: left;">Disc</th>
+                            <th style="margin: 0; padding: 2px; text-align: right;">Total</th>
+                        }
+                        else
+                        {
+                            <th style="margin: 3px; padding: 3px; text-align: left;">Description</th>
+                            <th style="margin: 0; padding: 3px; text-align: right;">Total</th>
+                        }
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in group.Items)
+                    {
+                        @if (group.PosType == "Products")
+                        {
+                            <tr style="line-height: 1; margin: 0; padding: 0; position: relative; font-size: 0.8rem !important;">
+                                <td style="margin: 3px; padding: 2px; text-align: left;">@item.Description</td>
+                                <td style="margin: 3px; padding: 2px; text-align: left;">@item.Qty</td>
+                                <td style="margin: 3px; padding: 2px; text-align: left;">@item.Rate</td>
+                                <td style="margin: 3px; padding: 2px; text-align: left;">
+                                    @if (!string.IsNullOrEmpty(item.Disc?.ToString()))
+                                    {
+                                        @($"{item.Disc}%")
+                                    }
+                                    else
+                                    {
+                                        @item.Disc
+                                    }
+                                </td>
+                                <td style="margin: 0; padding: 2px; position: relative; text-align: right;">
+                                    @item.Balance
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr style="line-height: 1; margin: 0; padding: 0; position: relative; font-size: 0.8rem !important;">
+                                <td style="margin: 3px; padding: 3px; text-align: left;">@item.Description</td>
+                                <td style="margin: 0; padding: 3px; position: relative; text-align: right;">
+                                    @(item.Balance?.ToString("N0") ?? "0")
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                    <!-- Row for total balance of the group -->
+                    <tr style="font-weight: bold; background-color: #f1f1f1;">
+                        <td style="margin: 3px; padding: 3px; text-align: left;">Total for @group.PosType</td>
+                        @if (group.PosType == "Products")
+                        {
+                            <td style="margin: 3px; padding: 3px; text-align: left;">@group.Qty</td>
+                        }
+                        <td colspan="3" style="margin: 0; padding: 3px; position: relative; text-align: right">
+                            @(group.TotalBalance?.ToString("N0") ?? "0")
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br /> <!-- Space between tables for clarity -->
+     }
+
+
+    </div>
+
+
+    <div style="11px !important;width: auto;padding:3px;font-weight: 600 !important;">
+        <div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+            <span style="text-align: left;">Closing Balance:</span>
+            <span style="text-align: right;">@((Convert.ToDouble(Model.ClosingBalance)).ToString("N2"))</span>
+        </div>
+    </div>
+    <hr style="border: none; border-top: 0.5px solid black; margin: 10px 0;">
+
+    <div style="font-size:0.8rem !important;">
+        <div style="width: 100%; display: flex; justify-content: space-between;">
+            <div style="float: left;">
+                <span style="text-align: left;padding-left:3px;font-weight: 600;">User:</span>
+                <span style="text-align: left;">@Model.SalesmanName</span><br />
+            </div>
+        </div>
+    <hr style="border: none; border-top: 0.5px solid black; margin: 10px 0;">
+    <div style="text-align: center;font-size:0.7rem !important; font-weight: 400;">
+        <p>
+            Software Designed By: @Model.FName <br />
+            @Model.FTEL <br />
+            @Model.FWebsite
+        </p>
+    </div>
+
+</div>

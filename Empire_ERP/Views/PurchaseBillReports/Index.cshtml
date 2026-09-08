@@ -1,0 +1,137 @@
+﻿<style>
+    .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused) > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused) > tr > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused):hover > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused):hover > tr > td {
+        background-color: #055a87 !important;
+        color: white;
+    }
+</style>
+<div class="card">
+    <div class="card-header">
+        <input class="form-control" id="HIDDEN_FROM_DATE" type="hidden" value="@ViewBag.StartDate" autocomplete="off">
+        <input class="form-control" id="HIDDEN_TO_DATE" type="hidden" value="@ViewBag.EndDate" autocomplete="off">
+        <div class="row">
+            <div class="col-xl-3">
+                <label class="form-label" for="FROM_DATE">From Date:</label>
+                <input class="form-control" id="FROM_DATE" type="date" value="@ViewBag.StartDate" autocomplete="off">
+            </div>
+            <div class="col-xl-3">
+               <label class="form-label" for="TO_DATE">To Date:</label>
+                @* <input class="form-control" id="TO_DATE" type="date" value="@ViewBag.EndDate" autocomplete="off"> *@
+                <input class="form-control" id="TO_DATE" type="date"
+                       value="@DateTime.Now.ToString("yyyy-MM-dd")" autocomplete="off">
+            </div>
+            <div class="col-xl-6">
+                <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end mt-3" id="BtnGenerate">
+                    <i class="fa fa-print"></i> Generate Report
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body pt-1 Record TabsDiv">
+        <ul class="nav nav-tabs nav-primary" id="Tab" role="tablist">
+            <li class="nav-item"><a class="nav-link active" id="OptionTab" data-bs-toggle="pill" href="#OptionTabContent" role="tab" aria-controls="pills-warninghome" aria-selected="true">REPORT OPTION</a></li>
+            <li class="nav-item"><a class="nav-link" id="ViewTab" data-bs-toggle="pill" href="#ViewTabContent" role="tab" aria-controls="pills-warningprofile" aria-selected="false">REPORT VIEW</a></li>
+        </ul>
+        <div class="tab-content" id="pills-warningtabContent">
+            <div class="tab-pane fade show active" id="OptionTabContent" role="tabpanel" aria-labelledby="pills-warninghome-tab">
+                <div class="row">
+                    <div class="col-xl-6 mt-3">
+                        <label class="breadcrumb-item reportHeading" for="MENU_NAME">@ViewBag.MENU_NAME:</label>
+                        <div id="GridContainer"></div>
+                    </div>
+                    <div class="col-xl-2 mt-50">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <label class="form-label" for="BUYER_CONTROL">Control:</label>
+                                <div id="BUYER_CONTROL"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <label class="form-label" for="ASTATUS">Status:</label>
+                                <div id="ASTATUS"></div>
+                            </div>
+                        </div>
+                        <div class="row d-none">
+                            <div class="col-xl-12">
+                                <label class="form-label" for="SELLER_CONTROL">Seller Control:</label>
+                                <div id="SELLER_CONTROL"></div>
+                            </div>
+                        </div>
+                        <div class="row d-none">
+                            <div class="col-xl-12">
+                                <label class="form-label" for="ARIVAL_STATUS">Arival Status:</label>
+                                <div id="ARIVAL_STATUS"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 mt-50">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <label class="form-label" for="BUYER_NAME">Name:</label>
+                                <div id="BUYER_NAME"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <label class="form-label" for="ITEM_MASTER">Item:</label>
+                                <div id="ITEM_MASTER"></div>
+                            </div>
+                        </div>
+                        <div class="row d-none">
+                            <div class="col-xl-12">
+                                <label class="form-label" for="SELLER_NAME">Seller Name:</label>
+                                <div id="SELLER_NAME"></div>
+                            </div>
+                        </div>
+                        <div class="row d-none">
+                            <div class="col-xl-12">
+                                <label class="form-label" for="ITEM_GROUP">Group:</label>
+                                <div id="ITEM_GROUP"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 mt-50">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <label class="form-label" for="BUYER_REGION">Reigon:</label>
+                                <div id="BUYER_REGION"></div>
+                            </div>
+                        </div>
+                        <div class="row d-none">
+                            <div class="col-xl-12">
+                                <label class="form-label" for="SELLER_REGION">Seller Region:</label>
+                                <div id="SELLER_REGION"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade Detail" id="ViewTabContent" role="tabpanel" aria-labelledby="pills-warningprofile-tab">
+                <div class="row mt-3 ml-5">
+                    <ul class="nav nav-tabs nav-primary" id="Tab" role="tablist">
+                        <li class="nav-item"><a class="nav-link active reportTab" id="REPORT_NAME" data-bs-toggle="pill" href="#ViewReport" role="tab" aria-controls="pills-warninghome" aria-selected="true">REPORT</a></li>
+                    </ul>
+                    <div class="tab-content" id="pills-warningtabContent">
+                        <div class="tab-pane mt-3 fade show active" id="ViewReport" role="tabpanel" aria-labelledby="pills-warninghome-tab">
+                            <div id="ReportGridContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section LinkScriptSection {
+    <script type="text/javascript">
+        var ConQty = @Html.Raw(Json.Serialize(ViewBag.ConQty));
+    </script>
+    <script src="~/js/customjs/empr_PurchaseBillReports.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        empr_helper.companyName = @Html.Raw(Json.Serialize(ViewBag.CompanyName));
+
+        $(function () {
+            empr_PurchaseBillReports.InitEvents();
+        });
+    </script>
+}

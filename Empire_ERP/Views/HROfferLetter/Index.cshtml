@@ -1,0 +1,189 @@
+﻿@{
+	var startDate = (Convert.ToDateTime(ViewBag.StartDate)).ToString("yyyy-MM-dd");
+	var endDate = (Convert.ToDateTime(ViewBag.EndDate)).ToString("yyyy-MM-dd");
+}
+
+<div class="card">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card-header">
+				<button id="quicksearch" type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl"><i class="fa fa-search"></i> Quick Search</button>
+				<button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="resetall" style="display:none"><i class="fa fa-plus"></i> Add New</button>
+			</div>
+			<div class="card-body pt-1 Record">
+				<div class="row theme-form">
+
+					<div class="col-xl-3">
+						<label class="form-label" for="Code">Code :</label>
+						<input class="form-control" readonly id="Code" type="text" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="ASTATUS">Status:</label>
+						<div id="ASTATUS"></div>
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="INTERVIEW">Interview:</label>
+						<div id="INTERVIEW"></div>
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="JOB_TITLE">Job Title:</label>
+						<input class="form-control" id="JOB_TITLE" type="text" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="DEP">Department:</label>
+						<div id="DEP"></div>
+					</div>
+
+					<div class="col-xl-3 ">
+						<label class="form-label" for="BASIC_SALARY">Basic Salary:</label>
+						<input class="form-control" id="BASIC_SALARY" type="number" step="0.01" min="0" onkeydown="return !['e', 'E', '+', '-'].includes(event.key)" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3 ">
+						<label class="form-label" for="ALLOWANCES">Allowances:</label>
+						<input class="form-control" id="ALLOWANCES" type="number" step="0.01" min="0" onkeydown="return !['e', 'E', '+', '-'].includes(event.key)" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3 ">
+						<label class="form-label" for="TOTAL_PACKAGE">Total Package:</label>
+						<input class="form-control" id="TOTAL_PACKAGE" type="number"  autocomplete="off" readonly>
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="JOINING_DATE">Joining Date:</label>
+						<input class="form-control" id="JOINING_DATE" type="date" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="OFFER_DATE">Offer Date:</label>
+						<input class="form-control" id="OFFER_DATE" type="date" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="DUTY_START">Duty Start Time:</label>
+						<input class="form-control" id="DUTY_START" type="time" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="DUTY_END">Duty End Time:</label>
+						<input class="form-control" id="DUTY_END" type="time" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="WEEKLY_OFF">Weekly Off Day(s):</label>
+						<input class="form-control" id="WEEKLY_OFF" type="text" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="WEEKLY_DESC">Weekly Off Description / Notes:</label>
+						<input class="form-control" id="WEEKLY_DESC" type="text" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="DOC">Doc:</label>
+						<input type="hidden" value="" id="hdnDOC" />
+						<div class="input-group">
+							<input type="file" name="DOC" id="DOC" class="form-control" onchange="empr_HROfferLetter.UploadDoc()" accept=".pdf, .doc, .docx, .xls, .xlsx, image/*" />
+							<div class="input-group-append">
+								<a href="javascript:;" class="input-group-text" id="openDoc" onclick="empr_HROfferLetter.OpenDoc()">
+									<i class="fa fa-eye"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="col-xl-12 text-end">
+						<button type="button" style="display:none" class="btn btn-success btn-print waves-effect waves-light float-end mx-1" id="BtnPrint">
+							<i class="fa fa-print"></i> Print
+						</button>
+						<button class="btn btn-danger btn-delete" style="display:none"><i class="fa fa-trash"></i> Delete</button>
+						<button class="btn btn-primary btn-save" id="saveAttempt"><i class="fa fa-save"></i> Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12">
+						<div class="card text-left">
+							<div class="card-body">
+								<div class="table-responsive">
+									<div id="gridContainer"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+
+
+	<div class="modal fade bs-example-modal-xl" id="ShowReportModal" style="display:none" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="myExtraLargeModalLabel">Print Report</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-10">
+						<div class="row">
+							<div class="col-xl-4">
+								<label class="form-label" for="ReportType">ReportType:</label>
+								<div id="ReportType"></div>
+							</div>
+							<div class="col-xl-2 mt-20">
+								<button type="button" class="btn btn-primary mr-5" data-bs-toggle="modal" id="BtnGenerateReport">
+									<i class="fa fa-file-arrow-down"></i> Get Report
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 mt-3">
+						<div class="card text-left" id="ModalBody"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section LinkScriptSection {
+	<script type="text/javascript">
+		var startDate = @startDate;
+		var endDate = @endDate;
+		var branchData = "";
+		var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+		var todayDate = '@DateTime.Now.Date.ToString("yyyy-MM-dd")';
+		//var Education = @Html.Raw(Json.Serialize(ViewBag.Education));
+		var Job = @Html.Raw(Json.Serialize(ViewBag.Job));
+		var Candidate = @Html.Raw(Json.Serialize(ViewBag.Candidate));
+		var Interviews = @Html.Raw(Json.Serialize(ViewBag.Interviews));
+		//var Employee = @Html.Raw(Json.Serialize(ViewBag.Employee));
+		//var EmpMails = @Html.Raw(Json.Serialize(ViewBag.EmpMails));
+		//var CandidateMails = @Html.Raw(Json.Serialize(ViewBag.CandidateMails));
+		var InterviewsDropdown = @Html.Raw(Json.Serialize(ViewBag.InterviewsDropdown));
+		var company = @Html.Raw(Json.Serialize(ViewBag.company));
+		var Department = @Html.Raw(Json.Serialize(ViewBag.Department));
+	</script>
+	<script type="text/javascript">
+		$(function () {
+			empr_HROfferLetter.initEvents();
+		});
+	</script>
+	<script src="~/js/customjs/empr_HROfferLetter.js"></script>
+}

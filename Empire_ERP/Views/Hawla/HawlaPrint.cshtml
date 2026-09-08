@@ -1,0 +1,50 @@
+﻿@model Empire_ERP.Core.Entities.HawlaViewModel
+<div style="width: 82mm; font-size: 10px; font-family: 'Poppins', sans-serif; padding: 10px; background-color: #f8f9fa; text-align: center;">
+
+    <!-- Success Message with Check Circle -->
+    <div style="margin-bottom: 20px;margin-left: 5px;">
+        <div style="display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background-color: #055a87; color: white; font-size: 18px; margin-bottom: 10px;">
+            ✔
+        </div>
+        <div style="font-weight: bold; font-size: 0.9rem;">
+            Transferred Successfully
+        </div>
+    </div>
+    <div style=" background-color: white;   width: 285px;height: 250px;border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        <!-- Amount -->
+        <div style="    padding: 10px;font-size: 1.8rem; font-weight: bold; color: #333; line-height: 1.2;">
+            PKR @Model.Amount
+        </div>
+
+        <!-- Transfer Details -->
+        <div style="display: flex; padding: 10px; margin-bottom: 25px; text-align: left; width: 300px;">
+            <!-- From Header -->
+            <div style="height: 175px; border: dotted; margin-bottom: 5px; text-align: center; width: 48%;">
+                <span style="font-size: 12px; font-weight: bold;">From</span>
+                <div style="font-size: 45px; margin-bottom: -5px;">
+                    <i class="fas fa-building"></i> <!-- HeadOffice Icon -->
+                </div>
+                <div style="font-weight: bold; font-size: 11px;">@Model.FromBranch</div>
+                <div style="font-size: 10px;">@Model.FromBranchAddress</div>
+                <div style="font-size: 10px;">@Model.FromBranchPhone</div>
+            </div>
+
+            <!-- To Header -->
+            <div style="height: 175px; border: dotted; margin-bottom: 5px; text-align: center; width: 48%;">
+                <span style="font-size: 12px; font-weight: bold;">To</span>
+                <div style="font-size: 45px; margin-bottom: -5px;">
+                    <i class="fas fa-store"></i> <!-- Shop Icon -->
+                </div>
+                <div style="font-weight: bold; font-size: 11px;">@Model.ToBranch</div>
+                <div style="font-size: 10px;">@Model.ToBranchAddress</div>
+                <div style="font-size: 10px;">@Model.ToBranchPhone</div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Buttons -->
+    @* <div style="display: flex; justify-content: space-between; margin-top: 20px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
+        <button style="background: none; border: 1px solid #e0e0e0; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Close</button>
+        <button style="background: #4CAF50; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">View Details</button>
+    </div> *@
+</div>

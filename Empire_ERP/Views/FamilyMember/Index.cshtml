@@ -1,0 +1,155 @@
+﻿<style>
+    #Loader {
+        top: 0;
+        left: 0;
+        z-index: 1;
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(255 255 255 / 57%);
+    }
+
+    .criteria {
+        color: red;
+    }
+
+    .complete {
+        color: green;
+    }
+
+    form .input-field {
+        flex-direction: row;
+        column-gap: 10px;
+    }
+
+    .input-field input {
+        height: 45px;
+        width: 42px;
+        border-radius: 6px;
+        outline: none;
+        font-size: 1.125rem;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+        .input-field input:focus {
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .input-field input::-webkit-inner-spin-button,
+        .input-field input::-webkit-outer-spin-button {
+            display: none;
+        }
+
+    form button {
+        width: 100%;
+        color: #fff;
+        font-size: 1rem;
+        border: none;
+        padding: 9px 0;
+        cursor: pointer;
+        border-radius: 6px;
+        background: #6e93f7;
+        transition: all 0.2s ease;
+    }
+
+        form button.active {
+            background: #4070f4;
+            pointer-events: auto;
+        }
+
+        form button:hover {
+            background: #0e4bf1;
+        }
+</style>
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-xl-8">
+                <div id="EMP_ID"></div>
+            </div>
+            <div class="col-xl-4">
+                <button type="button" id="BtnNew" class="btn btn-primary btn-new waves-effect waves-light float-end"><i class="fa fa-plus"></i> Add New</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body Record">
+        <input type="hidden" id="Employee_hidden" />
+        <input type="hidden" id="displayExprEmployee" />
+        <div class="row">
+            <div class="col-xl-2">
+                <label class="form-label" for="Code">Code:</label>
+                <input class="form-control" id="Code" readonly type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2">
+                <label class="form-label" for="ASTATUS">Status</label>
+                <div id="ASTATUS"></div>
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="F_NAME">Full Name</label>
+                <input class="form-control" id="F_NAME" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="RELATION">Relation</label>
+                <div id="RELATION"></div>
+            </div> 
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="DOB">DOB</label>
+                <input class="form-control" id="DOB" type="date" autocomplete="off" onkeydown="empr_helper.HandleTabFocus(event, '#GENDER')">
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="GENDER">Gender</label>
+                <div id="GENDER"></div>
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="CNIC">CNIC</label>
+                <input class="form-control cnic" id="CNIC" maxlength="12" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="CNIC_EXP">CNIC Expiry Date:</label>
+                <input class="form-control" id="CNIC_EXP" type="date" autocomplete="off">
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="MSTATUS">Marital Status</label>
+                <div id="MSTATUS"></div>
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="INSTITUTE">Institute</label>
+                <input class="form-control" id="INSTITUTE" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="EDUCATION">Education</label>
+                <input class="form-control" id="EDUCATION" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-4">
+                <label class="form-label" for="REMARKS">Comment:</label>
+                <textarea class="form-control" id="REMARKS" rows="1" type="text" autocomplete="off"></textarea>
+            </div>
+            <div class="col-xl-12 text-end">
+                <button class="btn btn-danger btn-delete" style="display:none" id="BtnDelete"><i class="fa fa-trash"></i> Delete</button>
+                <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="gridContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section LinkScriptSection {
+    <script src="~/js/customjs/empr_FamilyMember.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        $(function () {
+            empr_FamilyMember.initEvents();
+        });
+    </script>
+}

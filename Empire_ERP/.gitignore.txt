@@ -1,0 +1,23 @@
+# Ignore node_modules folder
+node_modules/
+
+# Ignore log files
+*.log
+
+# Ignore build directories
+dist/
+build/
+
+# Ignore environment variables
+.env
+
+.vsidx
+.cache
+# Ignore bin and obj folders in all projects
+**/bin/
+**/obj/
+
+Empire_ERP.Infrastructure/obj/**/*AssemblyInfo.cs
+Empire_ERP.Core/obj/**/*AssemblyInfo.cs
+Empire_ERP/obj/**/*AssemblyInfo.cs
+obj/**/*AssemblyInfo.cs

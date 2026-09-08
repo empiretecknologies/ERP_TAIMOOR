@@ -1,0 +1,97 @@
+﻿<div class="card">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-header">
+                @* <button id="BtnQuickSearch" type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl"><i class="fa fa-search"></i> Quick Search</button> *@
+                @* <button id="BtnNew" type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="BtnNew" style="display:none"><i class="fa fa-plus"></i> Add New</button> *@
+            </div>
+            <div class="card-body pt-1 Record">
+                <input id="srbName" hidden />
+                <input id="srbNtn" hidden />
+                <input id="posUser" hidden />
+                <input id="posPass" hidden />
+                <input id="srbId" hidden />
+                <input id="srbStatus" hidden />
+                <input id="srbUrl" hidden />
+                <div class="row theme-form">
+                    <div class="col-xl-3 mb-1">
+                        <label class="form-label" for="FromDate">From Date:</label>
+                        <input class="form-control" id="FromDate" type="date" onkeydown="empr_helper.HandleTabFocusToSelectBox(event, '#SellerCode')" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3 mb-1">
+                        <label class="form-label" for="ToDate">To Date:</label>
+                        <input class="form-control" id="ToDate" type="date" onkeydown="empr_helper.HandleTabFocusToSelectBox(event, '#SellerCode')" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off">
+                    </div>
+
+                    <div class="col-xl-12 text-end">
+                        <button class="btn btn-primary" id="BtnGet"><i class="fa fa-save"></i> Get</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="gridContainer"></div>
+                    </div>
+                    <div class="col-xl-12 text-end mt-2">
+                        <button class="btn" id="BtnClosed" style=" background-color: #790303;color: white;">
+                            <i class="fa fa-save"></i> SendTo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+    
+  
+</div>
+
+<div id="printModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width:auto">
+            <div class="modal-header">
+                <h5 class="modal-title">Print Preview</h5>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto;height: 400px;width:auto;">
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-xl-4" id="ReportDesign">
+                            <label class="form-label" for="ReportType">ReportType:</label>
+                            <div id="ReportType" style="width: 175% !important;height: 31px;font-weight: 400;padding: 5px;"></div>
+                        </div>
+                        <div class="col-xl-2 mt-20" style="padding: 5px;">
+                            <button type="button" class="btn btn-primary mr-5" data-bs-toggle="modal" id="BtnGenerateReport" style="width: 103px;">
+                                <i class="fa fa-file-arrow-down"></i> Get Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div id="slipPreview">
+                    <!-- Partial View Data Will Be Loaded Here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="printButton">Print</button>
+                <button type="button" id="printModalClose" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section LinkScriptSection{
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+    <script type="text/javascript">
+        $(function () {
+            empr_PendingToSRB.InitEvents();
+        });
+    </script>
+    <script src="~/js/customjs/empr_PendingToSRB.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,56 @@
+﻿<input type="hidden" id="costcenter_hidden" />
+<input type="hidden" id="displayExpr_costcenter" />
+<div class="card">
+    <div class="card-header">
+        <button type="button" id="costCenterBtnNew" style="display:none" class="btn btn-primary btn-new waves-effect waves-light float-end"><i class="fa fa-plus"></i> Add New</button>
+    </div>
+    <div class="card-body pt-1 Record">
+        <div class="row">
+            <input id="PTRAN_ID" hidden />
+            <input id="PICK_ID" hidden />
+
+            <div class="col-xl-4">
+                <label class="form-label" for="CC_Code">Code</label>
+                <input class="form-control" readonly id="CC_Code" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-4">
+                <label class="form-label" for="CCASTATUS">Status</label>
+                <div id="CCASTATUS"></div>
+            </div>
+            <div class="col-xl-4">
+                <label class="form-label" for="COST_CENTER_ID">Cost Center</label>
+                <div id="COST_CENTER_ID"></div>
+            </div>
+            <div class="col-xl-9 mb-1">
+                <label class="form-label" for="DESCR">Description</label>
+                <input class="form-control" id="DESCR" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3 vHide">
+                <label class="form-label" for="AMOUNT">Amount:</label>
+                <input class="form-control" id="AMOUNT" type="number" step="0.01" min="0" onkeydown="return !['e', 'E', '+', '-'].includes(event.key)" autocomplete="off">
+            </div>
+
+            <span class="span name-validation"></span>
+            <div class="col-xl-12 text-end">
+                <button class="btn btn-danger btn-delete" style="display:none" id="costCenterBtnDelete"><i class="fa fa-trash"></i> Delete</button>
+                <button class="btn btn-primary btn-save" id="costCenterBtnSave"><i class="fa fa-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="table-responsive">
+            <div id="ccgridContainer"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var CostCenter = @Html.Raw(Json.Serialize(ViewBag.CostCenter));
+    var PickData = @Html.Raw(Json.Serialize(ViewBag.PickData));
+
+
+    $(function () {
+        empr_CostCenter.initEvents();
+    });
+</script>
+<script src="~/js/customjs/empr_CostCenter.js"></script>

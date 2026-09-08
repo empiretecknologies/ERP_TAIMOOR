@@ -1,0 +1,204 @@
+﻿
+<style>
+	.abcc label.col-form-label,
+	.abcc .col-4,
+	.abcc .col-8 {
+		text-align: left !important;
+		display: block !important;
+	}
+
+	.db_box1 {
+		padding-top: 1% !important;
+		padding-right: 7% !important;
+		padding-left: 10% !important;
+		border-right: 1px solid #403e3d !important;
+	}
+
+	.db_box {
+		padding-top: 1% !important;
+		padding-right: 7% !important;
+		padding-left: 10% !important;
+	}
+
+	/* .s_Test_Btn:hover,
+		.d_Test_Btn:hover {
+			background-color: #0b5ed7;
+			border-color: #0a58ca;
+			transform: scale(1.05);
+			transition: all 0.3s ease;
+			color: #fff;
+		} */
+
+	#optionsModal .modal-body {
+		height: 80vh; /* modal ka height fix */
+		display: flex;
+		flex-direction: column;
+	}
+
+	#sourceTreeViewContainer,
+	#destinationTreeViewContainer {
+		height: 70vh; /* fixed height (modal se chhota) */
+		overflow-y: auto; /* scroll aayega */
+		padding: 10px;
+		background: #fff; /* optional: white background */
+	}
+
+	#sourceTreeViewContainer {
+		border-right: 1px solid #b0b0b0 !important;
+	}
+
+</style>
+<div class="card p-3">
+	<div class="row">
+		<!-- Source Database -->
+		<div class="col-md-6 text-start db_box1">
+			<h5><b>Source Database:</b></h5>
+			<div class="abcc">
+				<div class="row mb-2">
+					<label class="col-4 col-form-label">Server Host:</label>
+					<div class="col-8">
+						<input type="text" id="s_Server_Host" class="form-control" value="" />
+					</div>
+				</div>
+
+				<div class="row mb-2">
+					<label class="col-4 col-form-label">Authentication:</label>
+					<div class="col-8">
+						<select id="s_Auth" class="form-select">
+							<option value="SQL">SQL Server Authentication</option>
+							<option value="Windows">Windows Authentication</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="row mb-2">
+					<label class="col-4 col-form-label">Username:</label>
+					<div class="col-8">
+						<input type="text" id="s_user" class="form-control" autocomplete="off" />
+					</div>
+				</div>
+
+				<div class="row mb-2">
+					<label class="col-4 col-form-label">Password:</label>
+					<div class="col-8">
+						<input type="password" id="s_pass" class="form-control" autocomplete="new-password" />
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					<label class="col-4 col-form-label">Database:</label>
+					<div class="col-8">
+						<div id="s_Database"></div>
+					</div>
+				</div>
+			</div>
+			<button class="btn btn-primary d-block ms-auto" id="s_Test_Btn">Test</button>
+		</div>
+
+		<!-- Destination Database -->
+		<div class="col-md-6 text-start db_box">
+			<h5><b>Destination Database:</b></h5>
+			<div class="abcc">
+				<div class="row mb-2">
+					<label class="col-4 col-form-label">Server Host:</label>
+					<div class="col-8">
+						<input type="text" id="d_Server_Host" class="form-control" value="" />
+					</div>
+				</div>
+
+				<div class="row mb-2">
+					<label class="col-4 col-form-label">Authentication:</label>
+					<div class="col-8">
+						<select id="d_Auth" class="form-select">
+							<option value="SQL">SQL Server Authentication</option>
+							<option value="Windows">Windows Authentication</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="row mb-2">
+					<label class="col-4 col-form-label">Username:</label>
+					<div class="col-8">
+						<input type="text" id="d_user" class="form-control" autocomplete="off" />
+					</div>
+				</div>
+
+				<div class="row mb-2">
+					<label class="col-4 col-form-label">Password:</label>
+					<div class="col-8">
+						<input type="password" id="d_pass" class="form-control" autocomplete="new-password" />
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					<label class="col-4 col-form-label">Database:</label>
+					<div class="col-8">
+						<div id="d_Database"></div>
+					</div>
+				</div>
+			</div>
+
+			<button class="btn btn-primary d-block ms-auto" id="d_Test_Btn">Test</button>
+		</div>
+	</div>
+
+	<div class="row">
+	</div>
+
+</div>
+
+<button class="btn btn-primary d-block ms-auto" id="btn_Options">Option</button>
+<button class="btn btn-primary d-block ms-auto pt-5" id="btn_Compare">Compare</button>
+<button class="btn btn-primary d-block ms-auto pt-5" id="btn_GenerateScripts">Generate Scripts</button>
+
+<div class="modal" id="optionsModal" tabindex="-3" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content animatemodal">
+			<div class="modal-header">
+				<h5 class="modal-title" id="paymentModalLabel">Options</h5>
+				<button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="row">
+							<div class="col-md-2">
+								<h5>To: </h5>
+							</div>
+							<div class="col-md-10">
+								<h5 id="toDbName">Not Selected</h5>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="row">
+							<div class="col-md-2">
+								<h5>From:</h5>
+							</div>
+							<div class="col-md-10">
+								<h5 id="fromDbName">Not Selected</h5>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6" id="sourceTreeViewContainer"></div>
+					<div class="col-md-6" id="destinationTreeViewContainer"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+@section LinkScriptSection {
+	<script type="text/javascript">
+		var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+		$(function () {
+			empr_Binaries.InitEvents();
+		});
+	</script>
+	<script src="~/js/customjs/empr_Binaries.js" asp-append-version="true"></script>
+}

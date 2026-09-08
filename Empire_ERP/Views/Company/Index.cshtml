@@ -1,0 +1,75 @@
+﻿<div class="card">
+    <div class="card-header">
+        <button type="button" id="BtnNew" style="display:none" class="btn btn-primary btn-new waves-effect waves-light float-end"><i class="fa fa-plus"></i> Add New</button>
+    </div>
+    <div class="card-body Record">
+        <input type="hidden" id="naturehidden" />
+        <div class="row">
+            <div class="col-xl-2">
+                <label class="form-label" for="Code">Code</label>
+                <input class="form-control" id="Code" readonly type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-6 mb-1">
+                <label class="form-label" for="C_NAME">Name</label>
+                <input class="form-control" id="C_NAME" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="BUS_NATURE">Business Nature</label>
+                <div id="BUS_NATURE"></div>
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="C_TEL">Telephone</label>
+                <input class="form-control" id="C_TEL" autocomplete="off">
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="C_GST">GST #</label>
+                <input class="form-control" id="C_GST" autocomplete="off">
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="C_NTN">NTN #</label>
+                <input class="form-control" id="C_NTN" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1">
+                <label class="form-label" for="Image">Logo:</label>
+                <input type="hidden" id="GROUP_PIC" name="GROUP_PIC" />
+                <input class="form-control" id="Image" type="file" autocomplete="off">
+            </div>
+            <div class="col-xl-2 mb-1">
+                <label class="form-label" for="Image">Watermark:</label>
+                <input type="hidden" id="WATER_PIC" name="WATER_PIC" />
+                <input class="form-control" id="WaterImage" type="file" autocomplete="off">
+            </div>
+            <div class="col-xl-8 mb-1">
+                <label class="form-label" for="C_ADDRESS">Address</label>
+                <input class="form-control" id="C_ADDRESS" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-12 text-end">
+                <button class="btn btn-danger btn-delete" style="display:none" id="BtnDelete"><i class="fa fa-trash"></i> Delete</button>
+                <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="gridContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section LinkScriptSection{
+    <script src="~/js/customjs/empr_Company.js" asp-append-version="true"></script>
+    <script src="~/js/customjs/empr_Cropper.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js" integrity="sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript">
+        var Nature = @Html.Raw(Json.Serialize(ViewBag.Nature));
+        console.log(Nature);
+        $(function () {
+            empr_Company.initEvents();
+        });
+    </script>
+}

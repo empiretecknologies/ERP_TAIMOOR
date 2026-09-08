@@ -1,0 +1,114 @@
+﻿<div class="card">
+    <div class="card-header" style="height:30px;"> 
+        @* <button id="BtnQuickSearch" type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl"><i class="fa fa-search"></i> Quick Search</button> *@
+        <button id="BtnNew" type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="BtnNew" style="display:none; height: 22px;margin-top: -6px;width: 82px;padding: 0px;">
+            <i class="fa fa-plus"></i> Add New
+        </button>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-body pt-1 Record">
+                <div class="row theme-form">
+                    <div class="col-xl-2">
+                        <label class="form-label" for="Code">Code :</label>
+                        <input class="form-control" readonly id="Code" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-4">
+                        <label class="form-label" for="ASTATUS">Status :</label>
+                        <div id="ASTATUS"></div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label" for="Description">Description:</label>
+                        <input class="form-control" id="Description" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="Branches">Branches:</label>
+                        <div id="Branches"></div>
+                    </div>
+                   @*  <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="DesignNo">Design #:</label>
+                        <div id="DesignNo"></div>
+                    </div>
+                    <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="ItemGroup">Item Group:</label>
+                        <div id="ItemGroup"></div>
+                    </div> *@
+                    <div class="col-xl-3 mb-1">
+                        <label class="form-label" for="FromDate">From Date:</label>
+                        <input class="form-control" id="FromDate" type="date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3 mb-1">
+                        <label class="form-label" for="ToDate">To Date:</label>
+                        <input class="form-control" id="ToDate" type="date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3 mb-1">
+                        <label class="form-label" for="DiscountPercent">Discount%:</label>
+                        <input class="form-control" id="DiscountPercent" type="text" autocomplete="off" oninput="empr_helper.DecimalFieldValidation(this)">
+                    </div>
+                    <div class="col-xl-3 mb-1">
+                        <label class="form-label" for="DiscountExpired">Discount Expired:</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" id="DiscountExpired" type="checkbox">
+                        </div>
+                    </div>
+
+                    <div class="col-xl-12 text-end">
+                        <button class="btn btn-danger" id="BtnDelete" style="display:none"><i class="fa fa-trash"></i> Delete</button>
+                        <button class="btn btn-primary" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="gridContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   @*  <div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <div id="gridContainer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div> *@
+</div>
+
+<input type="hidden" id="branches_hidden" />
+<input type="hidden" id="displayExpr_branches" />
+
+@* <input type="hidden" id="design_hidden" />
+<input type="hidden" id="displayExpr_design" />
+
+<input type="hidden" id="group_hidden" />
+<input type="hidden" id="displayExpr_group" /> *@
+
+@section LinkScriptSection{
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        $(function () {
+            empr_POSDiscount.InitEvents();
+        });
+    </script>
+    <script src="~/js/customjs/empr_POSDiscount.js" asp-append-version="true"></script>
+}

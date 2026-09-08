@@ -1,0 +1,190 @@
+﻿<div class="card">
+    <div class="card-header">
+        <button type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal"
+                data-bs-target=".bs-example-modal-xl" id="BtnQuickSearch">
+            <i class="fa fa-search"></i> Quick Search
+        </button>
+        <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="BtnNew">
+            <i class="fa fa-plus"></i> Add New
+        </button>
+    </div>
+    <div class="card-body Record">
+        <div class="row align-items-end">
+            <input id="ID" hidden />
+            <div class="col-xl-3">
+                <label class="form-label" for="Code">Code:</label>
+                <input class="form-control" id="Code" readonly type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3">
+                <label class="form-label" for="V_DATE">Transaction Date:</label>
+                <input class="form-control" id="V_DATE" type="date" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off">
+            </div>
+            <div class="col-xl-3">
+                <label class="form-label" for="ASTATUS">Status:</label>
+                <div id="ASTATUS"></div>
+            </div>
+            <div class="col-xl-3 vHide">
+                <label class="form-label" for="VOUCHER_NO">Transaction #:</label>
+                <input class="form-control" id="VOUCHER_NO" type="text" readonly autocomplete="off">
+            </div>
+
+            <div class="col-xl-3">
+                <label class="form-label" for="FinishItem">Finish Item:</label>
+                <div id="FinishItem"></div>
+            </div>
+
+            <div class="col-xl-3">
+                <label class="form-label" for="BATCH_NAME">Batch Name:</label>
+                <div id="BATCH_NAME"></div>
+            </div>
+
+            <div class="col-xl-3">
+                <label class="form-label" for="BatchQuantity">Batch Quantity:</label>
+                <input class="form-control" id="BatchQuantity" type="text" autocomplete="off" oninput="empr_helper.EnhancedDecimalFieldValidation(this)">
+            </div>
+
+            <div class="col-xl-2">
+                <label class="form-label" for="Process">Process:</label>
+                <div id="Process"></div>
+            </div>
+
+            <div class="col-xl-1 d-flex">
+                <button type="button"
+                        class="btn btn-primary btn-new waves-effect waves-light w-100"
+                        id="BtnUpdate" style="height: 24px;">
+                    <i class="fa fa-save"></i>
+                    Batch Upd
+                </button>
+            </div>
+
+            <div class="col-xl-3">
+                <label class="form-label" for="BatchNo">Batch #:</label>
+                <input class="form-control" id="BatchNo" type="text" autocomplete="off">
+            </div>
+            
+            <div class="col-xl-3">
+                <label class="form-label" for="REF">Reference No:</label>
+                <input class="form-control" id="REF" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3">
+                <label class="form-label" for="CostPercent">Cost%:</label>
+                <input class="form-control" id="CostPercent" type="text" autocomplete="off" oninput="empr_helper.DecimalFieldValidation(this)">
+            </div>
+            
+            @* <div class="col-xl-3">
+                <label class="form-label" for="Process">Unit:</label>
+                <div id="Unit"></div>
+            </div> *@
+            
+            <div class="col-xl-3">
+                <label class="form-label" for="REMARKS">Comment</label>
+                <textarea class="form-control" id="REMARKS" rows="1" type="text" autocomplete="off"></textarea>
+            </div>
+            <div class="col-xl-3">
+                <label class="form-label" for="MFG_DATE">Manufacturing Date:</label>
+                <input class="form-control" id="MFG_DATE" name="MFG_DATE" type="date" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off" />
+            </div>
+            <div class="col-xl-3">
+                <label class="form-label" for="EXP_DATE">Expiry Date:</label>
+                <input class="form-control" id="EXP_DATE" type="date" value="" autocomplete="off">
+            </div>
+            <div class="col-x-12 pt-1 text-end">
+                <button type="button" id="BtnPrint" class="btn btn-success btn-print waves-effect waves-light float-end me-2" style="    margin-right: 5px;">
+                    <i class="fa fa-print"></i> Print
+                </button>
+            </div>
+        </div>
+        <ul class="nav nav-tabs nav-primary" id="pills-warningtab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-warninghome-tab" data-bs-toggle="pill"
+                   href="#pills-warninghome" role="tab" aria-controls="pills-warninghome" aria-selected="true">
+                    Detail
+                    Info
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-warningtabContent">
+            <div class="tab-pane fade show active" id="pills-warninghome" role="tabpanel"
+                 aria-labelledby="pills-warninghome-tab">
+                <div class="table-responsive">
+                    <div id="DetailContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12 text-end pt-5 pb-10 pr-15">
+        <button class="btn btn-danger btn-delete" id="BtnDelete" style="display:none"><i class="fa fa-trash"></i> Delete</button>
+        <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+    </div>
+    <div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <div id="gridContainer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+</div>
+<div class="modal fade bs-example-modal-xl" id="ShowReportModal" style="display:none" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myExtraLargeModalLabel">Print Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-xl-4">
+                            <label class="form-label" for="ReportType">ReportType:</label>
+                            <div id="ReportType"></div>
+                        </div>
+                        <div class="col-xl-2 mt-20">
+                            <button type="button" class="btn btn-primary mr-5" data-bs-toggle="modal" id="BtnGenerateReport">
+                                <i class="fa fa-file-arrow-down"></i> Get Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <div class="card text-left" id="ModalBody"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section LinkScriptSection{
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        var Items = @Html.Raw(Json.Serialize(ViewBag.Items));
+        var Units = @Html.Raw(Json.Serialize(ViewBag.Units));
+        var CompCond = @Html.Raw(Json.Serialize(ViewBag.CompCond));
+        var FinishItems = @Html.Raw(Json.Serialize(ViewBag.FinishItems));
+        var Processes = @Html.Raw(Json.Serialize(ViewBag.Processes));
+        var stkStatus = @Html.Raw(Json.Serialize(ViewBag.stkStatus));
+        var Unit = @Html.Raw(Json.Serialize(ViewBag.Unit));
+        var todayDate = '@DateTime.Now.Date.ToString("yyyy-MM-dd")';
+    </script>
+    <script src="~/js/customjs/empr_BatchIssue.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        $(function () {
+            empr_BatchIssue.InitEvents();
+        });
+    </script>
+}

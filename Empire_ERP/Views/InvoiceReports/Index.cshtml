@@ -1,0 +1,165 @@
+﻿<style>
+    .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused) > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused) > tr > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused):hover > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused):hover > tr > td {
+        background-color: #055a87 !important;
+        color: white;
+    }
+
+    .centered-column .dx-datagrid-text-content {
+        text-align: center !important;
+        padding-top: 10px !important;
+    }
+</style>
+<div class="card">
+    <div class="card-header">
+        <input class="form-control" id="HIDDEN_FROM_DATE" type="hidden" value="@ViewBag.StartDate" autocomplete="off">
+        <input class="form-control" id="HIDDEN_TO_DATE" type="hidden" value="@ViewBag.EndDate" autocomplete="off">
+        <div class="row">
+            <div class="col-xl-3">
+                <label class="form-label" for="FROM_DATE">From Date:</label>
+                <input class="form-control" id="FROM_DATE" type="date"
+                @* value="@ViewBag.StartDate" *@
+                       value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                autocomplete="off">
+            </div>
+            <div class="col-xl-3">
+                <label class="form-label" for="TO_DATE">To Date:</label>
+                <input class="form-control" id="TO_DATE" type="date"
+                       value="@DateTime.Now.ToString("yyyy-MM-dd")" autocomplete="off">
+            </div>
+            <div class="col-xl-6">
+                <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end mt-3" id="BtnGenerate">
+                    <i class="fa fa-print"></i> Generate Report
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body pt-1 Record TabsDiv">
+        <ul class="nav nav-tabs nav-primary" id="Tab" role="tablist">
+            <li class="nav-item"><a class="nav-link active" id="OptionTab" data-bs-toggle="pill" href="#OptionTabContent" role="tab" aria-controls="pills-warninghome" aria-selected="true">REPORT OPTION</a></li>
+            <li class="nav-item"><a class="nav-link" id="ViewTab" data-bs-toggle="pill" href="#ViewTabContent" role="tab" aria-controls="pills-warningprofile" aria-selected="false">REPORT VIEW</a></li>
+        </ul>
+        <div class="tab-content" id="pills-warningtabContent">
+            <div class="tab-pane fade show active" id="OptionTabContent" role="tabpanel" aria-labelledby="pills-warninghome-tab">
+                <div class="row">
+                    <div class="col-xl-6 mt-3">
+                        <label class="breadcrumb-item reportHeading" for="MENU_NAME">@ViewBag.MENU_NAME:</label>
+                        <div id="GridContainer"></div>
+                    </div>
+                    <div class="col-xl-6 mt-100">
+                        <div class="row">
+                            @* <div class="col-xl-4">
+                                <label class="form-label" for="ITEM_ID">Item Id:</label>
+                                <div id="ITEM_ID"></div>
+                            </div> *@
+                            <div class="col-xl-6">
+                                <label class="form-label" for="CONTROL_NAME">Control Name:</label>
+                                <div id="CONTROL_NAME"></div>
+                            </div>
+                            <div class="col-xl-6">
+                                <label class="form-label" for="PARTY_NAME">Party Name:</label>
+                                <div id="PARTY_NAME"></div>
+                            </div>
+                            <div class="col-xl-6">
+                                <label class="form-label" for="ITEM_GROUP">Group:</label>
+                                <div id="ITEM_GROUP"></div>
+                            </div>
+                            <div class="col-xl-6">
+                                <label class="form-label" for="ITEM_MASTER">Product:</label>
+                                <div id="ITEM_MASTER"></div>
+                            </div>
+
+                            <div class="col-xl-12">
+                                <label class="form-label" for="Branch">Branch:</label>
+                                <div id="Branch"></div>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            
+                        </div>
+                        @* <div class="row">
+                            <div class="col-xl-4">
+                                <label class="form-label" for="CATEGORY">Category:</label>
+                                <div id="CATEGORY"></div>
+                            </div>
+                            <div class="col-xl-4">
+                                <label class="form-label" for="SUBCATEGORY">Sub Category:</label>
+                                <div id="SUBCATEGORY"></div>
+                            </div>
+                            <div class="col-xl-4">
+                                <label class="form-label" for="BARCODE">Barcode:</label>
+                                <div id="BARCODE"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-4">
+                                <label class="form-label" for="COLOR">Color:</label>
+                                <div id="COLOR"></div>
+                            </div>
+                            <div class="col-xl-4">
+                                <label class="form-label" for="SIZE">Size:</label>
+                                <div id="SIZE"></div>
+                            </div>
+                            <div class="col-xl-4">
+                                <label class="form-label" for="CMOB">Contact:</label>
+                                <input class="form-control" id="CMOB" type="text" placeholder="Contact No" style="width: 120px;" autocomplete="off">
+                            </div>
+                        </div> *@
+
+
+
+                        @* <div class="row">
+                            <div class="col-xl-4">
+                                <label class="form-label" for="SCONTROL_NAME">Control Name:</label>
+                                <div id="SCONTROL_NAME"></div>
+                            </div>
+                            <div class="col-xl-4">
+                                <label class="form-label" for="SALESMAN_NAME">Salesman Name:</label>
+                                <div id="SALESMAN_NAME"></div>
+                            </div>
+                        </div>
+
+                        
+
+
+                        <div class="row">
+                            
+                            <div class="col-xl-12">
+                                <label class="form-label" for="LOT">Warehouse:</label>
+                                <div id="LOT"></div>
+                            </div>
+                        </div> *@
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade Detail" id="ViewTabContent" role="tabpanel" aria-labelledby="pills-warningprofile-tab">
+                <div class="row mt-3 ml-5">
+                    <ul class="nav nav-tabs nav-primary" id="Tab" role="tablist">
+                        <li class="nav-item"><a class="nav-link active reportTab" id="REPORT_NAME" data-bs-toggle="pill" href="#ViewReport" role="tab" aria-controls="pills-warninghome" aria-selected="true">REPORT</a></li>
+                    </ul>
+                    <div class="tab-content" id="pills-warningtabContent">
+                        <div class="tab-pane mt-3 fade show active" id="ViewReport" role="tabpanel" aria-labelledby="pills-warninghome-tab">
+                            <div id="ReportGridContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section LinkScriptSection {
+    <script src="~/js/customjs/empr_InvoiceReports.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        empr_helper.companyName = @Html.Raw(Json.Serialize(ViewBag.CompanyName));
+        var Branch = @Html.Raw(Json.Serialize(ViewBag.BranchText));
+
+
+        
+
+        $(function () {
+            $("#CMOB").mask("9999-9999999");
+            empr_InvoiceReports.InitEvents();
+        });
+    </script>
+}

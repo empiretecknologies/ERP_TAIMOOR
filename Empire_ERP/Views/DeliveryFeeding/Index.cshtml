@@ -1,0 +1,435 @@
+﻿@{
+    var startDate = (Convert.ToDateTime(ViewBag.StartDate)).ToString("yyyy-MM-dd");
+    var endDate = (Convert.ToDateTime(ViewBag.EndDate)).ToString("yyyy-MM-dd");
+}
+<style>
+    .number-input {
+        position: relative;
+        display: inline-block;
+    }
+
+        .number-input input {
+            width: 100%;
+            text-align: center;
+        }
+
+        .number-input button {
+            position: absolute;
+            top: 75%;
+            transform: translateY(-50%);
+            border: none;
+            border-radius: 2px;
+            background: #ddd;
+            width: 25px;
+            height: 17px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .number-input .minus {
+            left: 6px;
+        }
+
+        .number-input .plus {
+            right: 6px;
+        }
+
+        .number-input button.plus.active {
+            background: #055a87;
+            color: white;
+        }
+
+        .number-input button.minus.active {
+            background: #D22B2B;
+            color: white;
+        }
+</style>
+<div class="card">
+    <div class="card-header">
+        <button type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal"
+                data-bs-target=".bs-example-modal-xl" id="BtnQuickSearch">
+            <i class="fa fa-search"></i> Quick Search
+        </button>
+        <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="BtnNew">
+            <i class="fa fa-plus"></i> Add New
+        </button>
+    </div>
+    <div class="card-body Record">
+        <div class="row">
+            <div class="col-xl-9">
+                <div class="row">
+                    <input id="ID" hidden />
+                    <div class="col-xl-3">
+                        <label class="form-label" for="Code">Code:</label>
+                        <input class="form-control" id="Code" readonly type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="ASTATUS">Status:</label>
+                        <div id="ASTATUS"></div>
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="SDATE">Soda Date:</label>
+                        <input class="form-control" id="SDATE" type="date" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off" onkeydown="empr_helper.HandleTabFocus(event, '#V_DATE')">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="V_DATE">Transaction Date:</label>
+                        <input class="form-control" id="V_DATE" onchange="empr_helper.validateVDate()" type="date" onkeydown="empr_helper.HandleTabFocusToSelectBox(event, '#SellerCode')" max="@endDate" min="@startDate" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off">
+                        @* <input class="form-control" id="V_DATE" onblur="validateDateRange(this)" onchange="empr_helper.validateDate()" type="date" max="@((Convert.ToDateTime(ViewBag.EndDate)).ToString("yyyy-MM-dd"))" min="@((Convert.ToDateTime(ViewBag.StartDate)).ToString("yyyy-MM-dd"))" onkeydown="empr_helper.HandleTabFocusToSelectBox(event, '#SellerCode')" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off"> *@
+                    </div>
+                    <div class="col-xl-3 vHide">
+                        <label class="form-label" for="VOUCHER_NO">Transaction #:</label>
+                        <input class="form-control" id="VOUCHER_NO" type="text" readonly autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="REF">Reference No:</label>
+                        <input class="form-control" id="REF" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="SellerCode">Seller Code:</label>
+                        <div id="SellerCode"></div>
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="BuyerCode">Buyer Code:</label>
+                        <div id="BuyerCode"></div>
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="BrokerCode">Broker Code:</label>
+                        <div id="BrokerCode"></div>
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="D_NAME">Driver Name:</label>
+                        <input class="form-control" id="D_NAME" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="D_NUM">Driver No:</label>
+                        <input class="form-control" id="D_NUM" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="Condition">Condition:</label>
+                        <div id="Condition"></div>
+                    </div>
+                    <div class="col-xl-1 ConditionDiv" style="display:none">
+                        <label class="form-label" for="CreditDays">Cr. Days:</label>
+                        <input class="form-control" id="CreditDays" type="number" min="0" max="3" autocomplete="off" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3); empr_DeliveryFeeding.AutoCalculateDueDate(this)">
+                    </div>
+                    <div class="col-xl-2 ConditionDiv" style="display:none">
+                        <label class="form-label" for="DueDate">Due Date:</label>
+                        <input class="form-control" id="DueDate" type="date" autocomplete="off" onkeydown="empr_helper.HandleTabFocus(event, '#REMARKS')" oninput="empr_DeliveryFeeding.AutoCalculateDays(this)">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="Type">Type:</label>
+                        <div id="SBF_TYPE" onkeydown="empr_SodaBookFeeding.MoveFocusToGridShiftTab(event, '#DetailContainer', 0, 'iteM_CODE')"></div>
+                    </div>
+                    <div class="col-xl-9">
+                        <label class="form-label" for="REMARKS">Comment:</label>
+                        <textarea class="form-control" id="REMARKS" rows="1" type="text" autocomplete="off" onkeydown="empr_helper.MoveFocusToGrid(event, '#deliveryFeedingDetailContainer', 0, 'iteM_CODE')"></textarea>
+                    </div>
+
+                    <div class="col-xl-3 ImpExp IndHide">
+                        <label class="form-label" for="CurrCode">Currency:</label>
+                        <div id="CURR_CODE"></div>
+                    </div>
+                    <div class="col-xl-3 ImpExp IndHide">
+                        <label class="form-label" for="REF">Rate:</label>
+                        <input class="form-control" id="CRATE" type="number" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3 ImpExp shipDate">
+                        <label class="form-label" for="SHIP_DATE">Shipment Date: <input id="SHIP_STATUS" type="checkbox" checked="true" /></label>
+                        <input class="form-control" id="SHIP_DATE" type="month" value="@DateTime.Now.ToString("yyyy-MM")" autocomplete="off">
+                        @* <input class="form-control" id="SHIP_DATE" type="date" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off"> *@
+                    </div>
+                    <div class="col-xl-3 ImpExp">
+                        <label class="form-label" for="UNIT">Packing:</label>
+                        <div id="UNIT"></div>
+                    </div>
+                    <div class="col-xl-3 ImpExp">
+                        <label class="form-label" for="SODA_TYPE">Soda Type:</label>
+                        <div id="SODA_TYPE" onkeydown="empr_helper.MoveFocusToGridShiftTab(event, '#DetailContainer', 0, 'iteM_CODE')"></div>
+                    </div>
+                    <div class="col-xl-3 coBroker">
+                        <label class="form-label " for="BrokerCode">Co Broker Code:</label>
+                        <div id="coBrokerCode"></div>
+                    </div>
+
+                    <div class="col-x-12 pt-1 text-end">
+                        <button type="button" class="btn btn-primary btn-save mr-5" data-bs-toggle="modal" id="BtnSodaPick">
+                            <i class="fa fa-search"></i> Pick Data
+                        </button>
+                        <button type="button" class="btn btn-success btn-print waves-effect waves-light float-end" id="BtnPrint">
+                            <i class="fa fa-print"></i> Print
+                        </button>
+                    </div>
+                </div>
+                <ul class="nav nav-tabs nav-primary" id="pills-warningtab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pills-warninghome-tab" data-bs-toggle="pill"
+                           href="#pills-warninghome" role="tab" aria-controls="pills-warninghome" aria-selected="true">
+                            Detail
+                            Info
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-warningtabContent">
+                    <div class="tab-pane fade show active" id="pills-warninghome" role="tabpanel"
+                         aria-labelledby="pills-warninghome-tab">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <div id="deliveryFeedingDetailContainer"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h5 class="pt-3">Amount</h5>
+                <div class="row">
+                    <div class="col-xl-5 px-1 py-0">
+                        <input class="form-control" id="Sel_AMT" type="text" autocomplete="off" readonly>
+                    </div>
+                </div>
+                <h5 class="pt-3">Seller</h5>
+                <div class="row sellerCalculations">
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="BrSeller">Brk Amt:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignSeller('-', 'BrSeller')">−</button>
+                        <input class="form-control" id="BrSeller" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignSeller('+', 'BrSeller')">+</button>
+                        <input type="hidden" id="BrSellerSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="WtSeller">Wt Amt:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignSeller('-', 'WtSeller')">−</button>
+                        <input class="form-control" id="WtSeller" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignSeller('+', 'WtSeller')">+</button>
+                        <input type="hidden" id="WtSellerSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="SBardana">Bardana:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignSeller('-', 'SBardana')">−</button>
+                        <input class="form-control" id="SBardana" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignSeller('+', 'SBardana')">+</button>
+                        <input type="hidden" id="SBardanaSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="SGOD_CHARGES">Godown Charges:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignSeller('-', 'SGOD_CHARGES')">−</button>
+                        <input class="form-control" id="SGOD_CHARGES" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignSeller('+', 'SGOD_CHARGES')">+</button>
+                        <input type="hidden" id="SGOD_CHARGESSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="SLABOUR">Labour:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignSeller('-', 'SLABOUR')">−</button>
+                        <input class="form-control" id="SLABOUR" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignSeller('+', 'SLABOUR')">+</button>
+                        <input type="hidden" id="SLABOURSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="SFRIEGHT">Frieght:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignSeller('-', 'SFRIEGHT')">−</button>
+                        <input class="form-control" id="SFRIEGHT" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignSeller('+', 'SFRIEGHT')">+</button>
+                        <input type="hidden" id="SFRIEGHTSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="SFUMIGATION">Fumigation:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignSeller('-', 'SFUMIGATION')">−</button>
+                        <input class="form-control" id="SFUMIGATION" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignSeller('+', 'SFUMIGATION')">+</button>
+                        <input type="hidden" id="SFUMIGATIONSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0">
+                        <label class="form-label" for="SelNetAMT">Net Amt:</label>
+                        <input class="form-control" id="SelNetAMT" type="text" autocomplete="off" readonly>
+                    </div>
+                </div>
+                <h5 class="pt-3">Buyer</h5>
+                <div class="row buyerCalculations">
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="BrBuyer">Brk Amt:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignBuyer('-', 'BrBuyer')">−</button>
+                        <input class="form-control" id="BrBuyer" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignBuyer('+', 'BrBuyer')">+</button>
+                        <input type="hidden" id="BrBuyerSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="WtBuyer">Wt Amt:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignBuyer('-', 'WtBuyer')">−</button>
+                        <input class="form-control" id="WtBuyer" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignBuyer('+', 'WtBuyer')">+</button>
+                        <input type="hidden" id="WtBuyerSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="Bardana">Bardana:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignBuyer('-', 'Bardana')">−</button>
+                        <input class="form-control" id="Bardana" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignBuyer('+', 'Bardana')">+</button>
+                        <input type="hidden" id="BardanaSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="BGOD_CHARGES">Godown Charges:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignBuyer('-', 'BGOD_CHARGES')">−</button>
+                        <input class="form-control" id="BGOD_CHARGES" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignBuyer('+', 'BGOD_CHARGES')">+</button>
+                        <input type="hidden" id="BGOD_CHARGESSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="BLABOUR">Labour:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignBuyer('-', 'BLABOUR')">−</button>
+                        <input class="form-control" id="BLABOUR" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignBuyer('+', 'BLABOUR')">+</button>
+                        <input type="hidden" id="BLABOURSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="BFRIEGHT">Frieght:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignBuyer('-', 'BFRIEGHT')">−</button>
+                        <input class="form-control" id="BFRIEGHT" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignBuyer('+', 'BFRIEGHT')">+</button>
+                        <input type="hidden" id="BFRIEGHTSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0 number-input">
+                        <label class="form-label" for="BFUMIGATION">Fumigation:</label>
+                        <button class="minus" onclick="empr_DeliveryFeeding.toggleSignBuyer('-', 'BFUMIGATION')">−</button>
+                        <input class="form-control" id="BFUMIGATION" type="text" autocomplete="off">
+                        <button class="plus active" onclick="empr_DeliveryFeeding.toggleSignBuyer('+', 'BFUMIGATION')">+</button>
+                        <input type="hidden" id="BFUMIGATIONSign" value="+" />
+                    </div>
+                    <div class="col-xl-5 px-1 py-0">
+                        <label class="form-label" for="BuyNetAMT">Net Amt:</label>
+                        <input class="form-control" id="BuyNetAMT" type="text" autocomplete="off" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12 text-end pt-5 pb-10 pr-15">
+        <button class="btn btn-danger btn-delete" id="BtnDelete" style="display:none"><i class="fa fa-trash"></i> Delete</button>
+        <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+    </div>
+    <div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <div id="gridContainer"></div>
+                                    @*<ul class="pagination pagination-sm justify-content-end" id="customPagination">
+                                        <li class="page-item"><a class="page-link" href="#"><span aria-hidden="true">&laquo;</span></a></li>
+                                        <li class="page-item active" onclick="empr_DeliveryFeeding.GetDeliveryFeedings(0,10)"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item" onclick="empr_DeliveryFeeding.GetDeliveryFeedings(10,10)"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item" onclick="empr_DeliveryFeeding.GetDeliveryFeedings(20,10)"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item"><a class="page-link" href="#"><span aria-hidden="true">&raquo;</span></a></li>
+                                    </ul>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="SodaPickModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Pick Soda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="card text-left">
+                            <div class="card-body customHighlightForModifiedCells">
+                                <div class="table-responsive">
+                                    <div id="SodaPickGridContainer"></div>
+                                </div>
+                                <div class="pt-3 text-end">
+                                    <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="BtnAddSodaToDelivery">
+                                        <i class="fa fa-plus"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal fade bs-example-modal-xl" id="ShowReportModal" style="display:none" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Print Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-xl-4">
+                                <label class="form-label" for="ReportType">ReportType:</label>
+                                <div id="ReportType"></div>
+                            </div>
+                            <div class="col-xl-2 mt-20">
+                                <button type="button" class="btn btn-primary mr-5" data-bs-toggle="modal" id="BtnGenerateReport">
+                                    <i class="fa fa-file-arrow-down"></i> Get Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <div class="card text-left" id="ModalBody"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section LinkScriptSection {
+    <script type="text/javascript">
+        var startDate = @startDate;
+        var endDate = @endDate;
+        var Items = @Html.Raw(Json.Serialize(ViewBag.Items));
+        var Warehouse = @Html.Raw(Json.Serialize(ViewBag.Warehouse));
+        var Units = @Html.Raw(Json.Serialize(ViewBag.Units));
+        var Branch_RT_TYPE = @Html.Raw(Json.Serialize(ViewBag.Branch_RT_TYPE));
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        var Limit = @Html.Raw(Json.Serialize(ViewBag.Limit));
+        var todayDate = '@DateTime.Now.Date.ToString("yyyy-MM-dd")';
+        var dataClear = @Html.Raw(Json.Serialize(ViewBag.DATA_CLEAR));
+        var pickData = @Html.Raw(Json.Serialize(ViewBag.PICK_DATA));
+    </script>
+    <script src="~/js/customjs/empr_DeliveryFeeding.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        function validateDateRange(input) {
+            let minDate = new Date(input.min);
+            let maxDate = new Date(input.max);
+            let selectedDate = new Date(input.value);
+
+            if (selectedDate < minDate) {
+                input.value = input.min;
+            }
+
+            if (selectedDate > maxDate) {
+                input.value = input.max;
+            }
+        }
+        $(function () {
+            empr_DeliveryFeeding.Branch_RT_TYPE = Branch_RT_TYPE;
+            empr_DeliveryFeeding.InitEvents();
+            empr_helper.EnableShortCutKeys('#BtnSave', '#BtnNew', '#BtnDelete', '#BtnQuickSearch', '#Code', '#deliveryFeedingDetailContainer', 0, 'iteM_CODE', '#SodaPickModal', '#BtnSodaPick', '#SodaPickGridContainer', 0, 'v_DATE', '#BtnAddSodaToDelivery');
+        });
+    </script>
+}

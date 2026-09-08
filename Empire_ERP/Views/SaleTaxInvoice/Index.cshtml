@@ -1,0 +1,255 @@
+﻿<style>
+	#SodaPickGridContainer .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused) > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused) > tr > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused):hover > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused):hover > tr > td {
+		background-color: #055a87 !important;
+		color: white;
+	}
+
+	.image-box {
+		width: 180px; /* jitna chaho width fix kar lo */
+		height: 172px; /* jitna chaho height fix kar lo */
+		margin: 0 auto; /* center me karne ke liye */
+		border: 1px solid #ddd;
+		border-radius: 6px;
+		overflow: hidden;
+		background: #055a87;
+	}
+
+		.image-box img {
+			width: 90%;
+			height: 90%;
+			object-fit: cover;
+			margin-top: 5%;
+		}
+
+	.verified-label {
+		color: #28a745;
+		font-size: 20px;
+		font-weight: bold;
+		padding: 4px 5px 4px 5px;
+		/* border: 2px solid #28a745;
+		border-radius: 6px; */
+		display: inline-block;
+		margin-right: 4%;
+		/* font-family: "Times New Roman", Times, serif; */
+	}
+
+	#BtnPrint {
+		margin-right: 1.8%;
+	}
+
+</style>
+<div class="card">
+	<div class="card-header">
+		<button type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl" id="BtnQuickSearch">
+			<i class="fa fa-search"></i> Quick Search
+		</button>
+		<button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="BtnNew">
+			<i class="fa fa-plus"></i> Add New
+		</button>
+	</div>
+	<div class="card-body Record">
+		<div class="row">
+			@* <input id="ID" hidden /> *@
+			@* <input id="ACT_CODE" hidden />
+            <input id="SACODE" hidden /> *@
+			<input id="partyhidden" hidden />
+			<input id="acthidden" hidden />
+			@* <input id="salesmanhidden" hidden /> *@
+			<input id="itemIdHidden" hidden />
+
+			<div class="col-xl-10">
+				<div class="row">
+					<div class="col-xl-4">
+						<div class="row">
+							<div class="col-xl-6">
+								<label class="form-label" for="Code">Code:</label>
+								<input class="form-control" id="Code" readonly type="text" autocomplete="off">
+							</div>
+							<div class="col-xl-6">
+								<label class="form-label" for="ASTATUS">Status :</label>
+								<div id="ASTATUS"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xl-4">
+						<div class="row">
+							<div class="col-xl-6">
+								<label class="form-label" for="BTYPE">Type:</label>
+								<div id="BTYPE"></div>
+							</div>
+							<div class="col-xl-6">
+								<label class="form-label" for="V_DATE">Date :</label>
+								<input class="form-control" id="V_DATE" type="date" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xl-4">
+						<label class="form-label" for="VOUCHER_NO">Transaction # :</label>
+						<input class="form-control" id="VOUCHER_NO" type="text" readonly autocomplete="off">
+					</div>
+
+
+				</div>
+
+				<div class="row">
+					<div class="col-xl-4">
+						<label class="form-label" for="REF">Reference No:</label>
+						<input class="form-control" id="REF" type="text" autocomplete="off">
+					</div>
+
+					<div class="col-xl-4">
+						<label class="form-label" for="PARTY_CODE">Party Name:</label>
+						<div id="PARTY_CODE"></div>
+					</div>
+
+					<div class="col-xl-4">
+						<label class="form-label" for="DOC">Doc :</label>
+						<input type="hidden" value="" id="hdnDOC" />
+
+						<div class="input-group my-doc-input-group">
+							<input type="file" name="DOC" id="DOC" class="d-none" onchange=" empr_SaleTaxInvoice.UploadDoc()" accept=".pdf, .doc, .docx, .xls, .xlsx, image/*" />
+
+							<input type="text" id="DOCName" class="form-control my-doc-text" placeholder="No File" readonly />
+
+							<button type="button" class="btn my-doc-browse" onclick="$('#DOC').click()">Browse</button>
+							<a href="javascript:;" class="my-doc-eye" id="openDoc" onclick=" empr_SaleTaxInvoice.OpenDoc()"><i class="fa fa-eye my-eye-btn"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xl-12">
+						<label class="form-label" for="REMARKS">Comment :</label>
+						<textarea class="form-control" id="REMARKS" rows="1" type="text" autocomplete="off"></textarea>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xl-12">
+						<label class="form-label" for="FBR_RES">FBR Responce:</label>
+						<input class="form-control" id="FBR_RES" type="text" readonly autocomplete="off">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xl-2">
+				<div class="">
+					<div class="text-center p-2">
+						<div class="image-box">
+							@* <img id="empProfileImgFinal" src="~/Client/Company/default.jpg" /> *@
+							<img id="qrImg" src="~/Client/Company/notPostedYet.jpg" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="col-x-12 pt-1 text-end">
+				<button type="button" class="btn btn-primary mr-5" id="BtnfBRpOST">Post To FBR</button>
+				<button type="button" id="BtnPrint" class="btn btn-success btn-print waves-effect waves-light">
+					<i class="fa fa-print"></i> Print
+				</button>
+				<span id="verifiedText" class="verified-label" style="display:none;">✔ Verified</span>
+
+			</div>
+		</div>
+		<ul class="nav nav-tabs nav-primary" id="pills-warningtab" role="tablist">
+			<li class="nav-item detailInfo">
+				<a class="nav-link active" id="pills-warninghome-tab" data-bs-toggle="pill"
+				   href="#pills-warninghome" role="tab" aria-controls="pills-warninghome" aria-selected="true">
+					Detail Info
+				</a>
+			</li>
+		</ul>
+
+		<div class="tab-content" id="pills-warningtabContent">
+			<div class="tab-pane fade show active" id="pills-warninghome" role="tabpanel"
+				 aria-labelledby="pills-warninghome-tab">
+				<div class="table-responsive">
+					<div id="DetailContainer"></div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+	<div class="col-xl-12 text-end pt-5 pb-5 pr-10">
+		<button class="btn btn-danger btn-delete" id="BtnDelete" style="display:none"><i class="fa fa-trash"></i> Delete</button>
+		<button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+	</div>
+	<div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12">
+						<div class="card text-left">
+							<div class="card-body">
+								<div class="table-responsive">
+									<div id="gridContainer"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+
+	<div class="modal fade bs-example-modal-xl" id="ShowReportModal" style="display:none" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="myExtraLargeModalLabel">Print Report</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-10">
+						<div class="row">
+							<div class="col-xl-4">
+								<label class="form-label" for="ReportType">ReportType:</label>
+								<div id="ReportType"></div>
+							</div>
+							<div class="col-xl-2 mt-20">
+								<button type="button" class="btn btn-primary mr-5" data-bs-toggle="modal" id="BtnGenerateReport">
+									<i class="fa fa-file-arrow-down"></i> Get Report
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 mt-3">
+						<div class="card text-left" id="ModalBody"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section LinkScriptSection {
+	<script type="text/javascript">
+		var PartyType = @Html.Raw(Json.Serialize(ViewBag.PartyType));
+		var Items = @Html.Raw(Json.Serialize(ViewBag.Items));
+		var fbrType = @Html.Raw(Json.Serialize(ViewBag.fbrType));
+		var Units = @Html.Raw(Json.Serialize(ViewBag.Units));
+		// var Type = @Html.Raw(Json.Serialize(ViewBag.Type));
+		// var typeForm = @Html.Raw(Json.Serialize(ViewBag.FormType));
+		var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+		var Limit = @Html.Raw(Json.Serialize(ViewBag.Limit));
+		var todayDate = '@DateTime.Now.Date.ToString("yyyy-MM-dd")';
+		var dataClear = @Html.Raw(Json.Serialize(ViewBag.DATA_CLEAR));
+	</script>
+	<script src="~/js/customjs/empr_SaleTaxInvoice.js" asp-append-version="true"></script>
+	<script type="text/javascript">
+		$(function () {
+			empr_SaleTaxInvoice.InitEvents();
+		});
+	</script>
+}

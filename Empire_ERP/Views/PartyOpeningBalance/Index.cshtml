@@ -1,0 +1,132 @@
+﻿<div class="card">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="gridContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-xl" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myExtraLargeModalLabel">Party Name : </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="card text-left">
+                        <div class="card-body Record pt-2">
+                            <div class="row">
+                                <input id="PARTY_CODE" hidden />
+                                <input id="ACT_CODE" hidden />
+                                <input id="SALES_CODE" hidden />
+                                <input id="SALESACT_CODE" hidden />
+                                <input id="PARTYTYPE_CODE" hidden />
+                                <input id="DEFAULT_DC_TYPE" hidden />
+                                <div class="col-xl-3">
+                                    <label class="form-label" for="Code">Code</label>
+                                    <input class="form-control" id="Code" readonly type="text" autocomplete="off">
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label" for="BTYPE">Type</label>
+                                    <input class="form-control" id="BTYPE" readonly type="text" autocomplete="off">
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label" for="ASTATUS">Status</label>
+                                    <div id="ASTATUS"></div>
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label" for="BILL_NO">Bill No</label>
+                                    <input class="form-control" id="BILL_NO" type="text" autocomplete="off">
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label" for="BILL_DATE">Bill Date</label>
+                                    <input class="form-control" id="BILL_DATE" value="@ViewBag.StartDate" type="date" autocomplete="off">
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label" for="DC_TYPE">Debit/Credit</label>
+                                    <div id="DC_TYPE"></div>
+                                </div>
+                                @* <div class="col-xl-3">
+                                    <label class="form-label" for="AMOUNT">Amount</label>
+                                    <input class="form-control" id="AMOUNT" type="number" autocomplete="off" oninput="empr_helper.EnhancedDecimalFieldValidation(this)">
+                                </div> *@
+
+                                <div class="col-xl-3 vHide">
+                                    <label class="form-label" for="AMOUNT">Amount</label>
+                                    <input class="form-control" id="AMOUNT" type="number" step="0.01" min="0" onkeydown="return !['e', 'E', '+', '-'].includes(event.key)" autocomplete="off">
+                                </div>
+
+                                <div class="col-xl-3">
+                                    <label class="form-label" for="STAX_AMT">Sales Tax Amount</label>
+                                    <input class="form-control" id="STAX_AMT" type="number" autocomplete="off" oninput="empr_helper.EnhancedDecimalFieldValidation(this)">
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label" for="TAMT">Net Amount</label>
+                                    <input class="form-control" readonly id="TAMT" type="number" autocomplete="off" oninput="empr_helper.EnhancedDecimalFieldValidation(this)">
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label" for="COMM_AMT">Commission Amount</label>
+                                    <input class="form-control" id="COMM_AMT" type="number" autocomplete="off" oninput="empr_helper.EnhancedDecimalFieldValidation(this)">
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label" for="TERMS">Payment Terms</label>
+                                    <input class="form-control" id="TERMS" type="text" autocomplete="off" oninput="empr_helper.OnlyNumber(this)">
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label" for="CRATE">Rate</label>
+                                    <input class="form-control" id="CRATE" type="text" autocomplete="off" oninput="empr_helper.EnhancedDecimalFieldValidation(this)">
+                                </div>
+                                <div class="col-xl-6">
+                                    <label class="form-label" for="CURR_CODE">Currency</label>
+                                    <div id="CURR_CODE"></div>
+                                </div>
+                                <div class="col-xl-6 mb-1">
+                                    <label class="form-label" for="DDESC">Description</label>
+                                    <input class="form-control" id="DDESC" type="text" autocomplete="off">
+                                </div>
+                                <div class="col-xl-12 text-end">
+                                    <button class="btn btn-danger btn-dlt" id="BtnDelete"><i class="fa fa-trash"></i> | Delete</button>
+                                    <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> | Save</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer pt-0">
+                            <div class="col-md-12 pt-0">
+                                <div class="card text-left">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <div id="detailContainer"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="currency_hidden" />
+<input type="hidden" id="displayExpr_currency" />
+<input type="hidden" id="IsEdit" value="false" />
+
+@section LinkScriptSection{
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        var periodStartDate = @Html.Raw(Json.Serialize(ViewBag.StartDate));
+        console.log(periodStartDate)
+        $(function () {
+            empr_PartyOpening.InitEvents();
+        });
+    </script>
+    <script src="~/js/customjs/empr_PartyOpening.js" asp-append-version="true"></script>
+}

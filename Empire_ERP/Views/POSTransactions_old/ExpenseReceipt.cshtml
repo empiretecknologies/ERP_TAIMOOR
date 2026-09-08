@@ -1,0 +1,61 @@
+﻿@model Empire_ERP.Core.Entities.SlipViewModel
+
+<div style="max-width:72mm;font-size:0.8rem !important; font-weight: 400; font-family: 'Poppins', sans-serif;">
+
+    <div style="text-align: center;">
+        <img src="~/Client/Company/@Model.Clogo" alt="Company Logo" style="width: 150px;"><br />
+        <b>@Model.BName</b><br />
+        <b>@Model.BAddress</b><br />
+        <b>@Model.BPhone</b>
+    </div>
+
+    <div style="width: auto; background-color: black !important;color: white; text-align: center;">
+        <span style="font-weight: bold; font-size: 15px;">DAILY EXPENSE REPORT</span>
+    </div>
+
+    <br />
+
+    <div>
+
+        <table style="font-size:0.8rem !important; font-weight: 400;border-collapse: collapse;">
+            <thead style="background-color: white !important; color :black !important;">
+                <tr>
+                    <th style="text-align: center;border :0.5px dotted !important;">Description</th>
+                    <th style="text-align: center;border :0.5px dotted !important;">Amount</th>
+                </tr>
+            </thead>
+            <tbody id="body">
+                @if (Model.Expense != null)
+                {
+                    @foreach (var item in Model.Expense)
+                    {
+                        <tr>
+                            <td style="text-align: center;">@item.Description</td>
+                            <td style="text-align: center;">@(item.Amount?.ToString("N0") ?? "0")</td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+    <hr style="border: 0.5px solid black;">
+    <br />
+    <div style="width: auto; background-color: white; color:black;">
+        <span style="float: left; font-weight: bold;">TOTAL EXPENSE </span> <span style="float: right;"><b>@(Model.TotalAmount?.ToString("N0") ?? "0")</b></span><br />
+    </div>
+
+    <hr style="border: 0.5px solid black;">
+    <div style="text-align: center;font-size:0.9rem !important; font-weight: 400;">
+        <p>
+            Software Designed By: @Model.FName <br />
+            @Model.FTEL <br />
+            @Model.FWebsite
+        </p>
+    </div>
+
+</div>
+
+
+

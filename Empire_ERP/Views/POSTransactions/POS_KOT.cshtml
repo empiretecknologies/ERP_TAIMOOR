@@ -1,0 +1,112 @@
+﻿@model Empire_ERP.Core.Entities.SlipViewModel
+<style>
+    .ls {
+        letter-spacing: 0.7px !important;
+    }
+
+    .ls-wide {
+        letter-spacing: 1.5px !important;
+    }
+</style>
+
+<div style="max-width:72mm;font-size:15px !important;font-weight:300;font-family: 'Tw Cen MT', 'Arial Narrow', sans-serif;letter-spacing:0.5px !important;">
+
+    <div style="text-align: center;">
+        <img src="~/Client/Company/@Model.Clogo" alt="Company Logo" style="width: 150px;"><br /><br />
+        @* @Model.BName<br />
+        @Model.BAddress<br />
+        @Model.BPhone *@
+    </div>
+    @if (Model.QRCode == 1)
+    {
+        <div style="display: flex; justify-content: center; width: 100%;">
+            <img class="qr-code" src="POSTransactions/GenerateQRCode?invoiceNumber=@Model.ReferenceNumber" alt="QR Code" style="width: 100px;" />
+        </div>
+    }
+
+    <div style="font-size:15px !important; display: flex; flex-direction: column; width: 100%;letter-spacing:0.5px">
+        <div style="display: flex;width: 100%;">
+            <span style="font-weight: 500;">REF #: </span> &nbsp;&nbsp;&nbsp;<span>@Model.ReferenceNumber</span>
+        </div>
+
+        <div style="display: flex; width: 100%;">
+            <span style="font-weight: 500;">DATE: </span> &nbsp;&nbsp;&nbsp;<span>@Model.Date @Model.Time</span>
+        </div>
+        @if (Model.Waitername != "" && Model.Waitername != null)
+        {
+            <div style="display: flex; width: auto;">
+                <span style="font-weight:500;">Waiter: </span>&nbsp;&nbsp;&nbsp; <span>@Model.Waitername</span>
+            </div>
+        }
+        @if (Model.TableNum != "" && Model.TableNum != null)
+        {
+            <div style="display: flex; width: auto;">
+                <span style="font-weight:500;">Table: </span>&nbsp;&nbsp;&nbsp; <span>@Model.TableNum</span>
+            </div>
+        }
+
+    </div>
+    <br />
+    <div style="width: auto;color: black; text-align: center;padding:2px;border:1px solid black;">
+        <span style="font-weight: 600; font-size: 20px;letter-spacing:0.9px !important;">KOT RECEIPT</span>
+    </div>
+
+    <br />
+
+    <div>
+
+        <table style="border-collapse: collapse;">
+            <thead style="background-color: white !important; color :black !important;padding:3px;font-size:13px !important;font-weight:600;">
+                <tr>
+                    <th colspan="3" style="text-align: center;border :0.5px solid !important;">Description</th>
+                    <th colspan="1" style="text-align: center;border :0.5px solid !important;">Qty</th>
+                </tr>
+            </thead>
+            <tbody id="body" style="font-size:12px !important">
+                @if (Model.Items != null)
+                {
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td colspan="3" style="max-width: 150px; word-break: break-word; overflow-wrap: break-word;text-align: left; white-space: nowrap;font-weight:500;">
+                                <div>@item.Description</div>
+                                <small style="display:block; word-break: break-word; overflow-wrap: break-word;">
+                                    @item.Remarks
+                                </small>
+                            </td>
+
+                            <td style="text-align: center;">@item.Quantity</td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <hr style="border: 0.5px solid black;">
+
+    <div>
+        <div style="width: 100%; display: flex; justify-content: space-between;">
+            @*  <div style="float: left;">
+                <span style="text-align: left;padding-left:3px;font-weight: 600;">User:</span>
+                <span style="text-align: left;">@Model.SalesmanName</span><br />
+            </div> *@
+            <div style="float: right;">
+                <span style="text-align: right;font-weight: 500;">Counter:</span>
+                <span style="text-align: right;padding-right:3px;">@Model.SalesmanName</span><br />
+            </div>
+
+        </div>
+        @*  <div style="width: auto">
+        <span style="font-weight: 600;text-align: left;">User:</span><span style="text-align: center;">@Model.SalesmanName</span>
+        <span style="font-weight: 600;text-align: left;">Counter:</span><span style="text-align: center;">Core</span>
+        </div> *@
+
+    </div>
+
+</div>
+
+
+

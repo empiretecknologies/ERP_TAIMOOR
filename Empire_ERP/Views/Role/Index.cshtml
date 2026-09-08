@@ -1,0 +1,175 @@
+﻿<style>
+    .menuContainer .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused) > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused) > tr > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused):hover > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused):hover > tr > td {
+        background-color: #055a87 !important;
+        color: white;
+    }
+</style>
+<div class="card">
+    <div class="card-header">
+        <button type="button" id="BtnQuickSearch" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl"><i class="fa fa-search"></i> Quick Search</button>
+        <button type="button" id="BtnNew" style="display:none" class="btn btn-primary btn-new waves-effect waves-light float-end"><i class="fa fa-plus"></i> Add New</button>
+    </div>
+    <div class="card-body Record">
+        <div class="row">
+            <input type="hidden" id="branch_hidden" />
+            <input type="hidden" id="displayExpr_branch" />
+            <div class="col-xl-2">
+                <label class="form-label" for="Code">Code:</label>
+                <input class="form-control" id="Code" readonly type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-2">
+                <label class="form-label" for="ASTATUS">Status:</label>
+                <div id="ASTATUS"></div>
+            </div>
+            <div class="col-xl-4 mb-1">
+                <label class="form-label" for="ROLE_NAME">Role Name:</label>
+                <input class="form-control" id="ROLE_NAME" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-4">
+                <label class="form-label" for="ROLE_TYPE">Role Type:</label>
+                <div id="ROLE_TYPE"></div>
+            </div>
+            <div class="col-xl-4" style="display:none" id="moduleDiv">
+                <label class="form-label" for="MODULE_ID">Module:</label>
+                <div id="MODULE_ID"></div>
+            </div>
+            <div class="col-xl-4">
+                <label class="form-label" for="BRANCH">Branch:</label>
+                <div id="BRANCH"></div>
+            </div>
+            <div class="col-xl-4" style="display:none;" id="showHide">
+                <label class="form-label" for="CLOSING">Hide/Show :</label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" id="SHOW_SELECTED" type="checkbox" checked>
+                </div>
+            </div>
+            <span class="span name-validation"></span>
+        </div>
+    </div>
+
+    <div class="row" id="roleManagement">
+        <div class="col-lg-3">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="menuContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="gridContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="approval" style="display:none;">
+        <div class="col-lg-3">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="approvalmenuContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="approvalgridContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="reportFormat" style="display:none;">
+        <div class="col-lg-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="reportFormatContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="chartOfAcc" style="display:none;">
+        <div class="col-lg-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="chartOfAccContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="itemGroup" style="display:none;">
+        <div class="col-lg-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="itemGroupContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="partyType" style="display:none;">
+        <div class="col-lg-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="partyTypeContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12 text-end">
+            <button class="btn btn-danger btn-delete" style="display:none" id="BtnDelete"><i class="fa fa-trash"></i> Delete</button>
+            <button class="btn btn-primary btn-save m-3" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+        </div>
+    </div>
+
+
+    <!--  Extra Large modal example -->
+    <div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <div id="gridContainerQuickSearch"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+@section LinkScriptSection {
+    <script src="~/js/customjs/empr_Role.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        $(function () {
+            empr_Role.initEvents();
+        });
+    </script>
+}

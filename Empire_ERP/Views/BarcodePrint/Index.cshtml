@@ -1,0 +1,61 @@
+﻿<div class="card customHighlightForModifiedCells">
+	<div class="row">
+		<input type="hidden" name="name" id="reportName" value="" />
+		<div class="col-md-12">
+			<div class="card text-left">
+				<div class="card-header">
+					<button type="button" id="BtnPrint" class="btn btn-success btn-print waves-effect waves-light float-end">
+						<i class="fa fa-print"></i> Print
+					</button>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<div id="gridContainer"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade bs-example-modal-xl" id="ShowReportModal" style="display:none" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="myExtraLargeModalLabel">Print Barcodes</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-10">
+						<div class="row">
+							<div class="col-xl-4">
+								<label class="form-label" for="ReportType">ReportType:</label>
+								<div id="ReportType"></div>
+							</div>
+							<div class="col-xl-2 mt-20">
+								<button type="button" class="btn btn-primary mr-5" data-bs-toggle="modal" id="BtnGenerateReport">
+									<i class="fa fa-file-arrow-down"></i> Get Report
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 mt-3">
+						<div class="card text-left" id="ModalBody"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+@section LinkScriptSection {
+	<script type="text/javascript">
+		var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+	</script>
+	<script src="~/js/customjs/empr_BarcodePrint.js" asp-append-version="true"></script>
+	<script type="text/javascript">
+		$(function () {
+			empr_BarcodePrint.InitEvents();
+		});
+	</script>
+}

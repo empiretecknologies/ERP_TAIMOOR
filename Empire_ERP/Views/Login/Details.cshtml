@@ -1,0 +1,295 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Company | Branch | Period</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="~/images/Favicon.png" />
+    <!-- toster styles -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- font-family: 'Poppins', sans-serif; -->
+    <link rel="stylesheet" href="~/css/poppins-font.css" />
+
+    <!-- font awesome -->
+    <link rel="stylesheet" href="~/css/font-awesome-all.css" />
+
+    <!-- themify-icons -->
+    <link rel="stylesheet" href="~/css/themify-icons.css" />
+
+    <!-- icofont-icons -->
+    <link rel="stylesheet" href="~/css/icofont.css">
+    <!-- dev extreme -->
+    <!-- ImportantLinks-->
+    <link href="~/css/vendors/toastr.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/vendors/sweetalert2.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/vendors/datatables.css" asp-append-version="true" />
+    <!-- select2 -->
+    <link href="~/css/select2.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dx.common.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/dx.generic.custom-scheme.css" asp-append-version="true">
+
+    <!-- main -->
+    <link href="~/css/main.css" rel="stylesheet" asp-append-version="true">
+    <!-- mtstyle -->
+    <link href="~/css/mtstyles.css" rel="stylesheet" asp-append-version="true">
+    <link href="~/css/tautocomplete.css" rel="stylesheet" asp-append-version="true">
+    <!-- Custom styles for this template -->
+    <link href="~/css/style.css" rel="stylesheet" asp-append-version="true">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <style>
+        .dx-datagrid .dx-data-row > td.bullet {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        #form .dx-fieldset {
+            height: 500px;
+        }
+
+        .hide {
+            display: none !important;
+        }
+
+        .span {
+            color: red;
+            font-size: 9px;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            display: none;
+        }
+
+        .dx-toolbar-label .dx-toolbar-item-content > div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: none;
+        }
+
+        .form-control,
+        .form-select {
+            font-size: 11px;
+            padding: 2px 10px;
+            box-shadow: inherit !important;
+        }
+
+        label.form-label {
+            font-size: 10px;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+
+        textarea.form-control {
+            min-height: calc(0.5em + 0.75rem + 2px);
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.2rem 1rem;
+            color: #0d6efd;
+            text-decoration: none;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+        }
+
+        .table {
+            overflow-y: auto;
+        }
+
+        .dx-group-panel-message {
+            z-index: 9999999;
+        }
+
+        .nav-tabs li.nav-item .nav-link {
+            font-size: 10px;
+            border-radius: 0 !important;
+        }
+
+        ul.ui-widget {
+            font-size: 13px;
+            border: 0;
+        }
+
+            ul.ui-widget li.ui-menu-item {
+                list-style-image: none;
+                font-family: "Helvetica Neue", HelveticaNeue, helvetica, arial, sans-serif;
+                font-size: 92%;
+                font-weight: 300;
+                font-style: normal;
+                font-size-adjust: none;
+                margin: 0;
+                padding: 1.8px 4.55px;
+                white-space: nowrap;
+            }
+
+        .ui-widget-content a {
+            color: #444444;
+        }
+
+
+
+        ul.ui-widget li.ui-menu-item b {
+            font-weight: 700;
+        }
+
+        #search {
+            height: 25px;
+        }
+
+        .ui-widget-content .ui-state-focus {
+            background-color: #D6F7FF;
+            background-image: none;
+            border: 0;
+        }
+
+        .highlight {
+            background-color: #055a87;
+            color: #fff;
+        }
+
+        #Loader {
+            position: absolute;
+            top: 40%;
+            left: 40%;
+            z-index: 1;
+            display: none;
+            position: fixed;
+            width: 2em;
+            height: 2em;
+        }
+
+        .theme-form select.form-control:not([size]):not([multiple]) {
+            border-color: #efefef;
+            font-size: 11px;
+        }
+
+        .login-card .login-main .theme-form label {
+            font-size: 11px;
+        }
+
+        .login-card .login-main .theme-form .btn {
+            padding: 3px 10px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous" asp-append-version="true"></script>
+
+    <script src="~/dx/dx.all.js"></script>
+    <script src="~/dx/ajaxhelper.js"></script>
+    <script src="~/dx/ati_dxhelper.js"></script>
+    <script src="~/js/customjs/empr_helper.js"></script>
+
+</head>
+
+<body>
+    <div class="loader-box" id="Loader">
+        <div class="loader-1"></div>
+    </div>
+
+    <input type="hidden" id="companydx_hidden" />
+    <input type="hidden" id="branchdx_hidden" />
+    <input type="hidden" id="perioddx_hidden" />
+
+    <input type="hidden" id="displayExprCompanay" />
+    <input type="hidden" id="branchdisplayExpr" />
+    <input type="hidden" id="perioddisplayExpr" /> 
+
+    <div class="login_wrap" style="background-image: url(../@ViewBag.Background)">
+        <!-- login page start-->
+        <div class="container-fluid p-0">
+            <div class="row justify-content-center m-0">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4 p-3">
+                    <div class="login-card">
+                        <div>
+                            <div class="login-main">
+                                <a class="logo" href="javascript:;">
+                                    <img class="img-fluid for-light" src="~/@ViewBag.Logo" alt="looginpage">
+                                </a>
+                                <span class="productname">@ViewBag.c_name</span>
+                                <form class="theme-form">
+
+                                    <div class="form-group">
+                                        <label class="form-label"> Company <span class="text-danger">*</span></label>
+                                        <div id="companydxddl"></div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label"> Branch <span class="text-danger">*</span> </label>
+                                        <div id="branchdxddl"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label"> Period <span class="text-danger">*</span> </label>
+                                        <div id="perioddxddl"></div>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <div class="mt-3">
+                                            <a href="/login/index" class="btn btn-light btn-block w-30">
+                                                <i class="ti-arrow-left"></i> Pervious
+                                            </a>
+                                            <button type="button" id="nextmove" class="btn btn-primary btn-block w-30 float-end">
+                                                <i class="ti-arrow-right"></i> Next
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <img class="loginftr" src="~/@ViewBag.pb_image">
+
+        <div class="loginfooter">
+            <div class="row">
+                <div class="col-sm-4">
+                    <p>@ViewBag.COPY_RIGHTS</p>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <ul>
+                        <li>
+                            <a href="https://wa.me/message/MBZKFCKSDP6LB1" target="_blank"><i class="fa-brands fa-whatsapp"></i> @ViewBag.TEL</a>
+                        </li>
+                        <li>
+                            <a href="@ViewBag.WEBSITE_LINK" target="_blank"><i class="fa-solid fa-globe"></i> @ViewBag.WEBSITE</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 text-end about-links">
+                    <ul>
+                        <li>
+                            <a target="_blank" href="@ViewBag.ABOUT_LINK">@ViewBag.ABOUT_LABEL</a>
+                            <a target="_blank" href="@ViewBag.CONTACT_LINK">@ViewBag.CONTACT_LABEL</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <!-- custom js -->
+    <script src="~/js/toastr.min.js" asp-append-version="true"></script>
+    <script src="~/js/toastr.script.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
+            asp-append-version="true"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js" asp-append-version="true"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
+    <script src="~/js/parsley.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="~/js/Customjs/empr_LoginDetails.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        empr_LoginDetails.InitEvents();
+    </script>
+
+</body>
+</html>

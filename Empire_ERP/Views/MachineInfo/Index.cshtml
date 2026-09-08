@@ -1,0 +1,187 @@
+﻿<div class="card">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-header" style="    height: 36px;">
+              @*   <button id="quicksearch" type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl"><i class="fa fa-search"></i> Quick Search</button> *@
+                <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="resetall" style="display:none;margin-top: -5px;"><i class="fa fa-plus"></i> Add New</button>
+            </div>
+            <div class="card-body pt-1 Record">
+                <div class="row theme-form">
+                    <input id="TRAN_ID" hidden />
+                    <input id="ADD_USER_ID" hidden />
+                    <input id="ADD_DATE" hidden />
+                    <input id="ADD_COMPUTER_NAME" hidden />
+                    <input id="ADD_IP_ADDRESS" hidden />
+                    <input id="ADD_POSTALCODE" hidden />
+                    <input id="MENU_ID" hidden />
+                    <input id="unitcode_hidden" type="hidden" />
+                    <input id="displayExpr_unitcode" type="hidden" />
+                    <input id="lotcode_hidden" type="hidden" />
+                    <input id="displayExpr_lotcode" type="hidden" />
+                    <input type="hidden" id="activestatushidden" />
+                    <div class="col-xl-3">
+                        <label class="form-label" for="Code">Code :</label>
+                        <input class="form-control" readonly id="Code" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="Machine_Code">Machine Code :</label>
+                        <input class="form-control" id="Machine_Code" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="Machine_Name">Machine Name :</label>
+                        <input class="form-control" id="Machine_Name" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="BRANCH">Branch :</label>
+                        <div id="BRANCH"></div>
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="IP_ADDRESS">IP Address :</label>
+                        <input class="form-control" id="IP_ADDRESS" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="IP_PORT">IP PORT :</label>
+                        <input class="form-control" id="IP_PORT" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="SERVER_NAME">Server Name :</label>
+                        <input class="form-control" id="SERVER_NAME" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="S_USER_ID">Server User Id :</label>
+                        <input class="form-control" id="S_USER_ID" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="S_PASSWORD">Server Password :</label>
+                        <input class="form-control" id="S_PASSWORD" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label" for="DB_NAME">Database Name :</label>
+                        <input class="form-control" id="DB_NAME" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label" for="QUERY">Query :</label>
+                        <textarea class="form-control" id="QUERY" type="text" autocomplete="off" rows="3"></textarea>
+                    </div>
+                    <div class="col-xl-12 text-end mt-5">
+                        <button type="button" style="display:none" class="btn btn-success btn-print waves-effect waves-light float-end mx-1" id="BtnPrint">
+                            <i class="fa fa-print"></i> Print
+                        </button>
+                        <button class="btn btn-danger btn-delete" style="display:none"><i class="fa fa-trash"></i> Delete</button>
+                        <button type="button" class="btn btn-primary mr-5 d-none" data-bs-toggle="modal" id="BtnSodaPick">
+                            <i class="fa fa-search"></i> Pick Data
+                        </button>
+                        <button class="btn btn-primary btn-save" id="saveAttempt"><i class="fa fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card text-left">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div id="gridContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <div id="gridContainer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="SodaPickModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Pick Soda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="card text-left">
+                            <div class="card-body customHighlightForModifiedCells">
+                                <div class="table-responsive">
+                                    <div id="SodaPickGridContainer"></div>
+                                </div>
+                                <div class="pt-3 text-end">
+                                    <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="BtnAddSodaToDelivery">
+                                        <i class="fa fa-plus"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade bs-example-modal-xl" id="ShowReportModal" style="display:none" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Print Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-xl-4">
+                                <label class="form-label" for="ReportType">ReportType:</label>
+                                <div id="ReportType"></div>
+                            </div>
+                            <div class="col-xl-2 mt-20">
+                                <button type="button" class="btn btn-primary mr-5" data-bs-toggle="modal" id="BtnGenerateReport">
+                                    <i class="fa fa-file-arrow-down"></i> Get Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <div class="card text-left" id="ModalBody"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section LinkScriptSection {
+    <script type="text/javascript">
+        var branchData = "";
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        var CashAccount = @Html.Raw(Json.Serialize(ViewBag.CashAccount));
+        var BankAccount = @Html.Raw(Json.Serialize(ViewBag.BankAccount));
+        var PartyAccount = @Html.Raw(Json.Serialize(ViewBag.PartAccount));
+        var Branch = @Html.Raw(Json.Serialize(ViewBag.Branch));
+        var todayDate = '@DateTime.Now.Date.ToString("yyyy-MM-dd")';
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            empr_MachineInfo.initEvents();
+        });
+    </script>
+    <script src="~/js/customjs/empr_MachineInfo.js"></script>
+    <script src="~/js/customjs/empr_Cropper.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js" integrity="sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+}

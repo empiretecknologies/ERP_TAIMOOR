@@ -1,0 +1,440 @@
+﻿<style>
+	.image-box {
+		width: 200px; /* jitna chaho width fix kar lo */
+		height: 250px; /* jitna chaho height fix kar lo */
+		margin: 0 auto; /* center me karne ke liye */
+		border: 1px solid #ddd;
+		border-radius: 6px;
+		overflow: hidden; /* image bahar na nikle */
+	}
+
+		.image-box img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover; /* image crop ho kar fit hogi */
+		}
+
+	.image-box-modal {
+		width: 400px; /* jitna chaho width fix kar lo */
+		height: 400px; /* jitna chaho height fix kar lo */
+		margin: 0 auto; /* center me karne ke liye */
+		border: 1px solid #ddd;
+		border-radius: 6px;
+		overflow: hidden; /* image bahar na nikle */
+	}
+
+		.image-box-modal img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover; /* image crop ho kar fit hogi */
+		}
+
+	#cameraPreview {
+		transform: scaleX(-1); /* mirror effect for live preview */
+	}
+
+
+</style>
+
+<div class="card">
+	<div class="card-header">
+		<button type="button" id="quicksearch" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl"><i class="fa fa-search"></i> Quick Search</button>
+		<button type="button" id="resetForm" class="btn btn-primary btn-new waves-effect waves-light float-end"><i class="fa fa-plus"></i> Add New</button>
+	</div>
+	<div class="card-body pt-1 TabsDiv Record">
+		<ul class="nav nav-tabs nav-primary" id="myTab" role="tablist">
+			<li class="nav-item"><a class="nav-link active" id="pills-warninghome-tab" data-bs-toggle="tab" href="#pills-warninghome" role="tab" aria-controls="pills-warninghome" aria-selected="true">Main Info</a></li>
+			<li class="nav-item"><a class="nav-link" style="display:none" id="pills-warningprofile-tab" data-bs-toggle="tab" href="#pills-warningprofile" role="tab" aria-controls="pills-warningprofile" aria-selected="false">Other Info</a></li>
+		</ul>
+		<div class="tab-content" id="myTabContent">
+			<div class="tab-pane fade show active" id="pills-warninghome" role="tabpanel" aria-labelledby="pills-warninghome-tab">
+				<div class="card">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-xl-9">
+
+								<div class="row">
+									<div class="col-xl-4">
+										<label class="form-label" for="Code">Code :</label>
+										<input class="form-control" id="Code" readonly type="text" autocomplete="off">
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="ASTATUS">Status:</label>
+										<div id="ASTATUS"></div>
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="OFFER_LETTER">Offer Letter:</label>
+										<div id="OFFER_LETTER"></div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xl-4">
+										<label class="form-label" for="MACHINE_CODE">Machine ID :</label>
+										<input class="form-control" id="MACHINE_CODE" type="text" autocomplete="off">
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="EMP_ID">Employee ID :</label>
+										<input class="form-control" id="EMP_ID" type="text" autocomplete="off">
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="ENAME">Name :</label>
+										<input class="form-control" id="ENAME" type="text" autocomplete="off">
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xl-4">
+										<label class="form-label" for="FATHER_NAME">Father Name :</label>
+										<input class="form-control" id="FATHER_NAME" type="text" autocomplete="off">
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="EMAIL">Email :</label>
+										<input class="form-control" id="EMAIL" type="text" autocomplete="off">
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="CELL_NO">Cell :</label>
+										<input class="form-control ContactNo" id="CELL_NO" type="text" autocomplete="off">
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xl-4">
+										<label class="form-label" for="GENDER">Gender:</label>
+										<div id="GENDER"></div>
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="REG">Religion:</label>
+										<div id="REG"></div>
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="DEP_ID">Department:</label>
+										<div id="DEP_ID"></div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xl-4">
+										<label class="form-label" for="DESIG">Designation:</label>
+										<div id="DESIG"></div>
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="EMP_TYPE">Type:</label>
+										<div id="EMP_TYPE"></div>
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="SHIFT_T">Timings :</label>
+										<input type="hidden" id="SHIFT_hidden" />
+										<input type="hidden" id="displayExprShift" />
+										<div id="SHIFT_T"></div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xl-4">
+										<label class="form-label" for="BCODE">Branch :</label>
+										<div id="BCODE"></div>
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="PAY_MODE">Payment Mode :</label>
+										<div id="PAY_MODE"></div>
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="JOIN_DATE">Joining Date :</label>
+										<input class="form-control" id="JOIN_DATE" type="date" autocomplete="off">
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xl-4">
+										<label class="form-label" for="PARM_DATE">Permanent Date :</label>
+										<input class="form-control" id="PARM_DATE" type="date" autocomplete="off">
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="CHILD">Childrens:</label>
+										<input class="form-control" id="CHILD" type="text" autocomplete="off">
+									</div>
+									<div class="col-xl-4">
+										<label class="form-label" for="FAMILY_NUM">Family No:</label>
+										<input class="form-control" id="FAMILY_NUM" type="text" autocomplete="off">
+									</div>
+								</div>
+							</div>
+
+
+							<div class="col-xl-3">
+								<div class="card">
+									<div class="card-body text-center p-2">
+										<div class="image-box">
+											<img id="empProfileImgFinal" src="~/Client/Company/default.jpg" />
+										</div>
+
+										<div class="mt-2">
+											@* <button type="button" id="btnResetImage" class="btn btn-primary btn-sm">Clear Image</button> *@
+											<button type="button" id="btnOpenUploadModal" class="btn btn-primary btn-sm">Upload Image</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<input type="hidden" id="empCroppedImage" name="empCroppedImage" />
+
+						</div>
+
+						<div class="row">
+
+							<div class="col-xl-3">
+								<label class="form-label" for="CNIC">CNIC No:</label>
+								<input class="form-control cnic" id="CNIC" type="text" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="CNIC_IDATE">CNIC Issue Date:</label>
+								<input class="form-control" id="CNIC_IDATE" type="date" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="CNIC_EDATE">CNIC Expiry Date:</label>
+								<input class="form-control" id="CNIC_EDATE" type="date" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="BANK_NAME">Bank :</label>
+								<input class="form-control" id="BANK_NAME" type="text" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="BANK_ACC">Account No. :</label>
+								<input class="form-control" id="BANK_ACC" type="text" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="NTN_NO">NTN No. :</label>
+								<input class="form-control" id="NTN_NO" type="text" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="FILE_NO">File No. :</label>
+								<input class="form-control" id="FILE_NO" type="text" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="NATION">Nationality :</label>
+								<input class="form-control" id="NATION" type="text" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="POB">POB :</label>
+								<input class="form-control" id="POB" type="text" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="DOB">DOB :</label>
+								<input class="form-control" id="DOB" type="date" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="MSTATUS">Marital Status :</label>
+								<div id="MSTATUS"></div>
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="RSTATUS">Roaster Status :</label>
+								<div id="RSTATUS"></div>
+							</div>
+
+							<div class="col-xl-3">
+								<label class="form-label" for="THUMB">Thumb :</label>
+								<input type="hidden" value="" id="hdnTHUMB" />
+								<div class="input-group">
+									<input type="file" name="THUMB" id="THUMB" class="form-control" onchange="empr_Employee.UploadThumb()" accept=".pdf, .doc, .docx, .xls, .xlsx, image/*" />
+									<div class="input-group-append">
+										<a href="javascript:;" class="input-group-text" id="OpenThumb" onclick="empr_Employee.OpenThumb()">
+											<i class="fa fa-eye"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="SIGNA">Signature :</label>
+								<input type="hidden" value="" id="hdnSIGNA" />
+								<div class="input-group">
+									<input type="file" name="SIGNA" id="SIGNA" class="form-control" onchange="empr_Employee.UploadSign()" accept=".pdf, .doc, .docx, .xls, .xlsx, image/*" />
+									<div class="input-group-append">
+										<a href="javascript:;" class="input-group-text" id="OpenThumb" onclick="empr_Employee.OpenSign()">
+											<i class="fa fa-eye"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+							<input type="hidden" id="EMP_IMG" name="EMP_IMG" />
+							@* <div class="col-xl-3">
+								<label class="form-label" for="EMP_IMG">Image :</label>
+								<div class="input-group">
+									<input class="form-control" id="Image" type="file" accept="image/*" autocomplete="off">
+									<div class="input-group-append">
+										<a href="javascript:;" class="input-group-text" id="OpenImage" onclick="empr_Employee.OpenImage()">
+											<i class="fa fa-eye"></i>
+										</a>
+									</div>
+								</div>
+							</div> *@
+							<div class="col-xl-6">
+								<label class="form-label" for="EMP_ADD">Address :</label>
+								<textarea class="form-control" id="EMP_ADD" rows="1" type="text" autocomplete="off"></textarea>
+							</div>
+							<div class="col-xl-2">
+								<label class="form-label" for="SALARY_HOLD">Salary Hold :</label>
+								<div class="form-check form-switch">
+									<input class="form-check-input" id="SALARY_HOLD" type="checkbox" checked>
+								</div>
+							</div>
+							<div class="col-xl-2">
+								<label class="form-label" for="MSTAFF">MSTAFF :</label>
+								<div class="form-check form-switch">
+									<input class="form-check-input" id="MSTAFF" type="checkbox" checked>
+								</div>
+							</div>
+							<div class="col-xl-2">
+								<label class="form-label" for="OT">OT :</label>
+								<div class="form-check form-switch">
+									<input class="form-check-input" id="OT" type="checkbox" checked>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="pills-warningprofile" role="tabpanel" aria-labelledby="pills-warningprofile-tab">
+				<div class="card">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-xl-3">
+								<label class="form-label" for="EMP_CAST">Cast :</label>
+								<input class="form-control" id="EMP_CAST" type="text" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="EDUCTION">Education :</label>
+								<div id="EDUCTION"></div>
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="VEH_NUMBER">Vehicle No. :</label>
+								<input class="form-control" id="VEH_NUMBER" type="text" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="LTYPE">License Type :</label>
+								<input class="form-control" id="LTYPE" type="text" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="LNUMBER">License No. :</label>
+								<input class="form-control" id="LNUMBER" type="text" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="L_IDATE">License Issue Date :</label>
+								<input class="form-control" id="L_IDATE" type="date" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="L_EDATE">License Expiry Date :</label>
+								<input class="form-control" id="L_EDATE" type="date" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="LEFT_DATE">Leaving Date :</label>
+								<input class="form-control" id="LEFT_DATE" type="date" autocomplete="off">
+							</div>
+							<div class="col-xl-3">
+								<label class="form-label" for="REASON_L">Reason of Leaving :</label>
+								<textarea class="form-control" id="REASON_L" rows="1" type="text" autocomplete="off"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-12 text-end">
+			<button class="btn btn-danger btn-delete delete"><i class="fa fa-trash"></i> Delete</button>
+			<button class="btn btn-primary btn-save saveAttempt"><i class="fa fa-save"></i> Save</button>
+		</div>
+	</div>
+	<!--  Extra Large modal example -->
+	<div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12">
+						<div class="card text-left">
+							<div class="card-body">
+								<div class="table-responsive">
+									<div id="exportButtonsContainer">
+										<div id="excelButton"></div>
+										<div id="pdfButton"></div>
+									</div>
+									<div id="gridContainer"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+
+@* camera modal *@
+<div class="modal fade" id="uploadImageModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h5 class="modal-title">Upload / Capture Image</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+						onclick="empr_Employee.stopCamera()"></button>
+			</div>
+			<div class="modal-body text-center image-box-modal">
+
+				<!-- Croppie container (hidden initially) -->
+				<div id="croppieContainer" style="display:none;"></div>
+				<video id="cameraPreview" autoplay style="width:100%; height:100%; object-fit:cover;"></video>
+
+				<img id="empProfileImg" src="" alt="Employee Image" />
+
+
+			</div>
+			<div class="modal-footer">
+				<input type="file" id="empImgUpload" accept="image/*" style="display:none;" />
+				<button type="button" id="btnPickImage" class="btn btn-primary btn-sm" style="display:none;">Pick Image</button>
+				<button type="button" id="btnTakeCapture" class="btn btn-danger btn-sm" style="display:none;">Capture</button>
+				<button type="button" id="btnTransImg" class="btn btn-danger btn-sm" style="display:none;">Upload Image</button>
+				<button type="button" id="btnClearImage" class="btn btn-primary btn-sm" style="display:none;">Clear</button>
+				<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" onclick="empr_Employee.stopCamera()">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<input type="hidden" id="salesman_hidden" />
+<input type="hidden" id="displayExpr_salesman" />
+
+<input type="hidden" id="entity_hidden" />
+<input type="hidden" id="displayExpr_entity" />
+
+<input type="hidden" id="REGION_hidden" />
+<input type="hidden" id="displayExpr_REGION" />
+
+<input type="hidden" id="category_hidden" />
+<input type="hidden" id="displayExpr_category" />
+
+<input type="hidden" id="chartofaccount_hidden" />
+<input type="hidden" id="displayExpr_chartofaccount" />
+
+<input type="hidden" id="EmployeeDocs_hidden" />
+<input type="hidden" id="EmployeeCNIC_hidden" />
+
+
+@section LinkScriptSection {
+	<script src="~/js/customjs/empr_Helper.js"></script>
+	<script src="~/js/customjs/empr_Employee.js"></script>
+	<script src="~/js/customjs/empr_Cropper.js" asp-append-version="true"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js" integrity="sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+	<script type="text/javascript">
+		var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+		var EmpDataByOfferLetter = @Html.Raw(Json.Serialize(ViewBag.EmpDataByOfferLetter));
+	</script>
+	<script type="text/javascript">
+		$(".TabsDiv").tabs();
+		empr_Employee.initEvents();
+	</script>
+}

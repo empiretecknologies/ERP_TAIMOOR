@@ -1,0 +1,227 @@
+﻿@{
+	var startDate = (Convert.ToDateTime(ViewBag.StartDate)).ToString("yyyy-MM-dd");
+	var endDate = (Convert.ToDateTime(ViewBag.EndDate)).ToString("yyyy-MM-dd");
+}
+
+<div class="card">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card-header">
+				<button id="quicksearch" type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl"><i class="fa fa-search"></i> Quick Search</button>
+				<button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="resetall" style="display:none"><i class="fa fa-plus"></i> Add New</button>
+			</div>
+			<div class="card-body pt-1 Record">
+				<div class="row theme-form">
+					@* <input id="TRAN_ID" hidden />
+                    <input id="ADD_USER_ID" hidden />
+                    <input id="ADD_DATE" hidden />
+                    <input id="ADD_COMPUTER_NAME" hidden />
+                    <input id="ADD_IP_ADDRESS" hidden />
+                    <input id="ADD_POSTALCODE" hidden />
+                    <input id="MENU_ID" hidden />
+                    <input type="hidden" id="activestatushidden" /> *@
+					<div class="col-xl-3">
+						<label class="form-label" for="Code">Code :</label>
+						<input class="form-control" readonly id="Code" type="text" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="ASTATUS">Status :</label>
+						<div id="ASTATUS"></div>
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="V_DATE">Date:</label>
+						<input class="form-control" id="V_DATE" onchange="empr_helper.validateVDate()" type="date" max="@endDate" min="@startDate" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="APPLY_DATE">Apply Date:</label>
+						<input class="form-control" id="APPLY_DATE" type="date" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="JOB">Job:</label>
+						<div id="JOB"></div>
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="NAME">Candidate Name:</label>
+						<input class="form-control" id="NAME" type="text" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="EMAIL">Candidate Email:</label>
+						<input class="form-control" id="EMAIL" type="email" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="PHONE">Candidate Phone:</label>
+						<input class="form-control" id="PHONE" type="number" autocomplete="off">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="GENDER">Gender:</label>
+						<div id="GENDER"></div>
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="DOB">Candidate DOB:</label>
+						<input class="form-control" id="DOB" type="date" autocomplete="off">
+					</div>
+
+					@* <div class="col-xl-3">
+						<label class="form-label" for="EXP_YEAR">Experience in Years:</label>
+						<input class="form-control" id="EXP_YEAR" type="text" autocomplete="off">
+					</div> *@
+
+					<div class="col-xl-3">
+						<label class="form-label" for="EXP_YEAR">Experience in Years:</label>
+						<input class="form-control" id="EXP_YEAR" type="text" autocomplete="off" maxlength="5" oninput="empr_HRCandidate.validateExperience()">
+					</div>
+
+					<div class="col-xl-3">
+						<label class="form-label" for="EDUCATION">Education:</label>
+						<div id="EDUCATION"></div>
+					</div>
+
+					<div class="col-xl-6">
+						<label class="form-label" for="ADDRESS">Candidate Address:</label>
+						<input class="form-control" id="ADDRESS" type="text" autocomplete="off">
+					</div>
+
+					<div class="col-xl-6">
+						<label class="form-label" for="REMARKS">Comment</label>
+						<textarea class="form-control" id="REMARKS" rows="1" type="text" autocomplete="off"></textarea>
+					</div>
+
+					@* <div class="col-xl-3">
+						<label class="form-label" for="DOC">Resume:</label>
+						<input class="form-control" id="DOC" type="file" autocomplete="off">
+					</div> *@
+
+					<div class="col-xl-3">
+						<label class="form-label" for="DOC">Doc:</label>
+						<input type="hidden" value="" id="hdnDOC" />
+						<div class="input-group">
+							<input type="file" name="DOC" id="DOC" class="form-control" onchange="empr_HRCandidate.UploadDoc()" accept=".pdf, .doc, .docx, .xls, .xlsx, image/*" />
+							<div class="input-group-append">
+								<a href="javascript:;" class="input-group-text" id="openDoc" onclick="empr_HRCandidate.OpenDoc()">
+									<i class="fa fa-eye"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="col-xl-12 text-end">
+						<button type="button" style="display:none" class="btn btn-success btn-print waves-effect waves-light float-end mx-1" id="BtnPrint">
+							<i class="fa fa-print"></i> Print
+						</button>
+						<button class="btn btn-danger btn-delete" style="display:none"><i class="fa fa-trash"></i> Delete</button>
+						@* <button class="btn btn-primary btn-save" id="generateCode">#Card No.</button> *@
+						<button class="btn btn-primary btn-save" id="saveAttempt"><i class="fa fa-save"></i> Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12">
+						<div class="card text-left">
+							<div class="card-body">
+								<div class="table-responsive">
+									<div id="gridContainer"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+
+	@* <div class="modal fade" id="SodaPickModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Pick Soda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="card text-left">
+                            <div class="card-body customHighlightForModifiedCells">
+                                <div class="table-responsive">
+                                    <div id="SodaPickGridContainer"></div>
+                                </div>
+                                <div class="pt-3 text-end">
+                                    <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="BtnAddSodaToDelivery">
+                                        <i class="fa fa-plus"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div> *@
+
+	<div class="modal fade bs-example-modal-xl" id="ShowReportModal" style="display:none" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="myExtraLargeModalLabel">Print Report</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-10">
+						<div class="row">
+							<div class="col-xl-4">
+								<label class="form-label" for="ReportType">ReportType:</label>
+								<div id="ReportType"></div>
+							</div>
+							<div class="col-xl-2 mt-20">
+								<button type="button" class="btn btn-primary mr-5" data-bs-toggle="modal" id="BtnGenerateReport">
+									<i class="fa fa-file-arrow-down"></i> Get Report
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 mt-3">
+						<div class="card text-left" id="ModalBody"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section LinkScriptSection {
+	<script type="text/javascript">
+		var startDate = @startDate;
+		var endDate = @endDate;
+		var branchData = "";
+		var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+		var todayDate = '@DateTime.Now.Date.ToString("yyyy-MM-dd")';
+		var Education = @Html.Raw(Json.Serialize(ViewBag.Education));
+		var Job = @Html.Raw(Json.Serialize(ViewBag.Job));
+	</script>
+	<script type="text/javascript">
+		$(function () {
+
+			empr_HRCandidate.initEvents();
+		});
+	</script>
+	<script src="~/js/customjs/empr_HRCandidate.js"></script>
+}

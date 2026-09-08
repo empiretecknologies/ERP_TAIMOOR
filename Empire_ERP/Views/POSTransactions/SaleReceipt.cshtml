@@ -1,0 +1,320 @@
+﻿@model Empire_ERP.Core.Entities.SlipViewModel
+
+<div style="border: 1px solid black;max-width:72mm; font-size: 0.8rem; font-family: 'Poppins', sans-serif;">
+
+	<div style="text-align: center;width: auto;">
+		<img src="~/Client/Company/@Model.Clogo" alt="Company Logo" style="width: 180px;"><br />
+		@* <b>@Model.BName</b><br /> *@
+		<span>@Model.BAddress</span><br />
+		<span>SNTN: @Model.BNTN</span><br />
+		<span>CPC: @Model.BNTN</span><br />
+		<span>@Model.BPhone</span>
+	</div>
+
+	<div style="width: auto; background-color: black !important;color: white; text-align: center;">
+		<span style="font-weight: 600; font-size: 12px;">SALES RECEIPT</span>
+	</div>
+
+	<div style="font-size:0.8rem !important; display: flex; flex-direction: column; width: auto;padding:5px;">
+		<div style="display: flex;width: auto;">
+			<span style="font-weight:600;">Bill No: </span> <span style="margin-left: 10px;">@Model.ReferenceNumber</span>
+		</div>
+
+		<div style="display: flex; width: auto;">
+			<span style="font-weight:600;">Date & Time: </span> <span style="margin-left: 10px;">@Model.Date @Model.Time</span>
+		</div>
+		@if(Model.CustomerName != "")
+		{
+			<div style="display: flex; width: auto;">
+			<span style="font-weight:600;">CUSTOMER: </span> <span style="margin-left: 10px;">@Model.CustomerName</span>
+		</div>
+		}
+		@if(Model.ContactNumber!= "")
+		{
+			<div style="display: flex; width: auto;">
+			<span style="font-weight:600;">CONTACT #: </span> <span style="margin-left: 10px;">@Model.ContactNumber</span>
+		</div>
+		}
+		@if(Model.Remarks != "")
+		{
+			<div style="display: flex; width: auto;">
+			<span style="font-weight:600;">Remarks: </span> <span style="margin-left: 10px;">@Model.Remarks</span>
+		</div>
+		}
+
+
+	</div>
+	<div>
+
+		<table class="slip" style="margin:0; border-top: 0.5px solid black; border-collapse: collapse;">
+			<thead style="font-size:0.8rem !important; border-bottom: 1px dotted #5a5a5a;linear-gradient(to right, #ff7e5f, #feb47b)">
+				<tr style="line-height: 1; margin: 0 ;position: relative;">
+					<th colspan="4" style="margin: 3px; padding: 3px; text-align: left;">Description</th>
+				</tr>
+				<tr style="line-height: 1; position: relative;">
+					<th style="margin: 0; padding: 3px; text-align: left;margin-left: 5px;">Qty</th>
+					<th style="margin: 0; padding: 3px; text-align: center;">Price</th>
+					<th style="margin: 0; padding: 3px;"></th>
+					<th style="margin: 0; padding: 3px;">Tax</th>
+
+					<th style="margin: 0; padding: 3px; text-align: right;">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				@if (Model.Items != null)
+				{
+					@foreach (var item in Model.Items)
+					{
+						<tr style="line-height: 1; margin: 0; padding: 0; position: relative;font-size: 0.8rem !important;">
+							<td colspan="4" style="margin: 3px; padding: 3px; text-align: left;">@item.Description</td>
+						</tr>
+						<tr style="line-height: 1; border-bottom: 0.5px dotted #5a5a5a;linear-gradient(to right, #ff7e5f, #feb47b);font-size: 0.8rem !important;">
+							<td style="margin: 0; padding: 3px; text-align: left;">@item.Quantity</td>
+							<td style="margin: 0; padding: 3px; text-align: center;">@(item.Price?.ToString("N0") ?? "0")</td>
+							<td style="margin: 0; padding: 3px; text-align: center;">@item.Discount</td>
+							<td style="margin: 0; padding: 3px; text-align: center;">10</td>
+
+							<td style="margin: 0; padding: 3px; position: relative; text-align: right;">
+								@(item.Amount?.ToString("N0") ?? "0")
+							</td>
+						</tr>
+					}
+				}
+			</tbody>
+		</table>
+
+	</div>
+
+
+	<div style="font-size:0.8rem !important;width: auto;padding:3px;font-weight: 600 !important;">
+		<span style="float: left;border-bottom: 1.5px solid black;font-weight: 200 !important">Qty: </span><span style="text-align:center;border-bottom: 0.5px solid black;padding-left:10px;padding-right:10px;font-weight: 200 !important">@Model.TotalQuantity</span> <span style="float: right;border-bottom: 0.5px solid black;padding-left:10px;padding-right:10px;font-weight: 200 !important"> @Model.NoOfItems </span> <span style="float: right;border-bottom: 1.5px solid black;font-weight: 200 !important">No Of Item:</span><br />
+        @if (Model.RoundingDiscount != null && Model.RoundingDiscount != 0)
+        {
+            <div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+                <span style="text-align: left;">Discount :</span>
+                <span style="text-align: right;">(@Model.RoundingDiscount)</span>
+            </div>
+        }
+        @if (Model.RoundingDiscount != null && Model.RoundingDiscount != 0)
+        {
+            <div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+                <span style="text-align: left;">Discount :</span>
+                <span style="text-align: right;">(@Model.RoundingDiscount)</span>
+            </div>
+        }
+		@if(Model.Del_Charges != null && Model.Del_Charges != 0)
+        {
+            <div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+                <span style="text-align: left;">Delivery :</span>
+                <span style="text-align: right;">@Model.Del_Charges</span>
+            </div>
+        }
+        <div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+            <span style="text-align: left;">Net Total:</span>
+            <span style="text-align: right;">@Model.TotalValue</span>
+        </div>
+		<br />
+		@if (Model.PAYTYPE == "Split")
+		{
+			<span style="float: left;">Split Tax: </span>
+
+			<span style="text-align:center;">@Model.TAX_CASH %</span> <span style="float: right;">@Model.CASHTAX_AMT</span>
+			
+			@if (Model.Sett != 0 && Model.Sett != null)
+			{
+				<br />
+				<div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+					<span style="text-align: left;">Settlement :</span>
+					<span style="text-align: right;">@(Model.Sett < 0 ? "(" + Model.Sett + ")" : Model.Sett.ToString())</span>
+				</div>
+			}
+
+			<br />
+			<span style="float: left;">Gross Total: </span> <span style="float: right;"><span>@Model.TotalAmountFormatted</span></span>
+
+			<br />
+
+		}
+		else if (Model.PAYTYPE == "Bank")
+		{
+			<span style="float: left;">SST : </span>
+
+			<span style="text-align:center;">@Model.BANK_TAX %</span> <span style="float: right;">@Model.BANKTAX_AMT</span>
+
+			@if (Model.Sett != 0 && Model.Sett != null)
+			{
+				<br />
+				<div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+					<span style="text-align: left;">Settlement :</span>
+					<span style="text-align: right;">@(Model.Sett < 0 ? "(" + Model.Sett + ")" : Model.Sett.ToString())</span>
+				</div>
+			}
+			<br />
+			<span style="float: left;">Gross Total: </span> <span style="float: right;"><span>@Model.TotalAmountFormatted</span></span>
+
+			<br />
+		}
+		else if (Model.PAYTYPE == "Party")
+		{
+			<span style="float: left;">SST : </span>
+
+			<span style="text-align:center;">@Model.PARTY_TAX %</span> <span style="float: right;">@Model.PARTYTAX_AMT</span>
+
+			@if (Model.Sett != 0 && Model.Sett != null)
+			{
+				<br />
+				<div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+					<span style="text-align: left;">Settlement :</span>
+					<span style="text-align: right;">@(Model.Sett < 0 ? "(" + Model.Sett + ")" : Model.Sett.ToString())</span>
+				</div>
+			}
+			<br />
+			<span style="float: left;">Gross Total: </span> <span style="float: right;"><span>@Model.TotalAmountFormatted</span></span>
+
+			<br />
+		}
+		else
+		{
+			<span style="float: left;">SST : </span>
+
+			<span style="text-align:center;">@Model.TAX_CASH %</span> <span style="float: right;">@Model.CASHTAX_AMT</span>
+
+			@if (Model.Sett != 0 && Model.Sett != null)
+			{
+				<br />
+				<div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+					<span style="text-align: left;">Settlement :</span>
+					<span style="text-align: right;">@(Model.Sett < 0 ? "(" + Model.Sett + ")" : Model.Sett.ToString())</span>
+				</div>
+			}
+			<br />
+			<span style="float: left;">Gross Total: </span> <span style="float: right;"><span>@Model.TotalAmountFormatted</span></span>
+
+			<br />
+		}
+
+		@if (Model.billStatus == "P")
+		{
+			@if (Model.PAYTYPE == "Split")
+			{
+				<span style="float: left;">Cash Received: </span> <span style="float: right;"><b>@Model.CashPaid</b></span>
+
+				<br />
+				<span style="float: left;">CREDIT CARD: </span> <span style="float: right;"><b>@Model.Bank</b></span>
+
+				<br />
+				<span style="float: left;">PARTY: </span> <span style="float: right;"><b>@Model.Party</b></span>
+
+				<br />
+			}
+			else if (Model.PAYTYPE == "Party")
+			{
+				@* if (Model.billmode != "" && Model.billmode != "Credit")
+				{
+					<span style="float: left;">@Model.billmode: </span> <span style="float: right;"><b>@Model.PartyFormatted</b></span>
+				}
+				else if (Model.billmode == "Credit")
+				{
+					<span style="float: left;">@Model.CustomerName: </span> <span style="float: right;"><b>@Model.PartyFormatted</b></span>
+				}
+				else
+				{
+					<span style="float: left;">PARTY: </span> <span style="float: right;"><b>@Model.PartyFormatted</b></span>
+				} *@
+				<span style="float: left;">@Model.PrintModeLabel: </span> <span style="float: right;"><b>@Model.PartyFormatted</b></span>
+
+				<br />
+			}
+			else if (Model.PAYTYPE == "Cash")
+			{
+				<span style="float: left;">Cash Received: </span> <span style="float: right;text-align:right;"><b>@Model.CashFormatted</b></span>
+
+				<br />
+				<span style="float: left;">Cash Back: </span>
+
+				<span style="float: right;text-align:right">@Model.CashBack</span>
+
+				<br />
+			}
+			else if (Model.PAYTYPE == "Bank")
+			{
+				<span style="float: left;">CREDIT CARD: </span> <span style="float: right; text-align:right ; padding-left:100px;border-bottom:1px solid black;"><b>@Model.BankFormatted</b></span>
+
+				<br />
+			}
+			else
+			{
+				<span style="float: left;">Cash Received: </span> <span style="float: right;"><b>@Model.CashPaid</b></span>
+
+				<br />
+				<span style="float: left;">CREDIT CARD: </span> <span style="float: right;"><b>@Model.Bank</b></span>
+
+				<br />
+				<span style="float: left;">PARTY: </span> <span style="float: right;"><b>@Model.Party</b></span>
+
+				<br />
+			}
+
+		}
+	</div>
+	<hr style="border: none; border-top: 0.5px solid black; margin: 10px 0;">
+
+	<div style="font-size:0.8rem !important;">
+		<div style="width: 100%; display: flex; justify-content: space-between;">
+			<div style="float: left;">
+				<span style="text-align: left;padding-left:3px;font-weight: 600;">User:</span>
+				<span style="text-align: left;">@Model.UserName</span><br />
+			</div>
+			<div style="float: right;">
+				<span style="text-align: right;font-weight: 600;">Counter:</span>
+				<span style="text-align: right;padding-right:3px;">Core</span><br />
+			</div>
+
+		</div>
+
+	</div>
+	<hr style="border: none; border-top: 0.5px solid black; margin: 10px 0;">
+	@if (!string.IsNullOrEmpty(Model.SRBInvoiceId) && Model.SRBSTATUS == "Y")
+	{
+		<div style="width: auto;text-align: center;">
+			<span style="font-weight: 600;text-align: center;">SRB Invoice #:</span><br />
+			<span style="text-align: center;">@Model.SRBInvoiceId</span>
+		</div>
+		<div style="justify-content: space-between">
+
+			<div>
+				<img src="~/Client/Company/SRBPOS.png" alt="Company Logo" style="width: 100px; margin-left: 20px;float: left;"><br />
+				<img class="srb-code" src="POSTransactions/GenerateQRCode?invoiceNumber= @Model.SRBInvoiceId" alt="QR Code" style="width: 85px; margin-right: 25px;float: right;margin-top: -11px;" />
+			</div>
+
+		</div>
+		<div>
+			<div style="text-align:center;width:auto;margin-top: 90px;">
+				<span style="font-weight: 600;text-align: center;border-bottom: 1px solid black;">@Model.MENUTERMS</span>
+			</div>
+		</div>
+	}
+	else
+	{
+		<div>
+			<div style="text-align:center;width:auto;">
+				<span style="font-weight: 600;text-align: center;border-bottom: 1px solid black;">@Model.MENUTERMS</span>
+			</div>
+		</div>
+	}
+
+	<hr style="border: none; border-top: 0.5px solid black; margin: 10px 0;">
+	<div style="text-align:center;font-size: 0.7rem; margin-top:5px;width: auto;background:#000;clip-path: polygon(20px 0%, 100% 0%, 100% 100%, 0% 100%);">
+        <div class="website-bar"
+             style="
+             background:#000;
+             color:#fff;
+             padding:3px 6px;
+             display:inline-block;
+             font-weight:600;
+             letter-spacing:0.9px !important;
+             max-width:100% !important;">
+            @Model.FWebsite
+        </div>
+   </div>
+</div>

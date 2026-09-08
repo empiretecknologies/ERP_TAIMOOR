@@ -1,0 +1,422 @@
+﻿@model Empire_ERP.Core.Entities.SlipViewModel
+
+
+<div style="border: 1px solid black;max-width:72mm; font-size: 0.8rem; font-family: 'Poppins', sans-serif;">
+
+    <div style="text-align: center;width: auto;">
+        <img src="~/Client/Company/@Model.Clogo" alt="Company Logo" style="width: 180px;"><br />
+        @* <b>@Model.BName</b><br /> *@
+        <span>@Model.BAddress</span><br />
+        @if(Model.BNTN != "" && Model.BNTN != null)
+        {
+            <span>SNTN: @Model.BNTN</span><br />    
+        }
+        @if(Model.CPC_CODE != "0" &&Model.CPC_CODE != "" && Model.CPC_CODE != null)
+        {
+            <span>CPC: @Model.CPC_CODE</span><br />
+        }
+        <span>@Model.BPhone</span>
+    </div>
+
+    <div style="width: auto; background-color: black !important;color: white; text-align: center;">
+        <span style="font-weight: 600; font-size: 12px;">SALES RECEIPT</span>
+    </div>
+
+    <div style="font-size:0.8rem !important; display: flex; flex-direction: column; width: auto;padding:5px;">
+        <div style="display: flex;width: auto;">
+            <span style="font-weight:600;">Bill No: </span> <span style="margin-left: 10px;">@Model.ReferenceNumber</span>
+        </div>
+
+        <div style="display: flex; width: auto;">
+            <span style="font-weight:600;">Date & Time: </span> <span style="margin-left: 10px;">@Model.Date @Model.Time</span>
+        </div>
+        @if(Model.Waitername != "" && Model.Waitername != null)
+        {
+            <div style="display: flex; width: auto;">
+                <span style="font-weight:600;">Waiter: </span> <span style="margin-left: 10px;">@Model.Waitername</span>
+            </div>    
+        }
+        @if(Model.TableNum != "" && Model.TableNum != null)
+        {
+            <div style="display: flex; width: auto;">
+                <span style="font-weight:600;">Table: </span> <span style="margin-left: 10px;">@Model.TableNum</span>
+            </div>    
+        }
+        @if(Model.CustomerName != "" && Model.CustomerName != null)
+        {
+            <div style="display: flex; width: auto;">
+                <span style="font-weight:600;">Client: </span> <span style="margin-left: 10px;">@Model.CustomerName</span>
+            </div>
+        }
+        @if(Model.ContactNumber != "" && Model.ContactNumber != null)
+        {
+            <div style="display: flex; width: 100%;">
+                <b>Customer Number &nbsp;: &nbsp; </b> <span>@Model.ContactNumber</span>
+            </div>
+        }
+        @if(Model.Remarks != "" && Model.Remarks != null)
+        {
+            <div style="display: flex; width: auto;">
+                <span style="font-weight:600;">Remarks: </span> <span style="margin-left: 10px;">@Model.Remarks</span>
+            </div>    
+        }
+        
+        
+        
+        @* <div style="display: flex; width: auto;">
+        <b>CONTACT #: </b> <span style="margin-left: 10px;">@Model.ContactNumber</span>
+        </div> *@
+
+        @*  <div style="display: flex; width: auto;">
+        <b>SALESMAN: </b> <span style="margin-left: 10px;">@Model.SalesmanName</span>
+        </div> *@
+    </div>
+    <div>
+
+        <table class="slip" style="margin:0; border-top: 0.5px solid black; border-collapse: collapse;">
+            <thead style="font-size:0.8rem !important; border-bottom: 1px dotted #5a5a5a;linear-gradient(to right, #ff7e5f, #feb47b)">
+                <tr style="line-height: 1; margin: 0 ;position: relative;">
+                    <th colspan="4" style="margin: 3px; padding: 3px; text-align: left;">Description</th>
+                </tr>
+                <tr style="line-height: 1; position: relative;">
+                    <th style="margin: 0; padding: 3px; text-align: left;margin-left: 5px;">Qty</th>
+                    <th style="margin: 0; padding: 3px; text-align: center;">Price</th>
+                    <th style="margin: 0; padding: 3px;"></th>
+                    <th style="margin: 0; padding: 3px; text-align: right;">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Items != null)
+                {
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr style="line-height: 1; margin: 0; padding: 0; position: relative;font-size: 0.8rem !important;">
+                            <td colspan="4" style="margin: 3px; padding: 3px; text-align: left;">@item.Description</td>
+                        </tr>
+                        <tr style="line-height: 1; border-bottom: 0.5px dotted #5a5a5a;linear-gradient(to right, #ff7e5f, #feb47b);font-size: 0.8rem !important;">
+                            <td style="margin: 0; padding: 3px; text-align: left;">@item.Quantity</td>
+                            <td style="margin: 0; padding: 3px; text-align: center;">@(item.Price?.ToString("N0") ?? "0")</td>
+                            <td style="margin: 0; padding: 3px; text-align: center;">@item.Discount</td>
+                            <td style="margin: 0; padding: 3px; position: relative; text-align: right;">
+                                @(item.Amount?.ToString("N0") ?? "0")
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+
+
+
+
+    </div>
+
+
+    <div style="font-size:0.8rem !important;width: auto;padding:3px;font-weight: 600 !important;">
+        <span style="float: left;border-bottom: 1.5px solid black;font-weight: 200 !important">Qty: </span><span style="text-align:center;border-bottom: 0.5px solid black;padding-left:10px;padding-right:10px;font-weight: 200 !important">@Model.TotalQuantity</span> <span style="float: right;border-bottom: 0.5px solid black;padding-left:10px;padding-right:10px;font-weight: 200 !important"> @Model.NoOfItems </span> <span style="float: right;border-bottom: 1.5px solid black;font-weight: 200 !important">No Of Item:</span><br />
+        <div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+            <span style="text-align: left;">Bill Amount :</span>
+            <span style="text-align: right;">@Model.Amount</span>
+        </div>
+        @if(Model.SER_CHARGES != null && Model.SER_CHARGES != 0)
+        {
+            <div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+                <span style="text-align: left;">Service Charges :</span>
+                <span style="text-align: right;">@Model.SER_CHARGES</span>
+            </div>
+        }
+        @if (Model.RoundingDiscount != null && Model.RoundingDiscount != 0)
+        {
+            <div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+                <span style="text-align: left;">Bill Dics :</span>
+                <span style="text-align: right;">(@Model.RoundingDiscount)</span>
+            </div>
+        }
+        <div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+            <span style="text-align: left;">Net Total:</span>
+            <span style="text-align: right;">@Model.TotalValue</span>
+        </div>
+
+        <br />
+        @* @if (Model.BANK_TAX != null && Model.PARTY_TAX != null && Model.billStatus == "P") *@
+        @if (Model.PAYTYPE == "Split" && Model.billStatus == "P")
+        {
+            <span style="float: left;">SPLIT TAX : </span>
+
+            <span style="text-align:center;">@Model.TAX_CASH %</span> <span style="float: right;">@Model.CASHTAX_AMT</span>
+
+            @* <br />
+            <span style="float: left;">Bank SST : </span>
+
+            <span style="text-align:center;">@Model.BANK_TAX %</span> <span style="float: right;">@Model.BANKTAX_AMT</span>
+
+            <br />
+            <span style="float: left;">Party SST : </span>
+
+            <span style="text-align:center;">@Model.PARTY_TAX %</span> <span style="float: right;">@Model.PARTYTAX_AMT</span>
+
+            <br />
+            <span style="float: left;">Gross Total: </span> <span style="float: right;"><span>@Model.TotalAmountFormatted</span></span> *@
+
+            <br />
+
+        }
+        @* else if (Model.BANK_TAX != null && Model.billStatus == "P") *@
+        else if (Model.PAYTYPE == "Bank" && Model.billStatus == "P")
+        {
+            <span style="float: left;">SST : </span>
+
+            <span style="text-align:center;">@Model.BANK_TAX %</span> <span style="float: right;">@Model.BANKTAX_AMT</span>
+
+            <br />
+            @if (Model.Sett != 0 && Model.Sett != null)
+            {
+                <div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+                    <span style="text-align: left;">Settlement :</span>
+                    <span style="text-align: right;">(@Model.Sett)</span>
+                </div>
+            }
+            <span style="float: left;">Gross Total: </span> <span style="float: right;"><span>@Model.TotalAmountFormatted</span></span>
+
+            <br />
+        }
+        @* else if (Model.PARTY_TAX != null && Model.billStatus == "P") *@
+        else if (Model.PAYTYPE == "Party" && Model.billStatus == "P")
+        {
+            <span style="float: left;">SST : </span>
+
+            <span style="text-align:center;">@Model.PARTY_TAX %</span> <span style="float: right;">@Model.PARTYTAX_AMT</span>
+
+            <br />
+            @if (Model.Sett != 0 && Model.Sett != null)
+            {
+                <div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+                    <span style="text-align: left;">Settlement :</span>
+                    <span style="text-align: right;">(@Model.Sett)</span>
+                </div>
+            }
+            <span style="float: left;">Gross Total: </span> <span style="float: right;"><span>@Model.TotalAmountFormatted</span></span>
+
+            <br />
+        }
+        else
+        {
+            <span style="float: left;">TAX SST : </span>
+
+            <span style="text-align:center;">@Model.TAX_CASH %</span> <span style="float: right;">@Model.CASHTAX_AMT</span>
+
+            <br />
+            @if(Model.Sett != 0 && Model.Sett != null)
+            {
+                <div style="width: 100%; display: flex; justify-content: space-between; font-weight: 600;">
+                <span style="text-align: left;">Settlement :</span>
+                <span style="text-align: right;">(@Model.Sett)</span>
+                </div>
+            }
+            <span style="float: left;">Gross Total: </span> <span style="float: right;">@Model.TotalAmountFormatted</span>
+
+            <br />
+        }
+        
+        @* @if (Model.CashFormatted != "")
+        {
+        <span style="float: left; font-weight: 600;">Cash Received: </span> <span style="float: right;"><b>-</b></span>
+
+        <br />
+        <span style="float: left;">Cash Back: </span>
+
+        <span style="float: right;">-</span>
+
+        <br />
+        } *@
+
+        @if (Model.billStatus == "P")
+        {
+            @* @if (Model.Bank != 0 && Model.Party != 0) *@
+            @if (Model.PAYTYPE == "Split")
+            {
+                <span style="float: left;">Cash Received: </span> <span style="float: right;"><b>@Model.CashPaid</b></span>
+
+                <br />
+                <span style="float: left;">CREDIT CARD: </span> <span style="float: right;"><b>@Model.Bank</b></span>
+
+                <br />
+                <span style="float: left;">PARTY: </span> <span style="float: right;"><b>@Model.Party</b></span>
+
+                <br />
+                @* <div style="font-size:0.8rem !important; font-weight: 600; width: auto; text-align: left;padding:5px;">
+
+        </div> *@
+            }
+            @* else if (Model.Bank != 0) *@
+            else if (Model.PAYTYPE == "Bank")
+            {
+                <span style="float: left;">CREDIT CARD: </span> <span style="float: right; text-align:right ; padding-left:100px;border-bottom:1px solid black;"><b>@Model.BankFormatted</b></span>
+
+                <br />
+                @* <div style="font-size:0.8rem !important; font-weight: 600; width: auto; text-align: left;padding:5px;">
+
+        </div> *@
+            }
+            @* else if (Model.Party != 0) *@
+            else if (Model.PAYTYPE == "Party")
+            {
+                if (Model.billmode != "" && Model.billmode != "Credit")
+                {
+                    <span style="float: left;">@Model.billmode: </span> <span style="float: right;"><b>@Model.PartyFormatted</b></span>
+                }
+                else if (Model.billmode == "Credit")
+                {
+                    <span style="float: left;">@Model.CustomerName: </span> <span style="float: right;"><b>@Model.PartyFormatted</b></span>
+                }
+                else
+                {
+                    <span style="float: left;">PARTY: </span> <span style="float: right;"><b>@Model.PartyFormatted</b></span>
+                }
+
+
+                <br />
+                @* <div style="font-size:0.8rem !important; font-weight: 600; width: auto; text-align: left;padding:5px;">
+
+        </div> *@
+            }
+            else
+            {
+                <span style="float: left;">Cash Received: </span> <span style="float: right;text-align:right;"><b>@Model.CashFormatted</b></span>
+
+                <br />
+                <span style="float: left;">Cash Back: </span> <span style="text-align:center;"> </span>
+
+                <span style="float: right;text-align:right">@Model.CashBack</span>
+
+                <br />
+                @* <div style="font-size:0.8rem !important; font-weight: 600; width: auto; text-align: left;padding:5px;">
+
+        </div> *@
+            }
+        }
+
+    </div>
+    <hr style="border: none; border-top: 0.5px solid black; margin: 10px 0;">
+
+    <div style="font-size:0.8rem !important;">
+        <div style="width: 100%; display: flex; justify-content: space-between;">
+            <div style="float: left;">
+                <span style="text-align: left;padding-left:3px;font-weight: 600;">Cashier:</span>
+                <span style="text-align: left;">@Model.SalesmanName</span><br />
+            </div>
+            @* <div style="float: right;">
+                <span style="text-align: right;font-weight: 600;">Counter:</span>
+                <span style="text-align: right;padding-right:3px;">@Model.SalesmanName</span><br />
+            </div> *@
+
+        </div>
+        @*  <div style="width: auto">
+        <span style="font-weight: 600;text-align: left;">User:</span><span style="text-align: center;">@Model.SalesmanName</span>
+        <span style="font-weight: 600;text-align: left;">Counter:</span><span style="text-align: center;">Core</span>
+        </div> *@
+
+    </div>
+    <hr style="border: none; border-top: 0.5px solid black; margin: 10px 0;">
+    @if (Model.SRBSTATUS == "Y" && Model.SRBInvoiceId != "")
+    {
+        <div style="width: auto;text-align: center;">
+            <span style="font-weight: 600;text-align: center;">SRB Invoice #:</span><br />
+            <span style="text-align: center;">@Model.SRBInvoiceId</span>
+        </div>
+        <div style="justify-content: space-between">
+
+            <div>
+                <img src="~/Client/Company/SRBPOS.png" alt="Company Logo" style="width: 100px; margin-left: 20px;float: left;"><br />
+                <img class="srb-code" src="POSTransactions/GenerateQRCode?invoiceNumber= @Model.SRBInvoiceId" alt="QR Code" style="width: 85px; margin-right: 25px;float: right;margin-top: -11px;" />
+            </div>
+
+        </div>
+        if(Model.MENUTERMS != "")
+        {
+            <div>
+                <div style="text-align:center;width:auto;margin-top: 90px;">
+                    <span style="font-weight: 600;text-align: center;border-bottom: 1px solid black;">@Model.MENUTERMS</span>
+                </div>
+            </div>    
+        }
+        
+    }
+    else
+    {
+       if(Model.MENUTERMS != "")
+       {
+            <div>
+                <div style="text-align:center;width:auto;margin-top: 10px;">
+                    <span style="font-weight: 600;text-align: center;border-bottom: 1px solid black;">@Model.MENUTERMS</span>
+                </div>
+            </div>    
+       }
+    }
+
+    <!-- Social Links -->
+    <div style="font-size: 11px; margin-top: 5px;margin-left: 2px;">
+                <div style="margin-bottom: 2px;">
+                    @if(Model.FBLINK != "")
+                    {
+                        <img src="~/icons/facebook.svg" width="12" style="vertical-align: middle;" /> @Model.FBLINK
+                    }
+                    
+                </div>
+                <div style="margin-bottom: 2px;">
+                    @if (Model.INSTALINK != "")
+                    {
+                        <img src="~/icons/instagram.svg" width="12" style="vertical-align: middle;" />
+                        @Model.INSTALINK
+                    }
+                    
+                </div>
+                <div style="margin-bottom: 2px;">
+                    @if (Model.WEBLINK != "")
+                    {
+                        <img src="~/icons/googlechrome.svg" width="12" style="vertical-align: middle;" />
+                        @Model.WEBLINK
+                    }
+                    
+                </div>
+                <div style="margin-bottom: 2px;">
+                    @if (Model.TIKTOKLINK != "")
+                    {
+                        <img src="~/icons/tiktok.svg" width="12" style="vertical-align: middle;" />
+                        @Model.TIKTOKLINK
+                    }
+                   
+                </div>
+                <div style="margin-bottom: 2px;">
+                    @if (Model.YOUTUBELINK != "")
+                    {
+                        <img src="~/icons/youtube.svg" width="12" style="vertical-align: middle;" />
+                        @Model.YOUTUBELINK
+                    }
+                    
+                </div>
+    </div>
+
+    <!-- Free Wi-Fi QR -->
+    @if(Model.WIFINAME != "" && Model.WIFIPASS != "")
+    {
+        <div style="text-align: center; margin-top: 8px;">
+        <p style="font-size: 11px; margin: 0;">Free Wi-Fi</p>
+        <img src="/POSTransactions/GenerateWiFiQRCode?ssid=@Model.WIFINAME&password=@Model.WIFIPASS&encryption=WPA"
+             alt="Scan to Connect to WiFi"
+             style="width: 80px; height: 80px; border: 1px solid #eee;" />
+        <p style="font-size: 9px; margin: 0;">Password: @Model.WIFIPASS</p>
+        </div>    
+    }
+    
+    <hr style="border: none; border-top: 0.5px solid black; margin: 10px 0;">
+    <div style="text-align: center;font-size:0.9rem !important; font-weight: 400;">
+        <p>
+            Software Designed By: @Model.FName <br />
+            @Model.FTEL <br />
+            @Model.FWebsite
+        </p>
+    </div>
+
+</div>

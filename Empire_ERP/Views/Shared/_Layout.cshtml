@@ -1,0 +1,1324 @@
+﻿@{
+    string logoutURL = ViewBag.WebsiteURL + "/login/logout";
+    string favIcon = Context.Session.GetString("Icon");
+    string logo = Context.Session.GetString("Logo");
+    // string profileURL = ViewBag.WebsiteURL + "home/profile";
+    //string ProfileImage = "/images/upload/users/6.jpg";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title> @ViewBag.WebsiteName</title>
+    <link rel="shortcut icon" href="~/@favIcon" />
+    @* <link rel="shortcut icon" href="~/images/Favicon.png" /> *@
+    <environment>
+        <link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- font-family: 'Poppins', sans-serif; -->
+        <link rel="stylesheet" href="~/css/poppins-font.css" />
+
+        <!-- font awesome -->
+        <link rel="stylesheet" href="~/css/font-awesome-all.css" />
+
+        <!-- themify-icons -->
+        <link rel="stylesheet" href="~/css/themify-icons.css" />
+
+        <!-- icofont-icons -->
+        <link rel="stylesheet" href="~/css/icofont.css">
+        <!-- dev extreme -->
+        <!-- ImportantLinks-->
+        <link href="~/css/vendors/toastr.css" rel="stylesheet" asp-append-version="true" />
+        <link href="~/css/vendors/sweetalert2.min.css" rel="stylesheet" asp-append-version="true" />
+        <link rel="stylesheet" type="text/css" href="~/css/vendors/datatables.css" asp-append-version="true" />
+        <!-- select2 -->
+        <link href="~/css/select2.min.css" rel="stylesheet" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/dx.common.css" asp-append-version="true">
+        <link rel="stylesheet" href="~/css/dx.generic.custom-scheme.css" asp-append-version="true">
+        <!-- choices js -->
+        <!-- main -->
+        <link href="~/css/main.css" rel="stylesheet" asp-append-version="true">
+        <!-- mtstyle -->
+        <link href="~/css/mtstyles.css" rel="stylesheet" asp-append-version="true">
+        <link href="~/css/tautocomplete.css" rel="stylesheet" asp-append-version="true">
+        <!-- Custom styles for this template -->
+        <link href="~/css/style.css" rel="stylesheet" asp-append-version="true">
+        <link href="~/css/posstyle.css" rel="stylesheet" asp-append-version="true">
+        @*<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">*@
+        <link href="~/lib/toast-notification/build/toastr.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/css/DatePicker.css" />
+
+        <link href="~/lib/toast-notification/build/toastr.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" integrity="sha512-2eMmukTZtvwlfQoG8ztapwAH5fXaQBzaMqdljLopRSA0i6YKM8kBAOrSSykxu9NN9HrtD45lIqfONLII2AFL/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        @* <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.0/signalr.min.js"></script> *@
+        <script src="https://cdn.jsdelivr.net/npm/qz-tray/qz-tray.js"></script>
+        <style>
+            @@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap');
+
+            .dx-datagrid .dx-data-row > td.bullet {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+
+            #Loader {
+                top: 0;
+                left: 0;
+                z-index: 1002;
+                display: none;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                background-color: rgb(255 255 255 / 57%);
+            }
+
+            #form .dx-fieldset {
+                height: 500px;
+            }
+
+            .hide {
+                display: none !important;
+            }
+
+            .span {
+                color: red;
+                font-size: 9px;
+            }
+
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                display: none;
+            }
+
+            /* .dx-toolbar-label .dx-toolbar-item-content > div {
+                                                                overflow: hidden;
+                                                                text-overflow: ellipsis;
+                                                                white-space: nowrap;
+                                                                display: none;
+                                                            } */
+
+            .form-control,
+            .form-select {
+                font-size: 11px;
+                padding: 2px 10px;
+                box-shadow: inherit !important;
+            }
+
+            label.form-label {
+                font-size: 10px;
+                margin-bottom: 3px;
+                font-weight: 600;
+            }
+
+            textarea.form-control {
+                min-height: calc(0.5em + 0.75rem + 2px);
+            }
+
+            .nav-link {
+                display: block;
+                padding: 0.2rem 1rem;
+                color: #0d6efd;
+                text-decoration: none;
+                transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+            }
+
+            .table {
+                overflow-y: auto;
+            }
+
+            .dx-group-panel-message {
+                z-index: 9999999;
+            }
+
+            .nav-tabs li.nav-item .nav-link {
+                font-size: 10px;
+                border-radius: 0 !important;
+            }
+
+            ul.ui-widget {
+                font-size: 13px;
+                border: 0;
+            }
+
+                ul.ui-widget li.ui-menu-item {
+                    list-style-image: none;
+                    font-family: "Helvetica Neue", HelveticaNeue, helvetica, arial, sans-serif;
+                    font-size: 92%;
+                    font-weight: 300;
+                    font-style: normal;
+                    font-size-adjust: none;
+                    margin: 0;
+                    padding: 1.8px 4.55px;
+                    white-space: nowrap;
+                }
+
+            .ui-widget-content a {
+                color: #444444;
+            }
+
+
+
+            ul.ui-widget li.ui-menu-item b {
+                font-weight: 700;
+            }
+
+            #search {
+                height: 25px;
+            }
+
+            .ui-widget-content .ui-state-focus {
+                background-color: #D6F7FF;
+                background-image: none;
+                border: 0;
+            }
+
+            .highlight {
+                background-color: #055a87;
+                color: #fff;
+            }
+
+            a,
+            a:hover {
+                text-decoration: none;
+            }
+
+            body {
+                font-family: 'Roboto', sans-serif;
+            }
+
+            /*------------------  */
+            .ci-user-picture {
+                min-width: 150px;
+                margin-right: 16px;
+            }
+
+                .ci-user-picture img {
+                    width: 150px;
+                    height: 150px;
+                    border-radius: 50%;
+                }
+
+            .filepreviewprofile {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+            }
+
+            /*----modal--------*/
+            .modal-header-bg {
+                width: 100%;
+                height: 12px;
+                background: #055a87;
+            }
+
+            .cropImageModal .modal-dialog {
+                max-width: 750px;
+                width: 90%;
+                margin: 0.5rem auto;
+            }
+
+            .up-photo-title {
+                padding: 8px 15px;
+                text-align: center;
+            }
+
+            #upload-demo {
+                position: relative;
+                width: 100%;
+                height: 250px;
+                padding-bottom: 0;
+            }
+
+            .croppie-container h5 {
+                position: absolute;
+                bottom: 4px;
+                text-align: center;
+                left: 0;
+                right: 0;
+                color: #fff;
+                z-index: 2;
+                font-size: 15px;
+            }
+
+            figure figcaption {
+                position: absolute;
+                bottom: 0;
+                color: #fff;
+                width: 100%;
+                padding-left: 9px;
+                padding-bottom: 5px;
+                text-shadow: 0 0 10px #000;
+            }
+
+            .croppie-container .cr-image {
+                right: 0;
+            }
+
+            .croppie-container .cr-slider-wrap {
+                width: 275px;
+            }
+
+            .cr-slider-wrap p {
+                font-size: 13px;
+                color: #8D8D94;
+                text-align: left;
+            }
+
+            .cr-slider {
+                width: 275px;
+            }
+
+            .upload-action-btn {
+                margin-top: 60px;
+                padding-top: 40px;
+            }
+
+            .cr-slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 18px;
+                height: 18px;
+                background: #006AFA;
+                cursor: pointer;
+                box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.25);
+            }
+
+            .cr-slider::-moz-range-thumb {
+                width: 18px;
+                height: 18px;
+                background: #006AFA;
+                cursor: pointer;
+                box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.25);
+            }
+
+            .cr-slider::-ms-thumb {
+                width: 18px;
+                height: 18px;
+                background: #006AFA;
+                cursor: pointer;
+                box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.25);
+            }
+
+            .cr-slider::-webkit-slider-runnable-track {
+                width: 275px;
+                height: 2px;
+                cursor: pointer;
+                box-shadow: none;
+                background: #E0E0E0;
+                border-radius: 3px;
+                border: none;
+            }
+
+            .cr-slider:focus::-webkit-slider-runnable-track {
+                background: #E0E0E0;
+            }
+
+            .cr-slider::-moz-range-track {
+                width: 275px;
+                height: 2px;
+                cursor: pointer;
+                box-shadow: none;
+                background: #E0E0E0;
+                border-radius: 3px;
+                border: none;
+            }
+
+            .cr-slider::-ms-track {
+                width: 275px;
+                height: 2px;
+                cursor: pointer;
+                box-shadow: none;
+                background: #E0E0E0;
+                border-radius: 3px;
+                border: none;
+                color: transparent;
+            }
+
+            #ui-datepicker-div {
+                position: fixed;
+                top: 268.75px;
+                left: 308px;
+                z-index: 1000;
+                display: block;
+            }
+
+            /* start */
+
+            .dropdown-submenu > .dropdown-menu {
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 100%;
+                min-width: 330px !important; /* 🔥 Force width */
+                width: 400px !important; /* 🔥 Force apply width */
+                z-index: 9999;
+                max-height: 400px; /* 500px ke baad scroll start hoga */
+                overflow-y: auto; /* vertical scrollbar enable */
+                overflow-x: hidden;
+            }
+
+            .dropdown-submenu:hover > .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-submenu > .dropdown-menu {
+                z-index: 9999;
+            }
+
+            .dropdown-toggle::after {
+                display: none !important;
+            }
+
+            .dropdown-menu .dropdown-item {
+                padding-top: 5px;
+                padding-bottom: 5px;
+                line-height: 1.2;
+            }
+
+            .dropdown-menu {
+                position: absolute; /* ya fixed, use-case ke hisaab se */
+                z-index: 9999; /* sab se upar laane ke liye bada z-index */
+            }
+
+            .favMenu.highlight {
+                border: 2px dashed #4caf50;
+                background-color: rgba(76, 175, 80, 0.1);
+                transition: all 0.2s ease-in-out;
+            }
+
+            .slide-track-custom {
+                background-color: #055a87;
+                clip-path: polygon(20px 0%, 100% 0%, 100% 100%, 0% 100%);
+                color: white;
+                overflow: hidden;
+                display: inline-block;
+                padding: 3px 12px;
+            }
+
+
+            .branch-name-custom {
+                color: white !important;
+                white-space: nowrap !important;
+                font-size: 11px !important;
+                letter-spacing: 1px !important;
+                visibility: visible !important;
+            }
+
+            /* breadcrumb */
+
+            .breadcrumb-box {
+                text-align: left;
+            }
+
+            .breadcrumb-custom {
+                background-color: #055a87;
+                /* clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 0px 100%); */
+                clip-path: polygon(0px 0px, 100% 0%, calc(100% - 20px) 100%, 0px 100%);
+                color: white;
+                overflow: hidden;
+                display: inline-block;
+                padding: 7px 40px 0px 12px;
+                margin: 0;
+            }
+
+                .breadcrumb-custom li {
+                    color: white;
+                    font-size: 11px;
+                    letter-spacing: 1px;
+                    white-space: nowrap;
+                }
+
+                .breadcrumb-custom a {
+                    color: white;
+                    text-decoration: none;
+                }
+
+            /* KnockOff modal */
+            .modal-dialog.knockoff-modal {
+                max-width: 60%;
+                width: 95%;
+                height: 75%; /* Add this */
+                margin: 0 auto; /* Center vertically */
+                margin-top: 3rem; /* Center vertically */
+            }
+
+            .modal-content {
+                height: 100%; /* Add this */
+                display: flex;
+                flex-direction: column;
+            }
+
+            #knockOffModal .modal-body {
+                overflow-y: auto;
+                flex: 1; /* This will make modal-body take remaining space */
+            }
+
+            .dx-revert-button {
+                display: none !important;
+            }
+
+            .gear-dropdown {
+                display: none;
+                position: absolute !important;
+                background: #fff;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                padding: 15px 20px;
+                width: 240px !important;
+                max-width: 350px;
+                z-index: 9999;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Softer, larger shadow */
+                transition: opacity 0.2s ease, transform 0.2s ease;
+                /* opacity: 0; /* start hidden */ */ transform: translateY(-10px); /* slight upward offset for animation */
+            }
+
+
+                .gear-dropdown .form-check {
+                    padding-left: 0;
+                }
+
+                .gear-dropdown .form-check-label {
+                    margin-left: 0.5rem;
+                }
+
+            .breadcrumb-box, .breadcrumb {
+                overflow: visible !important; /* ensure dropdown is visible */
+            }
+
+            .dclear-chk {
+                margin-left: 4.5em !important;
+            }
+
+
+            .gear-checkbox {
+                width: 13px;
+                height: 13px;
+                transform: scale(1.3);
+                margin-left: 1.1em;
+                accent-color: var(--theme-deafult);
+                cursor: pointer;
+            }
+
+            .negative-summary {
+                color: red;
+                font-weight: 600;
+            }
+
+        </style>
+    </environment>
+    @if (IsSectionDefined("LinkStyleSection"))
+    {
+        @RenderSection("LinkStyleSection")
+        ;
+    }
+    @if (IsSectionDefined("InLineStyleSection"))
+    {
+        @RenderSection("InLineStyleSection")
+        ;
+    }
+</head>
+
+<body class="full_width">
+    <div class="loader-box" id="Loader">
+        <div class="loader-1"></div>
+    </div>
+    <div class="headertopbar">
+        <div class="container-fluid">
+            <div class="row g-0 d-flex align-items-center">
+                <div class="col-4">
+                    <img class="brang_logo" src="~/@logo">
+                </div>
+                <div class="col-8 text-end">
+                    <ul class="ul-right-menu topexlink">
+                        @* <li class="nav-item dropdown ph-hide">
+                            <a href="javascript:;" class="quick-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa-brands fa-uikit"></i> Calculator</a>
+                            <ul class="dropdown-menu quicklink-dropdown">
+                                <li>
+                                    <div class="calculator">
+                                        <div class="input" id="input"></div>
+                                        <div class="buttons">
+                                            <div class="operators">
+                                                <div>+</div>
+                                                <div>-</div>
+                                                <div>x</div>
+                                                <div>/</div>
+                                            </div>
+                                            <div class="leftPanel">
+                                                <div class="numbers">
+                                                    <div>7</div>
+                                                    <div>8</div>
+                                                    <div>9</div>
+                                                </div>
+                                                <div class="numbers">
+                                                    <div>4</div>
+                                                    <div>5</div>
+                                                    <div>6</div>
+                                                </div>
+                                                <div class="numbers">
+                                                    <div>1</div>
+                                                    <div>2</div>
+                                                    <div>3</div>
+                                                </div>
+                                                <div class="numbers">
+                                                    <div>0</div>
+                                                    <div>.</div>
+                                                    <div id="clear">C</div>
+                                                </div>
+                                            </div>
+                                            <div class="equal" id="result">=</div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown ph-hide">
+                            <a href="javascript:;" class="quick-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa-brands fa-uikit"></i> Dropdown</a>
+                            <ul class="dropdown-menu quicklink-dropdown">
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown ph-hide">
+                            <a href="javascript:;" class="quick-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa-brands fa-uikit"></i> Dropdown</a>
+                            <ul class="dropdown-menu quicklink-dropdown">
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa-brands fa-uikit"></i> Menu
+                                    </a>
+                                </li>
+                            </ul>
+                        </li> *@
+                        <li class="nav-item dropdown ph-hide">
+                            <a href="javascript:;" class="nav-link dropdown-toggle noti_dropbtn"
+                               data-bs-toggle="dropdown" aria-expanded="true">
+                                <i class="fa-regular fa-bell"></i>
+                                @* <span class="noticount">9+</span> *@
+                            </a>
+                            <ul class="dropdown-menu notidrop">
+                                <li class="hdng">Notification</li>
+                                <div class="bodycntnt" id="notifications">
+                                    <ul>
+                                        <li>
+                                            <h4>Notification 1</h4>
+                                            <p>
+                                                Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                industry.
+                                            </p>
+                                        </li>
+                                        <li>
+                                            <h4>Notification 2</h4>
+                                            <p>
+                                                Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                industry.
+                                            </p>
+                                        </li>
+                                        <li>
+                                            <h4>Notification 3</h4>
+                                            <p>
+                                                Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                industry.
+                                            </p>
+                                        </li>
+                                        <li>
+                                            <h4>Notification 4</h4>
+                                            <p>
+                                                Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                industry.
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </ul>
+                        </li>
+                        <li class="searchli ph-hide">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                <input type="text" class="form-control" placeholder="Search">
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="javascript:;" class="nav-link dropdown-logout dropdown-toggle"
+                               data-bs-toggle="dropdown">
+                                @* <span class="dp-user">@ViewBag.Name</span> *@
+                                <img src="@ViewBag.ProfileImage" alt="">
+                                <div class="dp-user mt-2">
+                                    <p>@ViewBag.Name</p>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu logoutmenu">
+                                <li><a href="#"><i class="ti-user"></i><span>Account </span></a></li>
+                                <li><a href="#"><i class="ti-email"></i><span>Inbox</span></a></li>
+                                <li><a onclick="StopIIS()" style="cursor: pointer;"><i class="ti-lock"></i><span>Stop IIS</span></a></li>
+                                <li><a href="#"><i class="ti-blackboard"></i><span>Taskboard</span></a></li>
+                                <li><a href="#"><i class="ti-settings"></i><span>Settings</span></a></li>
+                                <li><a onclick="Logout()" style="cursor: pointer;"><i class="ti-shift-left"></i><span>Logout</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            @Html.Raw(ViewBag.Menu)
+        </div>
+    </div><!-- End topbar -->
+
+    <input type="hidden" id="menuURLHidden" />
+    <div class="main_wrap @(ViewBag.IsSidebarOpen ? "" : "collapse_sidebar")">
+        <div class="leftsidebar">
+            <h3 class="hdr_title">Quick Links</h3>
+            <a href="javascript:;" class="toggle_sidebar"><i class="ti-angle-left"></i></a>
+            @* @Html.Raw(ViewBag.ChildMenu) *@
+            <div class="favMenu"></div>
+        </div>
+        <div class="rightsidecontent">
+            <div class="contain_wrap">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-4 breadcrumb-box  d-flex align-items-center position-relative">
+
+                            @Html.Raw(ViewBag.BreadCrumbHTML)
+                        </div>
+                        <div id="gearDropdown" class="gear-dropdown">
+                            <div class="fw-bold mb-2 ms-0"><i style="color:#055a87;" class='fa-solid fa-gear'></i> Settings</div>
+                            <div class="mb-2 d-flex align-items-center justify-content-between" style="white-space: nowrap;">
+                                <label class="form-check-label" for="g2">  Row  Limit : </label>
+                                <input type="number" style="width:30%;" type="text" id="RowLimit" min="1" step="1" class="form-control mb-2">
+
+                            </div>
+
+                            <div class="form-check form-switch mb-2 d-flex  align-items-center">
+                                <label class="form-check-label" for="g2">Data Clear :</label>
+                                <input class="mb-3 form-check-input dclear-chk" id="DClear-ChkBox" type="checkbox">
+
+                            </div>
+                            <div class="form-check form-switch mb-2 align-items-center">
+                                <label class="form-check-label" for="g1">Search With Detail : </label>
+                                <input class="gear-checkbox" id="Search-Chkbox" type="checkbox">
+
+                            </div>
+
+                            <div class="text-end">
+                                <button id="BtnApply" class="btn btn-sm btn-primary w-40">Apply</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-8" style="text-align: right;">
+                            <div class="branch-slider" style="display: inline-block;">
+                                <div class="slide-track slide-track-custom">
+                                    <span class="branch-name branch-name-custom">
+                                        @Html.Raw(ViewBag.Company + "&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;" + ViewBag.BranchForNav + "&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;" + ViewBag.Period)
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="display:none">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="confirm-identity">
+                        <div class="ci-user d-flex align-items-center justify-content-center">
+                            <div class="ci-user-picture">
+                                <img src="https://image.flaticon.com/icons/svg/145/145867.svg" id="item-img-output" class="imgpreviewPrf img-fluid" alt="">
+                            </div>
+                        </div>
+                        <div class="ci-user-btn text-center mt-4">
+                            <a href="javascript:;" class="userEditeBtn btn-default bg-blue position-relative">
+                                <input type="file" class="item-img file center-block filepreviewprofile">
+                                Adjust Image
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade cropImageModal" id="cropImagePop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <button type="button" class="close-modal-custom" data-dismiss="modal" aria-label="Close"><i class="feather icon-x"></i></button>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="modal-header-bg"></div>
+                    <div class="up-photo-title">
+                        <h3 class="modal-title">Adjust Image Upload</h3>
+                    </div>
+                    <div class="up-photo-content pb-5">
+
+                        <div id="upload-demo" class="center-block">
+                            <h5><i class="fas fa-arrows-alt mr-1"></i> Drag your image as you require</h5>
+                        </div>
+                        <div class="upload-action-btn text-center px-2">
+                            <button type="button" class="btn btn-danger px-3 ml-sm-2 position-relative replacePhoto"><i class="fa fa-close"></i> Close</button>
+                            <button type="button" id="cropImageBtn" class="btn btn-primary btn-save px-3 mr-2"><i class="fa fa-save"></i> Upload Image</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ImageViewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="height: 430px; width: 410px;">
+                <div class="modal-body p-0">
+                    <div class="up-photo-content pb-5">
+                        <div id="upload-demo" class="center-block">
+                            <img src="" style="height: 350px; width: 350px; margin-left: 30px; margin-top: 25px;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="upload-action-btn text-center px-2">
+                    <button type="button" class="btn btn-danger px-3 ml-sm-2 position-relative mb-15" onclick="return $('#ImageViewModal').modal('hide')"><i class="fa fa-close"></i> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="CopyViewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Save Copy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-5">
+                    <div>
+                        <input type="date" id="updatedDate" value="" />
+                    </div>
+                </div>
+                <div class="text-center px-2">
+                    <button type="button" id="saveCopiedRecord" class="btn btn-primary px-3 ml-sm-2 position-relative mb-15"><i class="fa fa-save"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div   class="modal fade" id="CopyViewModalBOM" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-modal="true" >
+        <div   class="modal-dialog">
+            <div   class="modal-content">
+                <div   class="modal-header">
+                    <h5   class="modal-title" id="myExtraLargeModalLabel">Save Copy</h5>
+                    <button   type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div   class="modal-body text-center p-5">
+
+                    <div   class="row">
+                        <div   class="col-lg-4">
+                            <label   class="form-label" for="FinishItem">Date:</label>
+                        </div>
+                        <div   class="col-lg-7 mr-10">
+                            <input   class="form-control" id="updated_Date" type="date" value="2026-04-11" autocomplete="off">
+                        </div>
+                    </div>
+                    <div   class="row">
+                        <div   class="col-lg-4">
+                            <label   class="form-label" for="FinishItem">Batch Name:</label>
+                        </div>
+                        <div   class="col-lg-7">
+                            <input   class="form-control mr-10" id="updatedBatchName" type="text" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div   class="text-center px-2">
+                    <button   type="button" id="saveCopiedRecord" class="btn btn-primary px-3 ml-sm-2 position-relative mb-15"><i   class="fa fa-save"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @* adSalesman Model here *@
+    <div class="modal fade" id="CopySalesMan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Save Copy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-5">
+                    <div>
+                        <div id="SalesManModal"></div>
+                    </div>
+                </div>
+                <div class="text-center px-2">
+                    <button type="button" id="saveCopiedRecord" class="btn btn-primary px-3 ml-sm-2 position-relative mb-15"><i class="fa fa-save"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="CustomerPricingCopy" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Save Copy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-5">
+                    <div>
+                        <div id="PartyModel"></div>
+                    </div>
+                </div>
+                <div class="text-center px-2">
+                    <button type="button" id="saveCopiedRecord" class="btn btn-primary px-3 ml-sm-2 position-relative mb-15"><i class="fa fa-save"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="CopyViewModal_LR" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Save Copy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-5">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label> Date :</label>
+                        </div>
+                        <div class="col-lg-8">
+                            <input type="date" id="updatedDated" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body text-center p-5">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label> Lot Name :</label>
+                        </div>
+                        <div class="col-lg-8">
+                            <input type="text" id="updatedLotNo" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center px-2">
+                    <button type="button" id="saveCopiedRecord" class="btn btn-primary px-3 ml-sm-2 position-relative mb-15"><i class="fa fa-save"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* MPO REG COPY MODAL *@
+    <div class="modal fade" id="CopyViewModal_MPOR" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Save Copy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-5">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label> Date :</label>
+                        </div>
+                        <div class="col-lg-8">
+                            <input type="date" id="updatedDatedMPOR" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body text-center p-5">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label> Client PO# :</label>
+                        </div>
+                        <div class="col-lg-8">
+                            <input type="text" id="updatedclientPO" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center px-2">
+                    <button type="button" id="saveCopiedRecord" class="btn btn-primary px-3 ml-sm-2 position-relative mb-15"><i class="fa fa-save"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="CopyViewModalName" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Save Copy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-5">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label> Name :</label>
+                        </div>
+                        <div class="col-lg-8">
+                            <input type="text" id="updatedName" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center px-2">
+                    <button type="button" id="saveCopiedRecord" class="btn btn-primary px-3 ml-sm-2 position-relative mb-15"><i class="fa fa-save"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="CopyViewModalBOM" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Save Copy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-5">
+
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label class="form-label" for="FinishItem">Finish Item:</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <input type="date" id="updated_Date" value="" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label class="form-label" for="FinishItem">Finish Item:</label>
+                        </div>
+                        <div class="col-lg-6" id="copiedFinishItem"></div>
+                        <input id="copiedFinishItem_Hidden" hidden />
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-lg-4">
+                            <label class="form-label" for="Process">Process:</label>
+                        </div>
+                        <div class="col-lg-6" id="copiedProcess"></div>
+                        <input id="copiedProcess_Hidden" hidden />
+                    </div>
+                </div>
+                <div class="text-center px-2">
+                    <button type="button" id="saveCopiedRecord" class="btn btn-primary px-3 ml-sm-2 position-relative mb-15"><i class="fa fa-save"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* cost center modal *@
+    <div class="modal fade" id="costCenterModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Cost Center</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="costCenterModalBody">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Knock Off modal -->
+    <div class="modal fade" id="knockOffModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog knockoff-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    @* <span id="knockOffModalLabel">This receiving AMOUNT is <span id="ko_amt_span" style="font-weight:600"></span> under BOOK TYPE <span id="ko_bt_span" style="font-weight:600"></span> against PARTY <span id="ko_party_span" style="font-weight:600"></span>.</span> *@
+                    <span id="knockOffModalLabel">Party Receiving Amount is : <span id="ko_amt_span" style="font-weight:600"></span> || Book Type : <span id="ko_bt_span" style="font-weight:600"></span> || Party Name : <span id="ko_party_span" style="font-weight:600"></span> || Party WHT : <span id="ko_party_wht" style="font-weight:600"></span>%</span>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="knockOffModalBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Favorite Menu Modal -->
+    <div class="modal fade" id="favoriteModal" tabindex="-1" role="dialog" aria-labelledby="favoriteModalLabel"
+         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="favoriteModalLabel">Add Favorite Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="txtMenuID" />
+                    <div class="mb-3">
+                        <label>Menu Name</label>
+                        <input type="text" id="txtCustomName" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label>Shortcut Key</label>
+                        <div id="SHORTCUT"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnSaveFavorite">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <environment>
+        <!--ImportantLinks-->
+        @* <script src="~/js/jquery-3.6.4.min.js" asp-append-version="true"></script> *@
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous" asp-append-version="true"></script>
+        @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" asp-append-version="true"></script> *@
+        <script src="~/js/jquery-ui.min.js" asp-append-version="true"></script>
+        @* <script src="https://cdn.tiny.cloud/1/6ie1ubu8p7appzkqgdxuve6qwupiijcpdytyb3qiiovaa6m1/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> *@
+        <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
+
+        <script src="~/lib/jquery-ui/jquery-ui-1.10.0.custom.min.js" asp-append-version="true"></script>
+        <script src="~/js/toastr.min.js" asp-append-version="true"></script>
+        <script src="~/js/toastr.script.min.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
+                asp-append-version="true"></script>
+        <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js" asp-append-version="true"></script>
+        <script src="~/js/perfect-scrollbar.min.js" asp-append-version="true"></script>
+        <script src="~/js/sweetalert2.min.js" asp-append-version="true"></script>
+        <script src="~/js/sweetalert.script.min.js" asp-append-version="true"></script>
+        <script src="~/js/main.js" asp-append-version="true"></script>
+        <script src="~/js/parsley.min.js" type="text/javascript" asp-append-version="true"></script>
+        <script src="~/js/input-mask.js" asp-append-version="true"></script>
+        <script src="~/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+        <script src="~/js/select2.min.js" asp-append-version="true"></script>
+        <!-- data table -->
+        <script src="~/js/datatable/datatables/jquery.dataTables.min.js" asp-append-version="true"></script>
+        <script src="~/js/datatable/datatables/datatable.custom.js" asp-append-version="true"></script>
+        <script src="~/js/tautocomplete.js" asp-append-version="true"></script>
+
+        <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        @* <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> *@
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.12.1/polyfill.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+        <script>
+
+            window.addEventListener("settingsUpdated", function (e) {
+                console.log("Updated settings received:", e.detail);
+                    Limit = e.detail.rowLimit;
+                    dataClear = e.detail.dataClear;
+                console.log("Limit updated to:", Limit);
+            });
+                var statusApp = @Html.Raw(Json.Serialize(ViewBag.StatusApp));
+
+
+            if (window.pageSettings) {
+                console.log("Using pre-loaded settings:", window.pageSettings);
+                Limit = window.pageSettings.rowLimit;
+                dataClear = window.pageSettings.dataClear;
+            }
+                      document.addEventListener('DOMContentLoaded', function () {
+                const sidebar = document.querySelector('.main_wrap');
+                $.get("/FavoriteMenu/GetFavorites", function (data) {
+                    if (data.data.length > 0) {
+                        const isOpen = data.data[0].iS_SIDEBAR_OPEN;
+                        if (isOpen) {
+                            sidebar.classList.remove('collapse_sidebar');
+                            sidebar.classList.remove('collapsed');
+                        }
+                    } else {
+                        sidebar.classList.add('collapse_sidebar');
+                    }
+                });
+            });
+
+                    document.getElementById('myTab')?.addEventListener(
+                'keydown',
+                blockArrowKeys,
+                true
+            );
+
+            document.querySelectorAll('.my-tabsss').forEach(function (el) {
+                el.addEventListener(
+                    'keydown',
+                    blockArrowKeys,
+                    true
+                );
+            });
+            function blockArrowKeys(e) {
+                if (
+                    e.key === 'ArrowLeft' ||
+                    e.key === 'ArrowRight' ||
+                    e.key === 'ArrowUp' ||
+                    e.key === 'ArrowDown'
+                ) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    return false;
+                }
+            }
+
+            $(document).ready(function () {
+                  setTimeout(function () {
+                  $('input[type="date"]').each(function () {
+                      $(this).attr('max', '9999-12-31');
+                      $(this).val();
+                  });
+                  }, 100);
+                });
+              var minDate = @Html.Raw(Json.Serialize(ViewBag.StartDate));
+              var maxDate = @Html.Raw(Json.Serialize(ViewBag.EndDate));
+              // document.addEventListener('DOMContentLoaded', function () {
+              //     if (window.location.href.includes('POSTransactions')) {
+              //         debugger;
+              //         const checkElement = setInterval(function () {
+              //             const toggleButton = $('.toggle_sidebar');
+              //             if (toggleButton.length > 0) {
+              //                 clearInterval(checkElement); // Stop checking once found
+              //                 toggleButton.trigger('click'); // Trigger the click event
+              //                 console.log("Sidebar toggle clicked.");
+              //             }
+              //         }, 100); // Check every 100ms
+              //     }
+              // });
+
+              window.jsPDF = window.jspdf.jsPDF;
+
+              function ShowImage(imageSrc) {
+                  $('#ImageViewModal img').attr('src', imageSrc);
+                  $('#ImageViewModal').modal('show');
+              }
+
+              function StopIIS() {
+                  swal({
+                      title: 'Are you sure you want to stop Application?',
+                      text: "You won't be able to revert this!",
+                      type: 'warning',
+                      showCancelButton: true,
+                      confirmButtonColor: '#0CC27E',
+                      cancelButtonColor: '#FF586B',
+                      confirmButtonText: 'Yes, stop it!',
+                      cancelButtonText: 'No, cancel!',
+                      confirmButtonClass: 'btn btn-success mr-5',
+                      cancelButtonClass: 'btn btn-danger',
+                      buttonsStyling: false
+                  }).then(function () {
+                      window.location.href = '/Home/StopApplication';
+                  });
+              }
+
+              function Logout() {
+                  swal({
+                      title: 'Are you sure you want to Logout?',
+                      text: "You'll have to re-enter credentials!",
+                      type: 'warning',
+                      showCancelButton: true,
+                      confirmButtonColor: '#0CC27E',
+                      cancelButtonColor: '#FF586B',
+                      confirmButtonText: 'Yes, logout!',
+                      cancelButtonText: 'No, cancel!',
+                      confirmButtonClass: 'btn btn-success mr-5',
+                      cancelButtonClass: 'btn btn-danger',
+                      buttonsStyling: false
+                  }).then(function () {
+                      window.location.href = '/login/logout';
+                  });
+              }
+        </script>
+
+        <!-- custom js -->
+        <script src="~/js/custom.js" asp-append-version="true"></script>
+        <script src="~/js/favoriteMenu.js" asp-append-version="true"></script>
+        <!--DevExpress Links-->
+        @*<script src="~/js/jquery-3.5.1.min.js" asp-append-version="true"></script> *@
+        <script>window.jQuery || document.write(decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E'))</script>
+        <script src="~/js/base.js" asp-append-version="true"></script>
+        @* <script src="~/dx/quill.min.js"></script> *@
+        <script src="~/js/dx.all.js" asp-append-version="true"></script>
+        @* <script src="https://cdn3.devexpress.com/jslib/23.2.4/js/dx.all.js" asp-append-version="true"></script> *@
+
+        <script src="~/dx/ajaxhelper.js"></script>
+        <script src="~/dx/ati_dxHelper.js"></script>
+        <script src="~/js/customjs/empr_helper.js"></script>
+        <script src="~/js/customjs/empr_ClosingShop.js"></script>
+        <script src="~/js/jquery.mapkey.js"></script>
+
+        <script src="~/lib/toast-notification/build/toastr.min.js"></script>
+        <!-- select2 -->
+    </environment>
+    @if (IsSectionDefined("LinkScriptSection"))
+    {
+        @RenderSection("LinkScriptSection")
+    }
+    @if (IsSectionDefined("InLineScriptSection"))
+    {
+        @RenderSection("InLineScriptSection")
+    }
+</body>
+
+</html>

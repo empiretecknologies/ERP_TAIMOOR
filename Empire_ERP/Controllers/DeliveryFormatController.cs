@@ -1,0 +1,344 @@
+﻿using Empire_ERP.Core.Entities;
+using Empire_ERP.Core.Interfaces;
+using Empire_ERP.Core.Services;
+using Empire_ERP.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Reporting.NETCore;
+using System.Text;
+using static Azure.Core.HttpHeader;
+
+namespace Empire_ERP.Controllers
+{
+    [CheckSession]
+    [ExtractMenuCode]
+    public class DeliveryFormatController : BaseController
+    {
+        public IDeliveryFormatService _deliveryFormatService { get; set; }
+        private readonly IWebHostEnvironment _hostingEnvironment;
+        public IPeriodService _periodService { get; set; }
+        public DeliveryFormatController(IDeliveryFormatService chartOfAccountService, IMenuService menuService, IWebHostEnvironment hostingEnvironment, IPeriodService periodService,IBaseService baseService) : base(menuService,baseService)
+        {
+            _deliveryFormatService = chartOfAccountService;
+            _hostingEnvironment = hostingEnvironment;
+            _periodService = periodService;
+        }
+
+        public IActionResult Index()
+        {
+            var common = CommonHelper.GetValues(HttpContext);
+            ViewBag.Permissions = common.RoleType == "A"
+                ? "Admin"
+                : CommonHelper.GetPermissionByMenueID(common.RoleID, common.MenuID);
+
+            var periodInfo = _periodService.GetPeriodById(Convert.ToInt32(common.Period));
+            ViewBag.StartDate = ((Period)periodInfo.data).START_D.Value.ToString("yyyy-MM-dd");
+            ViewBag.EndDate = ((Period)periodInfo.data).START_E.Value.ToString("yyyy-MM-dd");
+            var response = _menuService.GetMenu(common.MenuID);
+            if (response.msgType == 1)
+            {
+                ViewBag.DATA_CLEAR = ((Menu)response.data).DATA_CLEAR;
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetDeliveryFormats()
+        {
+            var data = _deliveryFormatService.GetDeliveryFormats(CommonHelper.GetValues(HttpContext));
+            return Json(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetAccountsForTreeView()
+        {
+            try
+            {
+                var data = _deliveryFormatService.GetAccountsForTreeView(CommonHelper.GetValues(HttpContext));
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        public JsonResult QuickSearch()
+        {
+            try
+            {
+                var data = _deliveryFormatService.QuickSearch(CommonHelper.GetValues(HttpContext));
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        //[HttpPost]
+        //public JsonResult QuickSearchLazyLoading(int skip = 0, int take = 12, string sort = null, string filter = null, string group = null)
+        //{
+        //    try
+        //    {  
+        //        var data = _deliveryFormatService.QuickSearch(CommonHelper.GetValues(HttpContext), skip, take, filter, group);
+        //        return Json(data);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+
+        [HttpGet]
+        public JsonResult DeliveryFormatByid(int id)
+        {
+            var data = _deliveryFormatService.GetDeliveryFormatById(id, CommonHelper.GetValues(HttpContext));
+            return Json(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetReportTypes()
+        {
+            try
+            {
+                var data = _menuService.GetMenuDetails(CommonHelper.GetValues(HttpContext).MenuID);
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                return Json(new { data = _catchMessage, msgType = 2 });
+            }
+        }
+
+        [HttpGet]
+        public JsonResult GetItems()
+        {
+            try
+            {
+                var data = DropdownService.ItemMasterDropdown(CommonHelper.GetValues(HttpContext).RoleID, CommonHelper.GetValues(HttpContext).RoleType);
+                return Json(new { data = data, msgType = 1 });
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                return Json(new { data = _catchMessage, msgType = 2 });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult Save(DeliveryFormat model)
+        {
+            try
+            {
+                var data = _deliveryFormatService.Save(model, CommonHelper.GetValues(HttpContext));
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public JsonResult Delete(int id)
+        {
+            try
+            {
+                var data = _deliveryFormatService.Delete(id, CommonHelper.GetValues(HttpContext));
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public JsonResult CopyRecord(CopyRecord record)
+        {
+            try
+            {
+                var data = _deliveryFormatService.CopyRecord(record, CommonHelper.GetValues(HttpContext));
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                return Json(new { msg = _catchMessage, msgType = 2 });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult GetPrintReport(DeliveryFormatReport model)
+        {
+            MyHttpResponseMessage response = new MyHttpResponseMessage();
+            try
+            {
+                var filePath = GenerateReport(model);
+                if (!String.IsNullOrEmpty(filePath))
+                {
+                    response.data = filePath;
+                    response.msg = "";
+                    response.msgType = 1;
+                }
+                else
+                {
+                    response.msg = "Unable to generate report. Please try again later.";
+                    response.msgType = 2;
+                }
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                response.msg = _catchMessage;
+                response.msgType = 2;
+            }
+            return Json(response);
+        }
+
+        private string GenerateReport(DeliveryFormatReport model)
+        {
+            var filePath = "";
+            try
+            {
+                if (model != null && model.TRAN_ID > 0 && model.MD_ID > 0)
+                {
+                    Reports.Datasets.BarcodeReportDataset.InvoiceReportDataTable reportDetails = new Reports.Datasets.BarcodeReportDataset.InvoiceReportDataTable();
+                    var responseMessage = _deliveryFormatService.GetDataForReport(model, reportDetails, CommonHelper.GetValues(HttpContext));
+                    if (responseMessage.msgType != 1)
+                    {
+                        return "";
+                    }
+                    var reportData = (DeliveryFormatReport)responseMessage.data;
+
+                    using (LocalReport report = new LocalReport())
+                    {
+                        var path = Path.Combine(_hostingEnvironment.ContentRootPath, @$"Reports\{reportData.REPORT_NAME}.rdlc");
+                        using (var stReader = new StreamReader(path))
+                        {
+                            string stringreader = stReader.ReadToEnd();
+                            byte[] byteArray = Encoding.UTF8.GetBytes(stringreader);
+                            using (var stream = new MemoryStream(byteArray))
+                            {
+                                report.EnableExternalImages = true;
+                                report.LoadReportDefinition(stream);
+                                report.DataSources.Clear();
+                                var companyLogoPath = Path.Combine(_hostingEnvironment.WebRootPath, @$"Client\Company\{reportData.COMPANY_LOGO}");
+                                bool? showCompanyLogo = true;
+                                if (!System.IO.File.Exists(companyLogoPath))
+                                {
+                                    showCompanyLogo = false;
+                                }
+                                var TotalBag = CommonController.ToAccountingFormat(reportData.TBAG);
+
+                                ReportParameter parameter = new ReportParameter("CompanyName", reportData.COMPANY_NAME);
+                                ReportParameter parameter1 = new ReportParameter("CompanyAddress", reportData.COMPANY_ADDRESS);
+                                ReportParameter parameter2 = new ReportParameter("CompanyPhone", reportData.COMPANY_PHONE);
+                                ReportParameter parameter3 = new ReportParameter("CompanyLogo", new Uri(Path.Combine(_hostingEnvironment.WebRootPath, @$"Client\Company\{reportData.COMPANY_LOGO}")).AbsoluteUri);
+                                ReportParameter parameter4 = new ReportParameter("ShowCompanyLogo", Convert.ToString(showCompanyLogo));
+                                ReportParameter parameter5 = new ReportParameter("Header", reportData.HEADER_NAME);
+
+                                ReportParameter parameter11 = new ReportParameter("V_DATE", reportData.V_DATE.ToString());
+                                ReportParameter parameter12 = new ReportParameter("VOUCHER_NO", reportData.VOUCHER_NO);
+                                ReportParameter parameter13 = new ReportParameter("PARTY_CODE", reportData.PARTY_CODE);
+                                ReportParameter parameter14 = new ReportParameter("S_DATE", reportData.S_DATE.ToString());
+                                ReportParameter parameter15 = new ReportParameter("S_NO", reportData.S_NO);
+                                ReportParameter parameter16 = new ReportParameter("BROKER_CODE", reportData.BROKER_CODE);
+                                ReportParameter parameter17 = new ReportParameter("GODOWN", reportData.GODOWN);
+                                ReportParameter parameter18 = new ReportParameter("KANTA", reportData.KANTA);
+                                ReportParameter parameter19 = new ReportParameter("COND", reportData.COND);
+                                ReportParameter parameter20 = new ReportParameter("C_NAME", reportData.C_NAME);
+                                ReportParameter parameter21 = new ReportParameter("CELL", reportData.CELL);
+                                ReportParameter parameter22 = new ReportParameter("LOT_NO", reportData.LOT_NO);
+                                ReportParameter parameter23 = new ReportParameter("ORIGIN", reportData.ORIGIN);
+                                ReportParameter parameter24 = new ReportParameter("ITEM_CODE", reportData.ITEM_CODE);
+                                ReportParameter parameter25 = new ReportParameter("TBAG", TotalBag);
+                                ReportParameter parameter26 = new ReportParameter("UNIT", reportData.UNIT);
+
+                                report.SetParameters(new ReportParameter[] { parameter, parameter1, parameter2, parameter3, parameter4, parameter5, parameter11, parameter12, parameter13, parameter14, parameter15,
+                            parameter16, parameter17, parameter18, parameter19, parameter20, parameter21, parameter22, parameter23, parameter24, parameter25, parameter26 });
+                                report.Refresh();
+                                //report.DataSources.Add(new ReportDataSource() { Name = "InvoiceReportDataSet", Value = reportData.Detail });
+
+                                byte[] file;
+                                string uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, @"Client\DeliveryFormat");
+                                if (!Directory.Exists(uploadsFolder))
+                                {
+                                    Directory.CreateDirectory(uploadsFolder);
+                                }
+
+                                if (report.IsReadyForRendering)
+                                {
+                                    string input = reportData.VOUCHER_NO;
+                                    string[] parts = input.Split('/');
+                                    string prefix = string.Empty;
+                                    string voucherNumber = string.Empty;
+                                    if (parts.Length >= 3)
+                                    {
+                                        prefix = parts[1];
+                                        voucherNumber = parts[^1];
+                                    }
+                                    file = report.Render("PDF");
+                                    filePath = $"{prefix} - {(reportData.PARTY_CODE).Replace(" / "," - ")} - {voucherNumber}" + ".pdf";
+
+                                    stReader.Close();
+                                    stReader.Dispose();
+                                    stream.Flush();
+                                    stream.Close();
+                                    stream.Dispose();
+                                    report.Dispose();
+                                    string reportPath = Path.Combine(uploadsFolder, filePath);
+                                    System.IO.File.WriteAllBytes(reportPath, file);
+                                    filePath = $"/Client/DeliveryFormat/{filePath}";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return filePath;
+        }
+
+        [HttpGet]
+        public JsonResult GetUnits()
+        {
+            try
+            {
+                var data = DropdownService.UnitDropdown();
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                return Json(_catchMessage);
+            }
+        }
+    }
+}

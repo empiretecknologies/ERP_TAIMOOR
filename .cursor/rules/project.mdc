@@ -1,0 +1,293 @@
+# STRICT PROJECT DEVELOPMENT RULES
+
+## 1. Project Technology Stack
+
+This project is built using the following technologies:
+
+- Framework: ASP.NET Core 7.0
+- Architecture: Clean Architecture
+- Backend: C#
+- Database: SQL Server
+- Frontend: HTML, CSS, JavaScript, jQuery
+- UI Framework: Bootstrap
+- Data Grids: DevExtreme
+- Reports / Printing: RDLC
+- Application Type: ASP.NET Core MVC
+
+Do not introduce or migrate to another framework, architecture, library, or technology unless explicitly requested.
+
+---
+
+## 2. STRICT SCOPE RULE
+
+Only perform the exact task requested by the user.
+
+Do NOT:
+
+- Add extra functionality.
+- Add new features.
+- Modify unrelated functionality.
+- Refactor unrelated code.
+- Improve existing code without being asked.
+- Change existing business logic unless specifically required.
+- Change UI/design unless specifically requested.
+- Change database structure unless specifically requested.
+- Add unnecessary validation.
+- Add unnecessary error handling.
+- Add unnecessary logging.
+- Add unnecessary dependencies or NuGet packages.
+- Create unnecessary files.
+- Rename existing files, classes, methods, variables, controllers, views, or database objects unless explicitly requested.
+
+If the requested task can be completed with a small change, make ONLY that small change.
+
+---
+
+## 3. FILE SCOPE RULE
+
+Only modify the files directly required to complete the requested task.
+
+Before making changes:
+
+1. Identify the exact file(s) responsible for the requested functionality.
+2. Understand the existing implementation.
+3. Modify only those files.
+4. Do not modify unrelated files.
+
+If one file is sufficient, do not modify multiple files.
+
+Do not create a new file when the existing file can be updated.
+
+---
+
+## 4. EXISTING CODE RULE
+
+Always respect the existing project structure and coding style.
+
+Before writing new code:
+
+- Check how the existing project handles the same or similar functionality.
+- Reuse existing methods, services, helpers, models, utilities, and patterns where appropriate.
+- Follow existing naming conventions.
+- Follow existing architecture.
+- Follow existing dependency injection patterns.
+- Follow existing database access patterns.
+
+Do not introduce a new pattern when an existing project pattern already exists.
+
+---
+
+## 5. CLEAN ARCHITECTURE RULE
+
+The project follows Clean Architecture.
+
+Maintain the existing separation of responsibilities.
+
+Do not:
+
+- Put business logic directly into Views.
+- Put business logic unnecessarily into Controllers.
+- Put database logic into Views.
+- Bypass existing application/service layers.
+- Create shortcuts that violate the existing architecture.
+- Move code between layers unless explicitly requested.
+
+Follow the existing project architecture exactly.
+
+---
+
+## 6. FRONTEND RULES
+
+The frontend uses:
+
+- HTML
+- CSS
+- JavaScript
+- jQuery
+- Bootstrap
+- DevExtreme
+
+Use the existing frontend technologies.
+
+Do not introduce:
+
+- React
+- Angular
+- Vue
+- Tailwind
+- Material UI
+- Any other frontend framework
+
+unless explicitly requested.
+
+For UI changes:
+
+- Modify only the required HTML/CSS/JavaScript.
+- Preserve the existing UI.
+- Do not redesign unrelated sections.
+- Do not change existing Bootstrap structure unnecessarily.
+- Do not replace DevExtreme components with another grid/component library.
+
+---
+
+## 7. DEVEXTREME GRID RULES
+
+DevExtreme is used for data grids.
+
+When modifying a grid:
+
+- Preserve the existing DevExtreme implementation.
+- Follow the existing configuration style.
+- Do not replace DevExtreme with another grid library.
+- Do not change unrelated columns.
+- Do not change sorting, filtering, paging, grouping, or selection unless requested.
+- Do not add additional grid functionality unless explicitly requested.
+
+Only implement the requested grid change.
+
+---
+
+## 8. RDLC REPORTING / PRINTING RULES
+
+The project uses RDLC for report and print designs.
+
+When modifying reports:
+
+- Preserve the existing RDLC report structure.
+- Do not replace RDLC with another reporting system.
+- Do not redesign reports unless explicitly requested.
+- Do not change print size, margins, paper size, orientation, fonts, or layout unless requested.
+- Do not modify unrelated report fields or formulas.
+- Only change the specific report functionality requested.
+
+---
+
+## 9. DATABASE / SQL RULES
+
+The project uses SQL Server.
+
+When working with SQL:
+
+- Preserve existing database logic.
+- Do not change table structures unless explicitly requested.
+- Do not add columns, indexes, constraints, procedures, or tables unless requested.
+- Do not modify unrelated queries.
+- Do not change stored procedure parameters unless required.
+- Do not change existing business rules.
+- Preserve existing SQL naming conventions.
+
+Always make the smallest possible SQL change required.
+
+---
+
+## 10. BACKEND / C# RULES
+
+Use the existing ASP.NET Core 7.0 implementation.
+
+When modifying C#:
+
+- Follow the existing coding style.
+- Preserve existing method signatures unless change is required.
+- Preserve existing business logic.
+- Do not introduce unnecessary classes or services.
+- Do not add unnecessary NuGet packages.
+- Do not upgrade .NET or NuGet packages unless explicitly requested.
+- Do not convert existing code to another pattern unless explicitly requested.
+
+---
+
+## 11. NO UNREQUESTED IMPROVEMENTS
+
+Do not "improve" code that is outside the requested task.
+
+For example:
+
+If the user asks to fix a calculation, ONLY fix the calculation.
+
+Do NOT additionally:
+
+- Refactor the method.
+- Rename variables.
+- Change UI.
+- Add validation.
+- Change database queries.
+- Optimize unrelated code.
+- Change formatting throughout the file.
+
+The requested task has priority over general code improvement.
+
+---
+
+## 12. MINIMAL CHANGE RULE
+
+Always prefer the smallest possible change.
+
+Before modifying code, ask internally:
+
+"Can this task be completed without changing anything else?"
+
+If YES, change nothing else.
+
+Do not make speculative changes.
+
+Do not change code simply because you think another implementation is better.
+
+---
+
+## 13. PRESERVE EXISTING FUNCTIONALITY
+
+Existing functionality must continue working after the requested change.
+
+Do not remove or disable existing functionality unless explicitly requested.
+
+Do not alter existing behavior outside the requested scope.
+
+---
+
+## 14. DO NOT GUESS
+
+If required information is missing:
+
+- Inspect the existing code first.
+- Follow existing implementation patterns.
+- Do not invent database columns.
+- Do not invent APIs.
+- Do not invent model properties.
+- Do not invent business rules.
+- Do not assume a new architecture.
+
+If something cannot be determined from the project, clearly state what is missing.
+
+---
+
+## 15. FINAL RESPONSE RULE
+
+After completing the task, provide a short summary:
+
+1. What was changed.
+2. Which files were changed.
+3. Any important issue or limitation.
+
+Do not provide unrelated suggestions unless they are necessary to complete the requested task.
+
+---
+
+# MOST IMPORTANT RULE
+
+STRICTLY FOLLOW THE USER'S REQUEST.
+
+DO ONLY WHAT THE USER ASKS.
+
+DO NOT ADD EXTRA FUNCTIONALITY.
+
+DO NOT MODIFY UNRELATED FILES.
+
+DO NOT REFACTOR UNRELATED CODE.
+
+DO NOT CHANGE EXISTING BUSINESS LOGIC.
+
+DO NOT CHANGE THE TECHNOLOGY STACK.
+
+DO NOT MAKE UNSOLICITED IMPROVEMENTS.
+
+MAKE THE SMALLEST POSSIBLE CHANGE REQUIRED TO COMPLETE THE TASK.

@@ -1,0 +1,23 @@
+﻿namespace Empire_ERP.Core.Entities
+{
+    public class ReportType
+    {
+        public int? R_ID { get; set; }
+        public string? REPORT_NAME { get; set; }
+        public int? SNO { get; set; }
+        public int? M_ID { get; set; }
+        public string? ADD_USER_ID { get; set; }
+        public DateTime? ADD_DATE { get; set; }
+        public string? ADD_COMPUTER_NAME { get; set; }
+        public string? ADD_IP_ADDRESS { get; set; }
+        public string? EDIT_USER_ID { get; set; }
+        public DateTime? EDIT_DATE { get; set; }
+        public string? EDIT_COMPUTER_NAME { get; set; }
+        public string? EDIT_IP_ADDRESS { get; set; }
+        public string? ADD_POSTALCODE { get; set; }
+        public string? EDIT_POSTALCODE { get; set; }
+        public string? ASTATUS { get; set; }
+        public int? MENU_ID { get; set; }
+        public string? DLT { get; set; }
+    }
+}

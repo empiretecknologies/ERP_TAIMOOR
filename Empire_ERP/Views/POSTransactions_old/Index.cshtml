@@ -1,0 +1,1083 @@
+﻿<style>
+
+
+</style>
+<header>
+    <div class="headerdiv">
+        <section class="header row">
+            <div class="header-left col-sm-12 col-md-3 col-lg-3 col-xl-3" style="margin-left: -34px;">
+                <p class="p-3"><span id="VOUCHER_NO">POS/000000</span> | <span id="V_DATE"></span> | <span id="Waiter"></span>  <span id="Tables"></span></p>
+            </div>
+            <div class="header-right col-sm-12 col-md-9 col-lg- col-xl-9" style="margin-right: -17px;">
+                <input id="INV_STATUS" hidden />
+                <input id="BILL_STATUS" hidden />
+                <input id="taxperhidden" hidden />
+                <input id="VOUCHERNO" hidden />
+                <input id="SRBVN" hidden />
+                <input id="DT_CODE" hidden />
+                <input id="SACTCODE" hidden />
+                <input id="Salesmanhidden" hidden />
+                <input id="waiterName" hidden />
+                <input id="tableNum" hidden />
+                <input id="Salesman" hidden />
+                <input id="Username" hidden />
+                <input id="advAmountbank" hidden />
+                <input id="SRBInvoiceId" hidden />
+                <input id="ratelock" hidden />
+                <input id="IsKot" hidden />
+                <input id="Cash" hidden />
+                <input id="recvAmount" hidden />
+                <input id="BILL_MODE" value="" hidden />
+                <input id="WHT_URL" value="" hidden />
+                <input id="WHT_TOKEN" value="" hidden />
+
+                @* <input id="WHT_CC_MSG" value="" hidden />
+                <input id="WHT_MSG_RETURN" value="" hidden />
+                <input id="WHT_MSG_ADV" value="" hidden />
+                <input id="WHT_MSG" value="" hidden />
+                <input id="WHT_ADV_COM" value="" hidden /> *@
+
+                <textarea id="WHT_CC_MSG" style="display:none;"></textarea>
+                <textarea id="WHT_MSG_RETURN" style="display:none;"></textarea>
+                <textarea id="WHT_MSG_ADV" style="display:none;"></textarea>
+                <textarea id="WHT_MSG" style="display:none;"></textarea>
+                <textarea id="WHT_ADV_COM" style="display:none;"></textarea>
+                <textarea id="WHT_PARTY_MSG" style="display:none;"></textarea>
+
+
+                <input id="TRANS_ID" type="hidden" class="discountunit" value="0" style="display: none;">
+                <input id="ExpTranId" type="hidden" class="discountunit" value="0" style="display: none;">
+                <input id="EXPVOUCHER_NO" type="hidden" class="discountunit" value="0" style="display: none;">
+                <div class="d-flex" style="float:right;width: 100%;gap:1px;height: 22px;">
+                    <input class="form-control" id="COMM" type="number" placeholder="Commision" style="width: 100px;margin-right: 2px;text-align: center;" autocomplete="off">
+                    <div id="SalesmanName" style="height: 22px !important;width: 245px !important;border-radius: 4px;margin-right: 2px;padding: 2px;"></div>
+                    <div style="border-left: 2px solid white; height: 22px; margin-right: 5px;"></div>
+                    <div class="input-container">
+                        <input class="form-control" id="CMOB" type="text" title="key F1" placeholder="Contact No" autocomplete="off">
+                        <button class="historyBtn" id="historyBtn" title="Ctrl+H">History</button>
+                    </div>
+                    <input class="form-control" type="text" id="CNAME" placeholder="Name" style="width: 120px; margin-left: 2px;" autocomplete="off">
+                    <input class="form-control" type="text" id="CADD" placeholder="Address" style="margin-left: 2px;width: 45%" autocomplete="off">
+                    <button class="expenseButton" id="expenseButton" title="Ctrl+E" style="width: 132px;"> <i class="fas fa-wallet"></i> Expense</button>
+                </div>
+            </div>
+        </section>
+    </div>
+</header>
+
+<div class="modal" id="paymentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog" style="margin-left: 405px;">
+        <div class="modal-content animatemodal" style="width: 120%;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Select Payment Mode</h5>
+                <div class="d-flex" style="width: 109px !important;margin-left: 248px;">
+                    <label class="" style="    font-size: 12px;font-weight: 500;" for="CLOSING">No</label>
+                    <div class="form-check form-switch " style="margin-left: 6px;margin-right: -3px;">
+                        <input class="form-check-input" id="TAX_PAID" type="checkbox" checked>
+                    </div>
+                    <label class="" style="    font-size: 12px;font-weight: 500;" for="CLOSING">Yes</label>
+                </div>
+                <button type="button" class="btn-close PaymentModalClose" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Total Payment Section -->
+                <div class="mb-3">
+                    <div class="d-flex" style="gap: 50px;">
+                        <div>
+                            <input type="hidden" id="TotalPaymenthidden" />
+                            <input type="hidden" id="TotalPaymentsett" />
+                            <h4 style="font-size: 23px;"> Total Payment: <span id="totalPayment"></span> PKRs</h4>
+                        </div>
+                        <div class="settlement-box">
+                            <label class="form-label mb-1">Settl:</label>
+                            <div class="number-input">
+                                <button class="minus active" id="minus"> − </button>
+
+                                <input class="form-control" id="settlementInput" type="text" />
+
+                                <button class="plus" id="Plus" > + </button>
+                                <input type="hidden" id="SettleSign" value="+" />
+                            </div>
+                        </div>
+
+                        @* <div id="settDiv" class="d-flex gap-1 hide-important">
+                            <h6 style="margin-top: 5px;">Settl: </h6>
+                            <input type="number" id="settlementInput" class="form-control cashAmount" style="text-align: center;font-size: 16px;height: 30px;width: 80px;" />
+                        </div> *@
+                    </div>
+                </div>
+
+                <!-- Buttons for Payment Modes -->
+                <div class="btn-group mb-0" role="group" aria-label="Payment Mode">
+                    <!-- Payment Mode Buttons with Icons -->
+                    <div class="d-flex justify-content-around mb-4 payBtns" style="gap: 17px;">
+                        <div class="button-container">
+                            <button type="button" class="btn paymentbtn selected" id="btnAdvance">
+                                Advance
+                                <i class="fa-solid fa-money-bill mt-1"></i>
+                            </button>
+                        </div>
+                        <div class="button-container">
+                            <button type="button" class="btn paymentbtn selected" id="btnCash">
+                                Cash
+                                <i class="fas fa-money-bill-wave mt-1"></i>
+                            </button>
+                        </div>
+                        <div class="button-container">
+                            <button type="button" class="btn paymentbtn" id="btnCard">
+                                Card
+                                <i class="fas fa-credit-card mt-1"></i>
+                            </button>
+                        </div>
+                        <div class="button-container">
+                            <button type="button" class="btn paymentbtn" id="btnParty">
+                                Party
+                                <i class="fas fa-users mt-1"></i>
+                            </button>
+                        </div>
+                        <div class="button-container">
+                            <button type="button" class="btn paymentbtn" id="btnSplit">
+                                Split
+                                <i class="fas fa-split mt-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Payment Fields -->
+                <div id="paymentFields">
+                    <!-- Cash Section -->
+                    <div id="advanceFields" class="payment-section">
+                        <div class="divider">
+                            <span>Advance Payment</span>
+                        </div>
+                        <div>
+                            <div class="d-flex">
+                                <input type="hidden" id="complete" value="0">
+                                <label for="cashAmount" class="form-label labelstyle">Cash: </label>
+                                <input type="number" id="advAmount" class="form-control cashAmount" style="    margin-left: 10px;  text-align: center;font-size: 16px;width: 100px;" />
+                                @* <div id="AcountName" style="height: 31px !important; padding: 5px !important;"></div> *@
+                                <label for="acountName" class="form-label labelstyle" style="margin-left: 10px; margin-top: 4px;">Tax: </label>
+                                <input type="text" id="advcashtax" class="form-control cashAmount" readonly style="margin-left: 10px; height: 35px;width: 70px;" />
+                                <label for="cashAmount" class="form-label" style="margin-left: 8px;margin-top: 7px;width: 110px; font-size:13px">Delivery Date: </label>
+                                <input type="date" id="delDate" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")" accept=" " style="margin-left: -13px; width: 185px; height: 35px; text-align: center; font-size: 13px;">
+                            </div>
+                            <div class="d-flex" style="margin-top: 10px;">
+                                <input type="hidden" id="complete" value="0">
+                                <label for="cashAmount" class="form-label labelstyle">Bank: </label>
+                                <input type="number" id="advBankAmount" class="form-control" style="margin-left: 10px;font-size: 16px;height: 35px;width: 100px;text-align: center;" />
+                                @* <div id="AcountName" style="height: 31px !important; padding: 5px !important;"></div> *@
+                                <label for="acountName" class="form-label labelstyle" style="margin-left: 10px;">Tax: </label>
+                                <input type="text" id="advbanktax" class="form-control" readonly style="margin-left: 10px; height: 35px; width: 70px;" />
+                                <label for="acountName" class="form-label labelstyle" style="margin-left: 10px;">Account: </label>
+                                <div id="BACCOUNT" style="margin-left: 5px;padding: 4px;height: 30px !important;width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="divider">
+                                <span>Remaining Payment</span>
+                            </div>
+                            <div class="d-flex" style="margin-top: 13px;gap: 11px;">
+                                <label for="cashAmount" class="form-label labelstyle"> Cash: </label>
+                                <input type="number" id="fnlAmount" class="form-control" style="    margin-left: -5px;  text-align: center;font-size: 16px; width: 100px;height: 35px;" />
+
+                                <div class="d-flex" style="    margin-top: 10px;">
+                                    <label for="cashAmount" class="form-label" style="font-size: 12px;margin-left: 15px;width: 15%;">Complete</label>
+                                    <input class="form-check-input" type="checkbox" value="" id="completecheck" style="margin-left: 50px;margin-top: 1px;">
+                                </div>
+                            </div>
+                            <div class="d-flex" style="margin-top: 13px;gap: 11px;">
+                                <label for="cashAmount" class="form-label labelstyle"> Bank: </label>
+                                <input type="number" id="fnlBankAmount" class="form-control" style="    margin-left: -5px;  text-align: center;font-size: 16px; width: 100px;height: 35px;" />
+                                <div class="d-flex" style="width:50%;    margin-left: -13px
+;">
+                                    <label for="acountName" class="form-label labelstyle" style="margin-left: 20px;margin-top: 4px;">Account: </label>
+                                    <div id="AdvAccount" style="margin-left: 5px;padding: 4px;height: 30px !important;width: 70%;"></div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        @*  <div class="d-flex" id="advcard" style="gap: 177px;margin-top: 12px;margin-left: 126px;margin-bottom: 10px;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="options" id="cashOption" onchange="empr_POSTransaction.updateHiddenField('cashOption')" checked>
+                                <label class="form-check-label RadioButton" for="cashOption">Cash</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="options" id="cardOption" onchange="empr_POSTransaction.updateHiddenField('cardOption')">
+                                <label class="form-check-label RadioButton" for="cardOption">Card</label>
+                            </div>
+                            <div class="d-flex" id="advbank" style="margin-top: -5px;display:none !important;">
+                                <label for="acountName" class="form-label labelstyle" style="margin-left: 20px;margin-top: 4px;">Account: </label>
+                                <div id="BACCOUNT" style="margin-left: 5px;padding: 4px;height: 30px !important;width: 100%;"></div>
+                            </div>
+                        </div> *@
+                        @* <div class="ReturnCash">
+                            <h5><b>Return Cash (PKRs):</b></h5>
+                            <input type="number" id="advReturn" class="form-control ReturnCashinput" style="font-size: 22px;" placeholder="0" readonly>
+                        </div> *@
+                        <div class="ReturnCash">
+                            <strong>Remark</strong>
+                            <textarea style="text-align:center;min-height:80px" id="advremark" name="remark" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="cashFields" class="payment-section">
+                        <div class="d-flex">
+                            <label for="cashAmount" class="form-label labelstyle" style="    margin-left: 90px;">Amount: </label>
+                            <input type="number" id="cashAmount" class="form-control cashAmount" style="    margin-left: 10px;  text-align: center;font-size: 16px;" />
+                            <input id="recvhidden" hidden />
+                            <input id="totalAmountGet" hidden />
+                            <input id="TotalbillDisc" hidden />
+                            <input id="Acounthidden" hidden />
+                            <input id="bankcharges" hidden />
+                            <input id="srbName" hidden />
+                            <input id="srbNtn" hidden />
+                            <input id="posUser" hidden />
+                            <input id="posPass" hidden />
+                            <input id="srbId" hidden />
+                            <input id="srbStatus" hidden />
+                            <input id="srbUrl" hidden />
+                            <input id="GroupImg" hidden />
+                            <input id="ItemImg" hidden />
+                            <input id="WaiterImg" hidden />
+                            <input id="TableImg" value="0" hidden />
+                            <input id="serviceChargesRate" value="0" hidden />
+                            <label for="acountName" class="form-label labelstyle" style="margin-left: 30px; margin-top: 4px;">Tax: </label>
+                            <input type="text" id="cashtax" class="form-control cashAmount" readonly style="    margin-left: 10px;text-align: center;font-size: 16px;width:70px;" />
+                            @* <div id="AcountName" style="height: 31px !important; padding: 5px !important;"></div> *@
+                        </div>
+                        <div class="ReturnCash" style="    margin-top: 10px;">
+                            <h5><b>Return Cash (PKRs):</b></h5>
+                            <input type="number" id="cashReturn" class="form-control ReturnCashinput" style="font-size: 22px;" placeholder="0" readonly>
+                        </div>
+                        <div class="ReturnCash">
+                            <strong>Remark</strong>
+                            <textarea style="text-align:center;min-height:80px" id="cashremark" name="remark" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Card Section -->
+                    <div id="cardFields" class="payment-section d-none">
+                        <div class="d-flex">
+                            <input id="bankhidden" hidden />
+                            <input id="bankrecvhidden" hidden />
+                            @* <label for="cardBank" class="form-label labelstyle">Select Bank</label> *@
+                            @*  <div id="bankNames" style="height: 31px !important; padding: 5px !important;"></div> *@
+                            <label for="cashAmount" class="form-label labelstyle" style="    margin-top: 6px;">Card:</label>
+                            <input type="number" id="bankrecv" class="form-control cashAmount" readonly style="margin-left: 10px;  text-align: center;font-size: 16px;width: 100px;">
+                            <label for="acountName" class="form-label labelstyle" style="margin-left: 30px; margin-top: 4px;">Tax: </label>
+                            <input type="text" id="banktax" class="form-control cashAmount" readonly style="margin-left: 10px; height: 30px;width: 60px;" />
+                            <label for="acountName" class="form-label labelstyle" style="margin-left: 20px;margin-top: 4px;">Account: </label>
+                            <div id="BACCOUNTS" style=" margin-left: 5px;padding: 4px;height: 30px !important;width: 100%;"></div>
+                        </div>
+                        <div class="ReturnCash">
+                            <h5><b>Return Cash (PKRs):</b></h5>
+                            <input type="number" id="Returnbank" class="form-control ReturnCashinput" style="font-size: 22px;" placeholder="0" readonly>
+                        </div>
+                        <div class="ReturnCash">
+                            <strong>Remark</strong>
+                            <textarea style="text-align:center;min-height:80px" id="bankremark" name="remark" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Party Section -->
+                    <div id="partyFields" class="payment-section d-none">
+                        <div class="d-flex">
+                            <input id="partyhidden" hidden />
+                            <input id="partycode" hidden />
+                            <input id="partynamehidden" hidden />
+                            <input id="partycellhidden" hidden />
+                            <label for="partyName" class="form-label" style="margin-left: 37px;margin-top: 5px;width: 50px; font-size:13px">Party: </label>
+                            <div id="partyName" style="height: 31px !important; padding: 5px !important;width: 147px;"></div>
+                            <label for="cashAmount" class="form-label" style="margin-left: 10px;margin-top: 6px;width: 60px; font-size:13px">Amount: </label>
+                            <input type="number" id="partyrecv" class="form-control cashAmount" style="margin-left: 5px; width: 77px; text-align: center;font-size: 13px;" readonly>
+                            <label for="cashAmount" class="form-label" style="margin-left: 7px;margin-top: 7px;width: 30px; font-size:13px">Tax: </label>
+                            <input type="number" id="partytax" class="form-control cashAmount" style="margin-left: 5px; width: 77px; text-align: center;font-size: 13px;" readonly>
+                        </div>
+                        <div class="d-flex partyradioBtn" style="    margin-left: 31px;gap: 156px;margin-top: 5px;margin-bottom: 5px;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="options" id="cashOption" onchange="empr_POSTransaction.updateHiddenField('cashOption')">
+                                <label class="form-check-label RadioButton" for="cashOption">Cash</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="options" id="cardOption" onchange="empr_POSTransaction.updateHiddenField('cardOption')">
+                                <label class="form-check-label RadioButton" for="cardOption">Card</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="options" id="creditOption" onchange="empr_POSTransaction.updateHiddenField('creditOption')" checked>
+                                <label class="form-check-label RadioButton" for="creditOption">Credit</label>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <label for="cashAmount" class="form-label" style="margin-left: 7px;margin-top: 7px;width: 76px; font-size:13px">Due Date: </label>
+                            <input type="date" id="dueDate" class="form-control" value="dd-MM-yyyy" style="margin-left: 5px; width: 180px;height: 30px; text-align: center;font-size: 13px;">
+                        </div>
+                        <div class="ReturnCash">
+                            <h5><b>Return Cash (PKRs):</b></h5>
+                            <input type="number" id="Returnparty" class="form-control ReturnCashinput" style="font-size: 22px;" placeholder="0" readonly>
+                        </div>
+                        <div class="ReturnCash">
+                            <strong>Remark</strong>
+                            <textarea style="text-align:center;min-height:80px" id="partyremark" name="remark" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Split Section -->
+                    <div id="splitFields" class="payment-section d-none">
+                        <h4>Split Payment</h4>
+                        <div class="SplitCash">
+                            <div class="divider">
+                                <span>Cash Payment</span>
+                            </div>
+                            @* <div class="d-flex">
+                                <input id="CashTax_Amt2" hidden />
+                                <input id="BankTax_Amt2" hidden />
+                                <input id="PartyTax_Amt2" hidden />
+                                <label for="cashAmount" class="form-label labelstyles">Amount: </label>
+                                <input type="number" id="cashAmount2" class="form-control cashAmounts" style="width: 165px !important" placeholder="Enter Cash Amount">
+                                <input id="Acounthidden2" hidden /> *@
+                            @* <label for="acountName" class="form-label labelstyles" style="margin-left: 10px;margin-top:5px !important">Tax: </label>
+                                <input type="number" id="cashtax2" class="form-control cashAmounts" style="height: 31px !important;text-align:center;" readonly>
+                                <label for="acountName" class="form-label labelstyles" style="margin-left: 10px;">Tax Amt: </label>
+                                <input type="number" id="cashtaxAmt2" class="form-control cashAmounts" style="height: 31px !important;text-align:center;" readonly> *@
+                            @* <div id="AcountName2" style="height: 31px !important; padding: 5px !important;"></div> *@
+                            @* </div> *@
+
+                            <div class="d-flex justify-content-center align-items-center w-100">
+                                <input id="CashTax_Amt2" hidden />
+                                <input id="BankTax_Amt2" hidden />
+                                <input id="PartyTax_Amt2" hidden />
+                                <input id="Acounthidden2" hidden />
+                                <label for="cashAmount2" style="font-size: 13px;" class="form-label mb-0 me-2">Amount:</label>
+                                <input type="number" id="cashAmount2" class="form-control cashAmounts" style="width: 165px !important;" placeholder="Enter Cash Amount">
+                            </div>
+                        </div>
+                        <div class="SplitBank">
+                            <div class="divider">
+                                <span>Card Payment</span>
+                            </div>
+                            <div class="d-flex" style="margin-right: 65px;">
+                                <label for="partyName" class="form-label" style="margin-left: 60px; font-size: 13px;margin-top: 5px;">Bank: </label>
+                                <div style="width: 255px;">
+                                    <div id="BACCOUNTS2" style="width: 255px !important;height: 31px;margin-top: 0px;margin-left: 5px;margin-bottom: 7px;padding: 5px !important;"></div>
+                                </div>
+
+                                <label for="cashAmount" class="form-label labelstyles">Amount: </label>
+                                <input type="number" id="bankrecv2" class="form-control cashAmounts" style="width: 165px !important" placeholder="Enter Card Amount">
+
+                            </div>
+
+
+                            <div class="d-flex">
+                                <input id="bankhidden2" hidden />
+                                <input id="banknamehidden2" hidden />
+
+                                @* <label for="acountName" class="form-label labelstyles" style="margin-left: 10px;margin-top:5px !important">Tax: </label>
+                                <input type="number" id="banktax2" class="form-control cashAmounts" style="height: 31px !important;text-align:center;" readonly>
+                                <label for="acountName" class="form-label labelstyles" style="margin-left: 10px;">Tax Amt: </label>
+                                <input type="number" id="banktaxAmt2" class="form-control cashAmounts" style="height: 31px !important;text-align:center;" readonly> *@
+                                @*     <label for="cardBank" class="form-label labelstyles">Select Bank</label>
+                            <div id="bankName2" style="height: 31px !important; padding: 5px !important;"></div> *@
+
+                            </div>
+                        </div>
+                        <div class="SplitParty">
+                            <div class="divider">
+                                <span>Party Payment</span>
+                            </div>
+                            <div class="d-flex" style="margin-right: 65px;">
+                                <label for="partyName" class="form-label" style="margin-left: 60px; font-size: 13px;margin-top: 5px;"> Party: </label>
+                                <div id="partyName2" style="width: 255px ; height: 31px; padding: 5px !important;margin-top: 0px; margin-left: 5px;"></div>
+
+                                <label for="partBalance" class="form-label labelstyles"> Amount: </label>
+                                <input type="number" id="partyrecv2" class="form-control cashAmounts" style="width: 165px !important" placeholder="Enter Party Amount">
+                            </div>
+
+                            <div class="d-flex" style="margin-top: 10px;">
+                                <input id="partyhidden2" hidden />
+                                <input id="partycode2" hidden />
+                                <input id="partynamehidden2" hidden />
+
+                                @* <label for="partBalance" class="form-label labelstyles" style="margin-left: 10px;margin-top:5px !important">Tax: </label>
+                                <input type="number" id="partytax2" class="form-control cashAmounts" style="height: 31px !important;text-align:center;" readonly>
+                                <label for="partBalance" class="form-label labelstyles" style="margin-left: 10px;">Tax Amt: </label>
+                                <input type="number" id="partytaxAmt2" class="form-control cashAmounts" style="height: 31px !important;text-align:center;" readonly> *@
+                                @*  <label for="partBalance" class="form-label" style="margin-left: 4px; font-size: 13px;">Party Amount: </label>
+                            <input type="number" id="partyrecv2" class="form-control" style="width: 64px;  margin-left: 3px;  height: 32px;  text-align: center; font-size: 13px; margin-top: 3px;">
+                            <label for="partBalance" class="form-label" style="margin-left: 6px; font-size: 13px; margin-top: 6px;  margin-right: -13px;">Tax: </label>
+                            <input type="number" id="partytax2" class="form-control" style="width: 60px;  margin-left: 15px;  height: 32px;  text-align: center; font-size: 13px;" readonly>
+                            <label for="partBalance" class="form-label" style="margin-left: 4px; font-size: 13px; margin-top: -2px;  margin-right: -13px;">Tax Amt: </label>
+                            <input type="number" id="partytaxAmt2" class="form-control" style="width: 60px;  margin-left: 14px;margin-right:-7px ;  height: 32px;  text-align: center; font-size: 13px;" readonly> *@
+
+                            </div>
+                        </div>
+
+
+                        @*  <div class="d-flex" style="margin-top: 10px;">
+                        <label for="partBalance" class="form-label labelstyles" style="margin-left: 194px; font-size: 15px !important; font-weight: bold;">Total Amount With Tax: </label>
+                        <span type="number" id="TotalAmtWithTax" style="height: 31px !important;margin-left: 37px; font-size: 15px !important; font-weight: bold;">  </span>
+                        </div> *@
+
+                        <div class="ReturnCash">
+                            <h5><b>G R A N D  &nbsp;&nbsp; T O T A L :</b></h5>
+                            <input type="number" id="TotalAmtWithTax" class="form-control ReturnCashinput" style="font-size: 22px;" placeholder="0" readonly>
+                        </div>
+                        <div class="ReturnCash">
+                            <strong>Remark</strong>
+                            <textarea style="text-align:center;min-height:80px" id="remark" name="remark" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="payment" class="btn btn-success paybtn">Pay</button>
+                <button type="button" class="btn btn-secondary paybtn close" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<main>
+    <section class="main row">
+        <!---Left Body--->
+        <div class="body-left col-sm-12 col-md-8 col-lg-8 col-xl-8">
+
+            <!-- Top Body left -->
+            <div class="Top-left-body">
+            </div>
+            <!---Top Body Left End--->
+            <!-- Bottom Body left -->
+            <div class="bottom-left-body">
+                <div class="starting d-flex" style="gap: .5rem;">
+                    <div style="border:1px solid #000;padding: 0;display: flex;align-items: center;height: 30px;width: 400px; gap: 10px;font-size: 11px;
+                        padding: 2px 10px;
+                        box-shadow: inherit !important;border-radius: 5px;">
+                        <i class='bx bx-search-alt-2'></i>
+                        <input type="text" class="search-bar" placeholder="Search" style="border: none;width: 100%;" autocomplete="off">
+                    </div>
+
+                    <input type="text" id="barcode" class="barcodevisible" title="Key F2" placeholder="Barcode & QRCode" style="border:1px solid #000;width: 50%;    height: 30px !important;" autocomplete="off">
+                    <input type="text" id="barcode" class="qrCodevisible" placeholder="QRCode" style="border:1px solid #000;width: 50%;    height: 30px !important;" autocomplete="off">
+                    <button id="barcodeEnter" style="width: 100px;">Enter</button>
+                    @*   <input type="text" placeholder="Place cursor here for ba rcode scan" style="height: 30px;width: 100%;"> *@
+                    <button class="toggle-view-list"><i class="fas fa-bars"></i></button>
+                    <button class="toggle-view-grid"><i class="fas fa-th-large"></i></button>
+
+                    <button class="toggle-referesh">
+                        <i class="fas fa-sync"></i>
+                    </button>
+                    <div class="d-flex" style="width: 109px !important;margin-left: 6px;align-items: center;">
+                        <label class="" style="    font-size: 12px;font-weight: 500;" for="CLOSING">ITems</label>
+                        <div class="form-check form-switch " style="margin-left: 4px;margin-right: -10px;">
+                            <input class="form-check-input" id="SHOW_SELECTED" type="checkbox">
+                        </div>
+                        <label class="" style="    font-size: 12px;font-weight: 500;" for="CLOSING">Group</label>
+                    </div>
+                </div>
+                <div class="middle grid-view">
+                </div>
+
+                <div class="ending row">
+                    <button type="button" class="btn btn-primary btn-search waves-effect waves-light" id="DiscardSale" title="key F3" style="height:40px; width:150px;">
+                        <i class="fa-solid fa-trash"></i> Discard Sale
+                    </button>
+                    <button type="button" class="btn btn-primary btn-search waves-effect waves-light" data-bs-target=".bs-example-modal-xls-Advance" id="AdvanceBtn" title="" style="height:40px; width:150px;">
+                        <i class="fa-solid fa-book-open"></i> Advance
+                    </button>
+                    <button type="button" class="btn btn-primary btn-search waves-effect waves-light" title="key F4" data-bs-target=".bs-example-modal-xls" id="BtnQuickSearch" style="height:40px; width:150px;">
+                        <i class="fa-solid fa-square-check"></i> Recall
+                    </button>
+                    <button type="button" class="btn btn-primary btn-search waves-effect waves-light" title="key F5" id="kot" style="height:40px; width:150px;">
+                        <i class="fa-solid fa-circle-plus"></i> KOT
+                    </button>
+                    <button type="button" class="btn btn-primary btn-search waves-effect waves-light" title="key F6" data-bs-toggle="modal" id="validateAndOpenModal" style="height:40px; width:150px;">
+                        <i class="fa-solid fa-money-bill"></i> Pay
+                    </button>
+                    @*  <button class="col-sm-12 col-md-3 col-lg-3 col-xl-3" style="background-color: rgb(167, 5, 5);"><a href=""><i class='bx bx-trash'></i>  Discard Sale</a></button> *@
+                    @* <button class="col-sm-12 col-md-3 col-lg-3 col-xl-3" style="background-color: #031162"><a href=""><i class='bx bxs-check-square'></i>Recall</a></button> *@
+                    @*  <button class="col-sm-12 col-md-3 col-lg-3 col-xl-3" style="background-color: #031162"><a href=""><i class='bx bx-plus-circle'></i>KOT</a></button> *@
+                    @*  <button class="col-sm-12 col-md-3 col-lg-3 col-xl-3" style="background-color: rgb(11, 151, 14);"><a href=""><i class='bx bx-money'></i>Pay(F7)</a></button> *@
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <!---Right Body--->
+        <div class="body-right col-sm-12 col-md-4 col-lg-4 col-xl-4" style="height: 753px;border-radius: 5px;">
+            <!---Table Section Start--->
+            <div class="table-container" style="height: 395px;">
+                <table id="tableGrid">
+                    <thead class="theadPOS">
+                        <tr>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Total Price</th>
+                            <th>Disc%</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTable">
+                    </tbody>
+                </table>
+            </div>
+
+            <!---Table Section End--->
+            <div class="headers">
+            </div>
+
+            @* <div class="stock-info">
+                Closing Stock For BarCode "10002" is "219"
+            </div> *@
+
+            <div class="summary" style="padding:10px;">
+                <div class="summary-item">
+                    <span id="totalItems">Total Items: 0</span>
+                    <span id="totalQty">Total Qty: 0</span>
+                    <span id="subTotal">Sub Total: 0</span>
+                </div>
+                <div class="summary-item" style="display:none;">
+                    <span id="totalTax">Total Tax:0</span>
+                    <span id="subtotalTax">0</span>
+                </div>
+                @*  <div class="summary-item">
+                <span>Amount (Inc Tax):</span>
+                <span id="totalAmount">0</span>
+                </div> *@
+                <div class="summary-item">
+                    <span>Total Item Discount:</span>
+                    <span id="itemDiscount">0</span>
+                </div>
+
+                <div class="summary-item">
+                    <span style="margin-top: 7px;margin-bottom: 5px;">Card Discount:</span>
+                    <input class="form-control" id="CardDisc" type="text" autocomplete="off" style="height: 27px;width: 250px;margin-right: 65px;margin-top: 5px;font-size: 13px;">
+                    <button id="CardEnter" style="width: 100px;display:none;"></button>
+                </div>
+                @* <div class="points-section text-center my-2">
+                    <div class="slider-container d-flex flex-column align-items-center">
+                        <input type="range" min="0" max="200" value="120" id="slider" class="readonly-slider mb-2">
+                        <div class="d-flex justify-content-between w-100 px-4">
+                            <span class="fw-bold text-primary">Prev Points: <span id="prevPoints">120</span></span>
+                            <span class="fw-bold text-success">Crt Points: <span id="currentPoints">80</span></span>
+                        </div>
+                    </div>
+                </div> *@
+                <div class="points-section text-center my-2" style="display:none;">
+                    <div class="slider-container d-flex flex-column align-items-center">
+                        <input type="range" min="0" max="200" value="100" id="slider" class="readonly-slider mb-2">
+                        <div class="d-flex justify-content-between w-100 px-4">
+                            <span class="fw-bold prev-points ">PrevPts: <span id="prevPoints">120</span></span>
+                            <span class="fw-bold text-success">CurrPts: <span id="currentPoints">0</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="discount-section">
+                    <div>
+                        <span>Bill Disc:</span>
+                        <input type="number" class="discount-input" value="0" id="billDiscPercent">%
+                    </div>
+                    <div>
+                        <span>Value:</span>
+                        <input type="number" class="discount-input" value="0" id="billDiscValue">
+                    </div>
+                    <div>
+                        @* <button id="DiscountBtn">Select Discount</button> *@
+                        <button type="button" class="btn btn-light btn-search waves-effect waves-light" id="DiscountBtn" title="Ctrl+D">
+                            <i class="fa fa-discount"></i> Select Discount
+                        </button>
+                    </div>
+                </div>
+                <div id="inputContainer" class="discount-section" style="display: none;">
+                    <div>
+                        <span>Bill Delivery:</span>
+                        <input type="number" class="discount-input" value="0" id="billDelPercent">%
+                    </div>
+                    <div>
+                        <span>Value:</span>
+                        <input type="number" class="discount-input" value="0" id="billDelValue">
+                    </div>
+                </div>
+
+                @* Ammar Start *@
+
+                <div id="dineInInputContainer" class="discount-section" style="display: none;">
+                    <div>
+                        <span>Service Charges:</span>
+                        <input type="number" class="discount-input" value="0" id="serviceChargesPercent">%
+                    </div>
+                    <div>
+                        <span>Value:</span>
+                        <input type="number" class="discount-input" value="0" id="serviceChargesValue">
+                    </div>
+                </div>
+
+                @* Ammar End *@
+
+                <div class="total-payment" id="FinalAmount">
+                    Value 0/-
+                </div>
+            </div>
+
+            <div style="padding-top: 8px; text-align: center;">
+                @* <button type="button" class="btn btn-light btn-search waves-effect waves-light" id="PayQuickSearch" style="height:40px; width:200px;">
+                <i class="fa fa-search"></i> QuickSerach
+                </button> *@
+                <button type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xls" id="PayQuickSearch" title="key F11" style="height:40px; width:200px;">
+                    <i class="fa fa-search"></i> QuickSerach
+                </button>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<div class="modal fade bs-example-modal-xls" id="QuickSearchModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="card text-left">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div id="gridContainer"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade bs-example-modal-xls-Advance" id="AdvanceModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="card text-left">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div id="AdvancegridContainer"></div>
+                            </div>
+                            <div class="pt-3 text-end SendBtn">
+                                <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="whtSend">
+                                    <i class="fa-brands fa-whatsapp"></i> Send
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="CustomerHistory" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myExtraLargeModalLabel">Customer History</h5>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="card text-left">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div id="CustomergridContainer"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<!-- Modal -->
+<div id="editItemModal" class="modal fade" tabindex="-3" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content animated-modal animatemodal">
+            <div class="modal-header editmodal">
+                <h5 class="modal-title" id="modalTitle">Edit - </h5>
+                <input type="hidden" id="modalId" />
+                <input type="hidden" id="BarcodeId" />
+                @* <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+            </div>
+            <div class="modal-body">
+                <form id="editItemForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="itemQuantity">Quantity</label>
+                                <input type="number" class="form-control" id="itemQuantity" />
+                                <input type="hidden" class="form-control" id="editrate" value="0" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="itemUnit">Unit</label>
+                                <input type="text" class="form-control" id="itemUnit" readonly />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="discountPercentage">Discount (%)</label>
+                                <input type="number" class="form-control discper" id="discountPercentage" value="0" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="discountPerUnit">Discount (Value)</label>
+                                <input type="number" class="form-control discvalue" id="discountPerUnit" value="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" class="form-control" id="amount" value="0" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label for="remarks">Remarks</label>
+                        <textarea class="form-control" id="remarks" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer editfooter">
+                <button type="button" class="btn btn-danger" id="updateItem">Update</button>
+                <button type="button" class="btn btn-secondary close" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="discountModal" tabindex="-3" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content animatemodal" style="width: 100%;height: 50% !important;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Select Discount</h5>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="modalData">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="WaiterModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content animatemodal" style="width: 100%;height: 65% !important;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Select Waiter</h5>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="waiterModalData">
+                </div>
+            </div>
+            <div class="modal-footer">
+                @* <button type="button" class="btn btn-primary" id="waiterSelect" style="height: 30px;width: 79px;">
+                    Select
+                </button> *@
+                <button type="button" id="waiterSkip" class="btn btn-primary close" data-dismiss="modal" style="height: 30px;width: 79px;"><i class="fa fa-forward"></i> Skip</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="TablesModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content animatemodal" style="width: 100%;width: 100%;height: 65% !important;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Select Tables</h5>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="tableModalData">
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*  <button type="button" class="btn btn-primary" id="tableSelect" style="height: 30px;width: 79px;">
+                    Select
+                </button> *@
+                <button type="button" id="tableSkip" class="btn btn-primary close" data-dismiss="modal" style="height: 30px;width: 79px;"><i class="fa fa-forward"></i> Skip</button>
+                @* <button type="button" id="tableSkip" class="btn btn-secondary close" data-dismiss="modal" style="height: 30px;width: 79px;">Skip</button> *@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="ExpenseModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content animatemodal"
+             style="width: 100%; height: auto; max-height: 90vh; overflow-y: auto;">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Expences</h5>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="" style="gap: 3px;">
+                    <div class="d-flex" style="gap:5px;">
+                        <label style="MARGIN-TOP: 0px;margin-left: 17px;">Account: </label>
+                        <div id="ExpenseType" style="height: 25px;font-weight: 400;padding: 2px;width: 43%;"></div>
+                        <label style="MARGIN-TOP: 0px;margin-left: 17px;">Amount</label>
+                        <input class="form-control" type="text" id="expamt" style="width: 20%; height: 24px; font-size: 11px;" autocomplete="off">
+                    </div>
+                    <div class="d-flex" style="gap:5px;">
+                        <label style="MARGIN-TOP: 0px;">Description</label>
+                        <input class="form-control" id="Des" type="text" style="width: 81%; height: 24px; font-size: 11px;" autocomplete="off">
+                    </div>
+                    <button class="btn btn-primary btn-save" id="ExpSave" style="float: right; margin-right: 4px; height: 24px; width: 75px;">
+                        <i class="fa fa-save"></i> Save
+                    </button>
+                    <button class="btn btn-success btn-save" id="ExpPrintSave" style="float: right; margin-right: 4px; height: 24px; width: 75px;">
+                        <i class="fa fa-save"></i> Print
+                    </button>
+                </div>
+                <div id="paymentFields"></div>
+            </div>
+
+            <div class="col-md-12" @* style="height:200px !important;" *@>
+                <div class="card text-left">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div id="ExpgridContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="printModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width:auto">
+            <div class="modal-header">
+                <h5 class="modal-title">Print Preview</h5>
+                <button type="button" id="printModalClose" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto;height: 400px;width:auto;">
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-xl-4" id="ReportDesign">
+                            <label class="form-label" for="ReportType">ReportType:</label>
+                            <div id="ReportType" style="width: 175% !important;height: 31px;font-weight: 400;padding: 5px;"></div>
+                        </div>
+                        <div class="col-xl-2 mt-20" style="padding: 5px;">
+                            <button type="button" class="btn btn-primary mr-5" data-bs-toggle="modal" id="BtnGenerateReport" style="width: 103px;">
+                                <i class="fa fa-file-arrow-down"></i> Get Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div id="slipPreview">
+                    <!-- Partial View Data Will Be Loaded Here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="printButton">Print</button>
+                <button type="button" id="printModalClose" class="btn btn-secondary close" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ExpenseprintModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width:auto">
+            <div class="modal-header">
+                <h5 class="modal-title">Print Preview</h5>
+                <button type="button" id="printModalClose" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto;height: 400px;width:auto;">
+                <div id="ExpenseSlipPreview">
+                    <!-- Partial View Data Will Be Loaded Here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="printButton">Print</button>
+                <button type="button" id="printModalClose" class="btn btn-secondary close" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="BarcodePickModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-width" style="    margin-right: 500px;width: 700px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myExtraLargeModalLabel">Pick Barcodes</h5>
+                <button type="button" class="btn-close closed" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="barcode-container">
+                </div>
+                @*  <div class="col-md-12">
+                    <div class="card text-left">
+                        <div class="card-body customHighlightForModifiedCells">
+                            <div class="table-responsive">
+                                <div id="BarcodePickGridContainer"></div>
+                            </div>
+                            <div class="pt-3 text-end">
+                                <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="BtnAddBarcodes">
+                                    <i class="fa fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div> *@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end close" data-bs-dismiss="modal" id="barcodeComplete">
+                    <i class="fa-solid fa-check"></i> Complete
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<!-- Color Selection Modal -->
+<div id="colorModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Color for Size: <span id="modalSize"></span></h5>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="colorOptions" style="max-height: 300px;overflow-y: auto;">
+                <!-- Color options will be inserted here -->
+            </div>
+            <div class="modal-footer" style="height: 37px;">
+                <button type="button" class="btn btn-primary" id="backColor" style="margin-top: -7px;margin-right: 220px;">
+                    Back
+                </button>
+                <button type="button" class="btn btn-primary" id="selectColor" style="margin-top: -30px;margin-right: -5px;">
+                    Select
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" style="margin-top: 68px;width: 500px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sendMessageLabel">Send Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="mobileNumbers" class="form-label">Mobile Numbers</label>
+                    <div id="mobileNumbersContainer" class="mobile-numbers-container"></div>
+                    <input type="hidden" id="mobileNumbers" name="mobileNumbers" />
+                    <input type="hidden" id="mobileData" name="mobileData" />
+
+                </div>
+
+                <div class="mb-3">
+                    <label for="messageText" class="form-label">Message</label>
+                    <textarea class="form-control" id="messageText" rows="8" placeholder="Type your message here..."></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Not Sent!</button>
+                <button type="button" class="btn btn-primary" id="confirmSendBtn">->Sent</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="usePointsModal" tabindex="-1" role="dialog" aria-labelledby="usePointsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="usePointsModalLabel">Use Your Points</h5>
+            </div>
+            <div class="modal-body">
+                You have reached your maximum points limit. Do you want to use your points now?
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirmUsePoints" class="btn btn-primary">Yes, Use Points</button>
+                <button type="button" id="cancelUsePoints" class="btn btn-secondary" data-dismiss="modal">No, Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section LinkScriptSection {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.0/signalr.min.js"></script>
+    <script type="text/javascript">
+
+        // const slider = document.getElementById('slider');
+
+        // function updateSliderFill(slider) {
+        //     const max = slider.max;
+        //     const val = slider.value;
+        //     const percentage = (val / max) * 100;
+
+        //     slider.style.background = `linear-gradient(to right, #055a87 0%, #055a87 ${percentage}%, white ${percentage}%, white 100%)`;
+        // }
+
+        // Initialize fill
+        // updateSliderFill(slider);
+
+        var BanksName = @Html.Raw(Json.Serialize(ViewBag.BanksName));
+        var Barcodes = @Html.Raw(Json.Serialize(ViewBag.Barcodes));
+        var MapTable = @Html.Raw(Json.Serialize(ViewBag.MapTable));
+        var DeleteRows = @Html.Raw(Json.Serialize(ViewBag.DeleteRow));
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        var User = @Html.Raw(Json.Serialize(ViewBag.Users));
+        var Type = @Html.Raw(Json.Serialize(ViewBag.Type));
+        var ItemsGroup = @Html.Raw(Json.Serialize(ViewBag.ItemsGroup));
+        var MapData = @Html.Raw(Json.Serialize(ViewBag.MapData));
+        var Commisions = @Html.Raw(Json.Serialize(ViewBag.Commision));
+        var BankAccount = @Html.Raw(Json.Serialize(ViewBag.BankAccount));
+        var TablesData = @Html.Raw(Json.Serialize(ViewBag.TablesData));
+        //var UserRights = @Html.Raw(Json.Serialize(ViewBag.UserRights));
+        var BarcodeTextBoxVisible = @Html.Raw(Json.Serialize(ViewBag.BarcodeTextBoxVisible));
+        //var Units = @Html.Raw(Json.Serialize(ViewBag.Units));
+        var Branch_RT_TYPE = @Html.Raw(Json.Serialize(ViewBag.Branch_RT_TYPE));
+    </script>
+    <script src="~/js/customjs/empr_POSTransaction.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        $(function () {
+            empr_POSTransaction.Branch_RT_TYPE = Branch_RT_TYPE;
+            empr_POSTransaction.InitEvents();
+            empr_POSTransaction.EnableShortCutKeys('#BtnSave', '#BtnNew', '#BtnDelete', '#BtnQuickSearch', '#Code', '#detailContainer', 0, 'iteM_CODE');
+        });
+    </script>
+}

@@ -1,0 +1,60 @@
+﻿<div class="card">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-left">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-xl-8 d-flex align-items-center gap-4">
+
+                            <div class="col-4">
+                                <label class="form-label" for="GROUP_CODE">Item Group :</label>
+                                <div id="GROUP_CODE"></div>
+                            </div>
+
+                            <div class="col-4">
+                                <label class="form-label" for="STOCK_STATUS">Stock Status :</label>
+                                <div id="STOCK_STATUS"></div>
+                            </div>
+
+                            <div class="mt-2">
+                                <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end mt-3" id="BtnGet">
+                                    <i class="fa fa-print"></i> Get Items
+                                </button>
+                            </div>
+                        </div>
+                        @* <div class="col-xl-2">
+                    
+                        </div> *@
+                        <div class="col mt-2">
+                            @* <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end mt-3" id="BtnGenerate">
+                                <i class="fa fa-print"></i> Generate Report
+                            </button> *@
+                            <button type="button" id="BtnSave" class="btn btn-primary btn-new waves-effect waves-light float-end"><i class="fa fa-save"></i> Update</button>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="gridContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="IsValidate" value="true" />
+
+@section LinkScriptSection {
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        var ItemGroups = @Html.Raw(Json.Serialize(ViewBag.ItemGroups));
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            empr_UploadItemImages.InitEvents();
+        });
+    </script>
+    <script src="~/js/customjs/empr_UploadItemImages.js" asp-append-version="true"></script>
+}

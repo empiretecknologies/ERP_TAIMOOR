@@ -1,0 +1,30 @@
+﻿<div class="card">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-left">
+                <div class="card-header">
+                    <button type="button" id="BtnSave" class="btn btn-primary btn-new waves-effect waves-light float-end"><i class="fa fa-save"></i> Update</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="gridContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="IsValidate" value="true"/>
+
+@section LinkScriptSection{
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            empr_AccountOpening.InitEvents();
+        });
+    </script>
+    <script src="~/js/customjs/empr_AccountOpening.js" asp-append-version="true"></script>
+}

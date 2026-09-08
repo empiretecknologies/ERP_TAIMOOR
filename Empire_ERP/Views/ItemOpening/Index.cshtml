@@ -1,0 +1,195 @@
+﻿<div class="card">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card text-left">
+				<div class="card-body">
+					<div class="table-responsive">
+						<div id="gridContainer"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal open fade bs-example-modal-xl" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<input id="ITEM_CODE" type="hidden">
+				<h5 class="modal-title" id="myExtraLargeModalLabel">Item Name : </h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body Record">
+				<div class="row">
+					<div class="col-xl-3">
+						<label class="form-label" for="Code">Code</label>
+						<input class="form-control" id="Code" readonly type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="ASTATUS">Status</label>
+						<div id="ASTATUS"></div>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="RATE">Rate</label>
+						<input class="form-control" id="RATE" type="text" autocomplete="off" oninput="empr_helper.EnhancedDecimalFieldValidation(this)">
+						<span class="span rate-validation"></span>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="BILL_DATE">Bill Date</label>
+						<input class="form-control" id="BILL_DATE" value="@ViewBag.StartDate" type="date" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="REF">Refrence No</label>
+						<input class="form-control" id="REF" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="BATCH">Batch No</label>
+						<input class="form-control" id="BATCH" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="LOT">Lot No</label>
+						<input class="form-control" id="LOT" type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="MFG_DATE">Manufacture Date</label>
+						<input class="form-control" id="MFG_DATE" type="date" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="EXP_DATE">Expire Date</label>
+						<input class="form-control" id="EXP_DATE" type="date" autocomplete="off">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="QTY">Quantity</label>
+						<input class="form-control" id="QTY" type="text" autocomplete="off" oninput="empr_helper.EnhancedDecimalFieldValidation(this)">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="IUNIT_CODE">Unit</label>
+						<div id="IUNIT_CODE"></div>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="QTY2">Quantity 2</label>
+						<input class="form-control" id="QTY2" type="text" autocomplete="off" oninput="empr_helper.EnhancedDecimalFieldValidation(this)">
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label d-flex mt-1" for="BAL_QTY"><input id="CHK" type="checkbox" checked="true"/> Balance Quantity</label>
+						<input class="form-control" readonly id="BAL_QTY" type="text" autocomplete="off" oninput="empr_helper.EnhancedDecimalFieldValidation(this)">
+						<span class="span bal-validation"></span>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="PUNIT_CODE">Packing Unit</label>
+						<div id="PUNIT_CODE"></div>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="ColorSingle">Color</label>
+						<div id="ColorSingle"></div>
+					</div>
+					<div class="col-xl-3">
+						<label class="form-label" for="SizeSingle">Size</label>
+						<div id="SizeSingle"></div>
+					</div>
+					<div class="col-xl-3 mb-1">
+						<label class="form-label" for="Grade">Grade</label>
+						<div id="Grade"></div>
+					</div>
+					<div class="col-xl-5 mb-1">
+						<label class="form-label" for="WAREHOUSE">Warehouse</label>
+						<div id="WAREHOUSE"></div>
+					</div>
+					<div class="col-xl-12 text-end mt-2 mb-1">
+						<button class="btn btn-danger btn-dlt" id="BtnDelete" style="display:none"><i class="fa fa-trash"></i> | Delete</button>
+						<button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> | Save</button>
+					</div>
+				</div>
+
+				<div class="table-responsive">
+					<div id="detailContainer"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal barcode fade" id="BarcodeModal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+	<div class="modal-lg modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<input id="ITEM_OP_ID" hidden />
+				<h5 class="modal-title" id="myExtraLargeModalLabel">BarCode Info </h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body Record">
+				<div class="row">
+					<div class="col-xl-4">
+						<label class="form-label" for="BCode">Code</label>
+						<input class="form-control" id="BCode" readonly type="text" autocomplete="off">
+					</div>
+					<div class="col-xl-4">
+						<label class="form-label" for="BASTATUS">Status</label>
+						<div id="BASTATUS"></div>
+					</div>
+					<div class="col-xl-4">
+						<label class="form-label" for="BARCODE">BarCode</label>
+						<div id="BARCODE"></div>
+					</div>
+					<div class="col-xl-4">
+						<label class="form-label" for="BUNIT">Unit</label>
+						<div id="BUNIT"></div>
+					</div>
+					<div class="col-xl-4">
+						<label class="form-label" for="BQTY">Quantity</label>
+						<input class="form-control" id="BQTY" type="text" autocomplete="off" oninput="empr_helper.EnhancedDecimalFieldValidation(this)">
+						<span class="span bqty-validation"></span>
+					</div>
+					<div class="col-xl-4 mb-1">
+						<label class="form-label" for="BRATE">Rate</label>
+						<input class="form-control" id="BRATE" type="text" autocomplete="off" oninput="empr_helper.EnhancedDecimalFieldValidation(this)">
+						<span class="span brate-validation"></span>
+					</div>
+					<div class="col-xl-12 text-end mt-2 mb-1">
+						<button class="btn btn-danger btn-bdlt" id="BtnBarcodeDelete" style="display:none"><i class="fa fa-trash"></i> | Delete</button>
+						<button class="btn btn-primary btn-bsave" id="BtnBarcodeSave"><i class="fa fa-save"></i> | Save</button>
+					</div>
+				</div>
+				<div class="table-responsive">
+					<div id="BarCodeDetailContainer"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<input type="hidden" id="unitcode_hidden" />
+<input type="hidden" id="displayExpr_unitcode" />
+
+<input type="hidden" id="package_hidden" />
+<input type="hidden" id="displayExpr_package" />
+
+<input type="hidden" id="colorsingle_hidden" />
+<input type="hidden" id="displayExpr_colorsingle" />
+
+<input type="hidden" id="sizesingle_hidden" />
+<input type="hidden" id="displayExpr_sizesingle" />
+
+<input type="hidden" id="grade_hidden" />
+<input type="hidden" id="displayExpr_grade" />
+
+<input type="hidden" id="warehouse_hidden" />
+<input type="hidden" id="displayExpr_warehouse" />
+
+<input type="hidden" id="barcodeunit_hidden" />
+<input type="hidden" id="displayExpr_barcodeunit" />
+
+<input type="hidden" id="barcode_hidden" />
+<input type="hidden" id="displayExpr_barcode" />
+
+@section LinkScriptSection{
+	<script type="text/javascript">
+		var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+		var B_I = @Html.Raw(Json.Serialize(ViewBag.BI));
+		var periodStartDate = @Html.Raw(Json.Serialize(ViewBag.StartDate));
+		console.log(periodStartDate)
+		$(function () {
+			empr_ItemOpening.InitEvents();
+		});
+	</script>
+	<script src="~/js/customjs/empr_ItemOpening.js" asp-append-version="true"></script>
+}

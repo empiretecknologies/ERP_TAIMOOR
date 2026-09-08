@@ -1,0 +1,516 @@
+﻿<style>
+    #Loader {
+        top: 0;
+        left: 0;
+        z-index: 1;
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(255 255 255 / 57%);
+    }
+
+    .criteria {
+        color: red;
+    }
+
+    .complete {
+        color: green;
+    }
+
+    form .input-field {
+        flex-direction: row;
+        column-gap: 10px;
+    }
+
+    .input-field input {
+        height: 45px;
+        width: 42px;
+        border-radius: 6px;
+        outline: none;
+        font-size: 1.125rem;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+        .input-field input:focus {
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .input-field input::-webkit-inner-spin-button,
+        .input-field input::-webkit-outer-spin-button {
+            display: none;
+        }
+
+    form button {
+        width: 100%;
+        color: #fff;
+        font-size: 1rem;
+        border: none;
+        padding: 9px 0;
+        cursor: pointer;
+        border-radius: 6px;
+        background: #6e93f7;
+        transition: all 0.2s ease;
+    }
+
+        form button.active {
+            background: #4070f4;
+            pointer-events: auto;
+        }
+
+        form button:hover {
+            background: #0e4bf1;
+        }
+
+        /* camera css */
+  
+    .profile-card
+    {
+        background-color:transparent !important;
+    }
+    .image-box {
+        position: relative; 
+        width: 100%; /* Parent container ka 80% */
+        max-width: 200px;
+        margin: 0 auto; 
+        border: 1px solid #ddd;
+        border-radius:50%;
+        display: block;
+        overflow: hidden;
+    }
+    .profile-image
+    {
+        position:relative;
+    }
+
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            border-radius:inherit;
+            object-fit: cover; 
+        }
+
+    .overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width:100%;
+        height:100%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: white;
+        background-color: #0000008a;
+        cursor:pointer;
+
+    }
+
+    .upload-btn {
+        background: white;
+        border: none;
+        color: #055a87;
+        border-radius: 50%;
+        height: 33%;
+        width: 33%;
+        margin-top:29%;
+        margin-bottom: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .upload-btn i{
+        font-size:2.2rem;
+    }
+
+            .upload-btn i:hover
+            {
+                color: #055a87;
+            }
+            .upload-btn:hover {
+               background-color:white;
+            color: #055a87;
+            }
+
+        .upload-btn i {
+            font-size: 1.5rem;
+        }
+
+    .overlay span {
+        display: block;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+    .image-box-modal {
+        width: 350px; 
+        height:350px;
+        margin: 0 auto;
+
+        border-radius: 50%;
+
+        overflow: hidden;
+    }
+
+        .image-box-modal img {
+            width: 100%;
+            height: 100%;
+            border-radius:50%; 
+            object-fit: cover; 
+        }
+
+    .model-content .modal-body
+    {
+        border:none 
+
+    }
+
+    .cr-viewport
+    {
+        width:100%;
+        height:100%;
+        border-radius:50% ! important;
+    }
+
+    .cr-overlay
+{
+        width: 100%;
+        height: 100%;
+        border-radius: 50% !important;
+}
+
+    .cr-slider-wrap {
+        display: block !important;
+        position: relative;
+        margin-top: 10px; /* add some spacing if needed */
+    }
+    #cameraPreview {
+        width:100%;
+        height:100%;
+        border-radius:50%; 
+        /* transform: scaleX();  */
+        /* border-radius:50%; */
+        margin:0px auto;
+    }
+</style>
+<div class="card">
+    <div class="card-header">
+        <button type="button" id="BtnNew" class="btn btn-primary btn-new waves-effect waves-light float-end"><i class="fa fa-plus"></i> Add New</button>
+    </div>
+    <div class="card-body Record">
+        <input type="hidden" id="branchhidden" />
+        <input type="hidden" id="rolehidden" />
+        <div class="row">
+
+            <div class="col-xl-10">
+                <div class="row">
+                    <div class="col-xl-2">
+                        <label class="form-label" for="Code">Code:</label>
+                        <input class="form-control" id="Code" readonly type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-2">
+                        <label class="form-label" for="ASTATUS">Status:</label>
+                        <div id="ASTATUS"></div>
+                    </div>
+                    <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="FULLNAME">Full Name:</label>
+                        <input class="form-control" id="FULLNAME" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="USERNAME">Username:</label>
+                        <input class="form-control" id="USERNAME" maxlength="10" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="EMAIL">Email:</label>
+                        <input class="form-control" id="EMAIL" type="email" autocomplete="off">
+                    </div>
+                    <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="CELL_NO">Cell:</label>
+                        <input class="form-control" id="CELL_NO" maxlength="12" type="text" autocomplete="off">
+                    </div>
+                    <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="BRANCH">Branch:</label>
+                        <div id="BRANCH"></div>
+                    </div>
+                    <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="USTART_DATE">Start Date:</label>
+                        <input class="form-control" id="USTART_DATE" type="date" autocomplete="off">
+                    </div>
+                    <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="ESTART_DATE">End Date:</label>
+                        <input class="form-control" id="ESTART_DATE" type="date" autocomplete="off">
+                    </div>
+                    <div class="col-xl-4 mb-1" id="userPass">
+                        <label class="form-label" for="UPASS">Password:</label>
+                        <div class="input-group userPass">
+                            <input class="form-control" maxlength="8" id="UPASS" type="password" autocomplete="off">
+                            <div class="input-group-append">
+                                <a href="javascript:;" class="input-group-text" id="show_loginpassword" onclick="ShowPassword($('#UPASS'),this)">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="upass pswrd_option" style="display: none;">
+                            <span class="criteria password_length">Minimum 8 characters</span><br>
+                            <span class="criteria password_uppercase">At least 1 uppercase letter</span><br>
+                            <span class="criteria password_lowercase">At least 1 lowercase letter</span><br>
+                            <span class="criteria password_number">At least 1 number</span><br>
+                            <span class="criteria password_special">At least 1 special character</span><br>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 mb-1" id="userconfirmPass">
+                        <label class="form-label" for="CPASS">Confirm Password:</label>
+                        <div class="input-group">
+                            <input class="form-control" maxlength="8" id="CPASS" type="password" autocomplete="off">
+                            <div class="input-group-append">
+                                <a href="javascript:;" class="input-group-text" id="show_loginpassword" onclick="ShowPassword($('#CPASS'),this)">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="cpass pswrd_option" style="display: none;">
+                            <span class="criteria password_match">Match Passwords.</span><br>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="ROLE_TYPE">Role Type:</label>
+                        <div id="ROLE_TYPE"></div>
+                    </div>
+
+
+                    <div class="col-xl-4 mb-1" id="roleDDL" style="display:none;">
+                        <label class="form-label" for="ROLE">Role:</label>
+                        <div id="ROLE"></div>
+                    </div>
+                    <div class="col-xl-2 mb-1">
+                        <label class="form-label" for="CLOSING">Multiple Login :</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox" checked>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="GROUP_PIC" name="GROUP_PIC" />
+
+                <div class="row">
+                    
+                    @* <div class="col-xl-4 mb-1">
+                        <label class="form-label" for="Image">Picture:</label>
+                        <input class="form-control" id="Image" type="file" autocomplete="off">
+                    </div> *@
+                </div>
+
+            </div>
+
+
+
+
+            @* <div class="col-xl-2">
+                <div class="card">
+                    <div class="card-body text-center p-2">
+                        <div class="image-box">
+                            <img id="empProfileImgFinal" src="~/Client/Company/default.jpg" />
+                            <div class="mt-2"> 
+                                <button type="button" id="btnOpenUploadModal" class=" upload-btn btn btn-primary btn-sm">Upload Image</button>
+                             </div> 
+
+                         <div class="mt-2">
+                                <button type="button" id="btnOpenUploadModal" class="upload-btn  btn btn-primary btn-sm">Upload Image</button>
+                        </div> 
+                    </div>
+                </div>
+            </div> *@
+            <div class="col-xl-2">
+                <div class=" profile-card">
+                    <div class="card-body text-center p-2">
+                        <div class="image-box gap-1">
+                            <img id="empProfileImgFinal" src="~/Client/Company/default.jpg" alt="Profile Image" />
+
+                            <!-- Camera icon overlay button -->
+                            <div class="overlay" id="btnOpenUploadModal">
+                                <button type="button"  class="upload-btn btn ">
+                                    <i class="fa fa-camera"></i>
+                                </button>
+                                <span>Add Profile Picture</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+            <input type="hidden" id="empCroppedImage" name="empCroppedImage" />
+
+            
+
+            
+            
+            
+            
+            
+            <span class="span name-validation"></span>
+            <div class="col-xl-12 text-end">
+                <button class="btn btn-danger btn-delete" style="display:none" id="BtnDelete"><i class="fa fa-trash"></i> Delete</button>
+                <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="gridContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Verification Pending</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="message"></p>
+                <div class="row mt-1">
+                    <div class="col-xl-12">
+                        <label class="form-label" for="OTP">OTP:</label>
+                        <div id="otptextbox" class="mb-3">
+                            <div id="otp" class="input-field">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <input class="otpclass" type="number" />
+                                    </div>
+                                    <div class="col-2">
+                                        <input class="otpclass" type="number" disabled />
+                                    </div>
+
+                                    <div class="col-2">
+                                        <input class="otpclass" type="number" disabled />
+                                    </div>
+
+                                    <div class="col-2">
+                                        <input class="otpclass" type="number" disabled />
+                                    </div>
+
+                                    <div class="col-2">
+                                        <input class="otpclass" type="number" disabled />
+                                    </div>
+
+                                    <div class="col-2">
+                                        <input class="otpclass" type="number" disabled />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="OTPCode" class="form-control" />
+                        <div id="timer"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="BtnVerify" class="btn btn-primary btn-verify" type="button" disabled><i class="fa-regular fa-circle-check"></i> Verify</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* camera modal *@
+@*  <div class="modal fade" id="uploadImageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header ">
+                <h5 class="modal-title">Take Your Picture</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        onclick="empr_Employee.stopCamera()"></button>
+            </div>
+            <div class="modal-body text-center image-box-modal">
+
+                <!-- Croppie container (hidden initially) -->
+                <div id="croppieContainer" style="display:none;"></div>
+                <video id="cameraPreview" autoplay style="width:100%; height:100%; object-fit:cover;"></video>
+
+                <img id="empProfileImg" src="" alt="Employee Image" />
+
+
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <input type="file" id="empImgUpload" accept="image/*" style="display:none;" />
+                 <button type="button" id="btnPickImage" class="btn btn-primary btn-sm" style="display:none;">Pick Image</button> 
+                <button type="button" id="btnTakeCapture" class="btn btn-danger btn-sm" style="display:none;">Capture</button>
+                <button type="button" id="btnTransImg" class="btn btn-danger btn-sm" style="display:none;">Upload Image</button>
+                <button type="button" id="btnClearImage" class="btn btn-primary btn-sm" style="display:none;">Clear</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" onclick="empr_Employee.stopCamera()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+> *@
+<div class="modal fade" id="uploadImageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg">
+
+            <!-- Header -->
+            <div class="modal-header bg-primary text-white rounded-top py-3 px-4">
+                <h5 class="modal-title fw-semibold">📸 Take Your Picture</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+                        onclick="empr_Employee.stopCamera()"></button>
+            </div>
+
+            
+            <div class="modal-body text-center p-4 image-box-modal">
+                <div id="croppieContainer" class="mb-3" style="display:none;"></div>
+
+                <video id="cameraPreview" autoplay muted playsinline class=" mb-3" style="object-fit:cover;;"></video>
+
+                <img id="empProfileImg" src="" alt="Employee Image" class="img-fluid rounded-circle shadow-sm" style="max-width:150px;" />
+            </div>
+
+           
+            <div class="modal-footer d-flex flex-wrap justify-content-center gap-2 px-4 pb-4">
+                <input type="file" id="empImgUpload" accept="image/*" hidden />
+
+                <button type="button" id="btnPickImage" class="btn btn-primary btn-sm">
+                    <i class="bi bi-folder2-open"></i> Pick Image
+                </button>
+                <button type="button" id="btnTakeCapture" class="btn btn-danger btn-sm">
+                    <i class="bi bi-camera"></i> Capture
+                </button>
+                <button type="button" id="btnTransImg" class="btn btn-success btn-sm">
+                    <i class="bi bi-cloud-upload"></i> Upload Image
+                </button>
+                <button type="button" id="btnClearImage" class="btn btn-warning btn-sm">
+                    <i class="bi bi-trash"></i> Clear
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" onclick="empr_Employee.stopCamera()">
+                    <i class="bi bi-x-circle"></i> Close
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+ 
+@section LinkScriptSection {
+    <script src="~/js/customjs/empr_User.js" asp-append-version="true"></script>
+    <script src="~/js/customjs/empr_Cropper.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js" integrity="sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript">
+
+
+
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        var Branch = @Html.Raw(Json.Serialize(ViewBag.Branch));
+        var Role = @Html.Raw(Json.Serialize(ViewBag.Role));
+        $(function () {
+            empr_User.initEvents();
+        });
+    </script>
+}

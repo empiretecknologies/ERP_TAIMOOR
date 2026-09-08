@@ -1,0 +1,229 @@
+﻿<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" integrity="sha512-2eMmukTZtvwlfQoG8ztapwAH5fXaQBzaMqdljLopRSA0i6YKM8kBAOrSSykxu9NN9HrtD45lIqfONLII2AFL/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+
+@@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap');
+
+a,
+a:hover{
+  text-decoration: none;
+}
+
+body{
+  font-family: 'Roboto', sans-serif;
+}
+
+/*------------------  */
+.ci-user-picture {
+    min-width: 150px;
+    margin-right: 16px;
+}
+.ci-user-picture img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.filepreviewprofile {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+/*----modal--------*/
+.modal-header-bg {
+    width: 100%;
+    height: 12px;
+        background: #055a87;
+}
+.cropImageModal .modal-dialog{
+    max-width: 750px;
+    width: 90%;
+    margin: 0.5rem auto;
+}
+.up-photo-title{
+    padding: 8px 15px;
+    text-align: center;
+}
+
+#upload-demo{
+    position: relative;
+	width: 100%;
+	height: 250px;
+  padding-bottom:0;
+}
+.croppie-container h5 {
+    position: absolute;
+    bottom: 4px;
+    text-align: center;
+    left: 0;
+    right: 0;
+    color: #fff;
+    z-index: 2;
+    font-size: 15px;
+}
+figure figcaption {
+    position: absolute;
+    bottom: 0;
+    color: #fff;
+    width: 100%;
+    padding-left: 9px;
+    padding-bottom: 5px;
+    text-shadow: 0 0 10px #000;
+}
+.croppie-container .cr-image{
+    right: 0;
+}
+.croppie-container .cr-slider-wrap {
+    width: 275px;
+}
+.cr-slider-wrap p{
+    font-size: 13px;
+    color: #8D8D94;
+    text-align: left;
+}
+.cr-slider{
+    width: 275px;
+}
+.upload-action-btn {
+    margin-top: 60px;
+    padding-top: 40px;
+}
+
+.cr-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #006AFA;
+    cursor: pointer;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.25);
+}
+  
+.cr-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #006AFA;
+    cursor: pointer;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.25);
+}
+.cr-slider::-ms-thumb {
+    width: 18px;
+    height: 18px;
+    background: #006AFA;
+    cursor: pointer;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.25);
+}
+.cr-slider::-webkit-slider-runnable-track {
+    width: 275px;
+    height: 2px;
+    cursor: pointer;
+    box-shadow: none;
+    background: #E0E0E0;
+    border-radius: 3px;
+    border:none;
+}
+.cr-slider:focus::-webkit-slider-runnable-track {
+    background: #E0E0E0;
+}
+.cr-slider::-moz-range-track {
+    width: 275px;
+    height: 2px;
+    cursor: pointer;
+    box-shadow: none;
+    background: #E0E0E0;
+    border-radius: 3px;
+    border:none;
+}
+.cr-slider::-ms-track {
+    width: 275px;
+    height: 2px;
+    cursor: pointer;
+    box-shadow: none;
+    background: #E0E0E0;
+    border-radius: 3px;
+    border:none;
+    color: transparent;
+}
+
+
+</style>
+<div class="card">
+    <div class="card-header">
+        <button type="button" id="BtnNew" style="display:none" class="btn btn-primary btn-new waves-effect waves-light float-end"><i class="fa fa-plus"></i> Add New</button>
+    </div>
+    <div class="card-body pt-1 Record">
+        <div class="row">
+            <input id="ID" hidden />
+            <input id="ACT_CODE" hidden />
+            <input id="SACODE" hidden />
+            <input id="partyhidden" hidden />
+            <input id="acthidden" hidden />
+            <div class="col-xl-4">
+                <label class="form-label" for="Code">Code</label>
+                <input class="form-control" readonly id="Code" type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-4">
+                <label class="form-label" for="ASTATUS">Status</label>
+                <div id="ASTATUS"></div>
+            </div>
+            <div class="col-xl-4">
+                <label class="form-label" for="V_DATE">Date:</label>
+                <input class="form-control" id="V_DATE" type="date" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off">
+            </div>
+            @* <div class="col-xl-4 mb-1">
+                <label class="form-label" for="LOT_NO">Lot:</label>
+                <input class="form-control" id="LOT_NO" type="text" autocomplete="off">
+            </div> *@
+
+            <div class="col-xl-3">
+                <label class="form-label" for="CLIENT_PO">Model# / PO#:</label>
+                <input class="form-control" id="CLIENT_PO" type="text" autocomplete="off">
+            </div>
+
+            <div class="col-xl-3">
+                <label class="form-label" for="PARTY_CODE">Client :</label>
+                <div id="PARTY_CODE"></div>
+            </div>
+
+            <div class="col-xl-3">
+                <label class="form-label" for="FABRIC">Fabric :</label>
+                <div id="FABRIC"></div>
+            </div>
+
+            <div class="col-xl-3">
+                <label class="form-label" for="GSM">GSM :</label>
+                <div id="GSM"></div>
+            </div>
+            <span class="span name-validation"></span>
+            <div class="col-xl-12 text-end mt-5">
+                <button class="btn btn-danger btn-delete" style="display:none" id="BtnDelete"><i class="fa fa-trash"></i> Delete</button>
+                <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="table-responsive">
+            <div id="gridContainer"></div>
+        </div>
+    </div>
+</div>
+
+
+@section LinkScriptSection{
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        var PartyType = @Html.Raw(Json.Serialize(ViewBag.PartyType));
+        var Fabric = @Html.Raw(Json.Serialize(ViewBag.Fabric));
+        var GSMData = @Html.Raw(Json.Serialize(ViewBag.GSMData));
+        var Clients = @Html.Raw(Json.Serialize(ViewBag.Clients));
+    </script>
+    <script src="~/js/customjs/empr_MPORegistration.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        $(function () {
+            empr_MPORegistration.initEvents();
+        });
+    </script>
+}

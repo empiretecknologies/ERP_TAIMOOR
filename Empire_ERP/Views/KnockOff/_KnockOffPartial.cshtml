@@ -1,0 +1,75 @@
+﻿@* <input type="hidden" id="costcenter_hidden" />
+<input type="hidden" id="displayExpr_costcenter" /> *@
+
+<style>
+    .knockoff-heading {
+        background-color: #055a87; /* 🔹 heading ka color */
+        color: white; /* text color */
+        padding: 2px 22px;
+        margin-top: 20px;
+        display: inline-block;
+        clip-path: polygon(0 0, 88% 0, 100% 100%, 0% 100%); /* right side slope */
+    }
+
+    .billing-heading {
+        background-color: #055a87; /* 🔹 heading ka color */
+        color: white; /* text color */
+        padding: 2px 22px;
+        margin-top: 20px;
+        display: inline-block;
+        clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%); /* right side slope */
+    }
+
+</style>
+<div class="card">
+
+    <input id="PTRAN_ID" hidden />
+    <input id="PDT_CODE" hidden />
+    <input id="P_AMOUNT" hidden />
+    <input id="PPARTY_CODE" hidden />
+    <input id="PACT_CODE" hidden />
+
+    <div class="table-responsive">
+        <span id="billing-heading"></span>
+        <h5 class="billing-heading">Billing Records</h5>
+        <div id="saleInvoicegridContainer"></div>
+    </div>
+
+</div>
+
+<div class="card">
+
+    <div class="table-responsive">
+        <div class="d-flex align-items-center justify-content-between" style="margin-top: 20px;">
+            <h5 class="knockoff-heading" style="margin-bottom: 0;">Knock Off</h5>
+
+            <div class="d-flex align-items-center">
+                <label for="remainingAmount" style="margin-right: 10px; margin-bottom: 0; font-weight: bold;">
+                    Remaining Payment Amount:
+                </label>
+                <span id="displayRemainingAmount" style="background-color: #f8f9fa; padding: 1px 10px; border-radius: 5px; border: 1px solid #dee2e6; font-weight: bold;"></span>
+            </div>
+        </div>
+
+
+        <div id="knockOffgridContainer"></div>
+    </div>
+
+</div>
+
+
+<div class="col-xl-12 text-end pt-5 pr-15">
+    <button class="btn btn-primary btn-save" id="knockOffBtnSave"><i class="fa fa-save"></i> Save</button>
+</div>
+
+
+<script type="text/javascript">
+    //var CostCenter = @Html.Raw(Json.Serialize(ViewBag.CostCenter));
+    var PickData = @Html.Raw(Json.Serialize(ViewBag.PickData));
+
+
+    $(function () {
+        empr_KnockOff.initEvents();
+    });
+</script>
+<script src="~/js/customjs/empr_KnockOff.js"></script>

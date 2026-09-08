@@ -1,0 +1,69 @@
+﻿namespace Empire_ERP.Core.Entities
+{
+    public class Employee
+    {
+        public int EMP_CODE { get; set; }
+        public int CODE { get; set; }
+        public string? EMP_ID { get; set; }
+        public int? MACHINE_CODE { get; set; }
+        public string? ENAME { get; set; }
+        public int? DEP_ID { get; set; }
+        public string? FATHER_NAME { get; set; }
+        public int? DESIG { get; set; }
+        public string? DESIGNATION_NAME { get; set; }
+        public string? GENDER { get; set; }
+        public int? BCODE { get; set; }
+        public int? SHIFT_T { get; set; }
+        public int? EMP_TYPE { get; set; }
+        public string? CELL_NO { get; set; }
+        public string? EMAIL { get; set; }
+        public int? REG { get; set; }
+        public int? OFFER_LETTER { get; set; }
+        public int? CHILD { get; set; }
+        public string? PAY_MODE { get; set; }
+        public DateTime? JOIN_DATE { get; set; }
+        public DateTime? PARM_DATE { get; set; }
+        public string? SALARY_HOLD { get; set; }
+        public string? CNIC { get; set; }
+        public string? FAMILY_NUM { get; set; }
+        public string? BANK_ACC { get; set; }
+        public DateTime? CNIC_IDATE { get; set; }
+        public DateTime? CNIC_EDATE { get; set; }
+        public string? BANK_NAME { get; set; }
+        public string? NTN_NO { get; set; }
+        public string? FILE_NO { get; set; }
+        public string? EMP_ADD { get; set; }
+        public string? NATION { get; set; }
+        public string? POB { get; set; }
+        public DateTime? DOB { get; set; }
+        public string? MSTATUS { get; set; }
+        public string? MSTAFF { get; set; }
+        public string? RSTATUS { get; set; }
+        public string? THUMB { get; set; }
+        public string? SIGNA { get; set; }
+        public string? EMP_IMG { get; set; }
+        public string? OT { get; set; }
+        public string? EMP_CAST { get; set; }
+        public int? EDUCTION { get; set; }
+        public string? VEH_NUMBER { get; set; }
+        public string? LTYPE { get; set; }
+        public string? LNUMBER { get; set; }
+        public DateTime? L_IDATE { get; set; }
+        public DateTime? L_EDATE { get; set; }
+        public DateTime? LEFT_DATE { get; set; }
+        public string? REASON_L { get; set; }
+        public string? ADD_USER_ID { get; set; }
+        public DateTime? ADD_DATE { get; set; }
+        public string? ADD_COMPUTER_NAME { get; set; }
+        public string? ADD_IP_ADDRESS { get; set; }
+        public string? EDIT_USER_ID { get; set; }
+        public DateTime? EDIT_DATE { get; set; }
+        public string? EDIT_COMPUTER_NAME { get; set; }
+        public string? EDIT_IP_ADDRESS { get; set; }
+        public string? ADD_POSTALCODE { get; set; }
+        public string? EDIT_POSTALCODE { get; set; }
+        public string? ASTATUS { get; set; }
+        public int? MENU_ID { get; set; }
+        public string? DLT { get; set; }
+    }
+}

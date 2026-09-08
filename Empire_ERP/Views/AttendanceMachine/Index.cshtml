@@ -1,0 +1,70 @@
+﻿<div class="card">
+    <div class="card-header">
+        <button type="button" id="quicksearch" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl"><i class="fa fa-search"></i> All Attendance</button>
+        <button type="button" id="BtnGet" class="btn btn-primary btn-new waves-effect waves-light float-end"><i class="fas fa-download"></i> Attendance Download</button>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-left">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="gridContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myExtraLargeModalLabel">All Attendance</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-3 mb-1">
+                                <label class="form-label" for="FromDate">From Date:</label>
+                                <input class="form-control" id="FromDate" type="date" onkeydown="empr_helper.HandleTabFocusToSelectBox(event, '#SellerCode')" value="@DateTime.Now.Date.ToString("yyyy-MM-01")" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3 mb-1">
+                                <label class="form-label" for="ToDate">To Date:</label>
+                                <input class="form-control" id="ToDate" type="date" onkeydown="empr_helper.HandleTabFocusToSelectBox(event, '#SellerCode')" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3 mb-1">
+                                <label class="form-label" for="Time">Time:</label>
+                                <input class="form-control" id="Time" type="text" value="" placeholder="hh:mm" autocomplete="off" style="width: 72px;">
+                            </div>
+
+                            <div class="col-xl-12 text-end">
+                                <button class="btn btn-primary" id="GetAttendance"><i class="fa fa-save"></i> Find</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card text-left">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div id="AllAttendanceGrid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+@section LinkScriptSection{
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+    <script type="text/javascript">
+        $(function () {
+            empr_AttendanceMachine.InitEvents();
+        });
+    </script>
+    <script src="~/js/customjs/empr_AttendanceMachine.js" asp-append-version="true"></script>
+}

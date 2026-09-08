@@ -1,0 +1,317 @@
+﻿
+
+<div class="card">
+    <div class="card-header">
+        <button type="button" id="quicksearch" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl"><i class="fa fa-search"></i> Quick Search</button>
+        <button type="button" id="resetForm" class="btn btn-primary btn-new waves-effect waves-light float-end"><i class="fa fa-plus"></i> Add New</button>
+    </div>
+    <div class="card-body pt-1 TabsDiv Record">      
+        <ul class="nav nav-tabs nav-primary" id="myTab" role="tablist">
+            <li class="nav-item"><a class="nav-link active" id="pills-warninghome-tab" data-bs-toggle="tab" href="#pills-warninghome" role="tab" aria-controls="pills-warninghome" aria-selected="true">Main Info</a></li>
+            <li class="nav-item"><a class="nav-link" style="display:none" id="pills-warningprofile-tab" data-bs-toggle="tab" href="#pills-warningprofile" role="tab" aria-controls="pills-warningprofile" aria-selected="false">Other Info</a></li>
+            <li class="nav-item"><a class="nav-link" style="display:none" id="pills-warningcontact-tab" data-bs-toggle="tab" href="#pills-warningcontact" role="tab" aria-controls="pills-warningcontact" aria-selected="false">Branch Info</a></li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="pills-warninghome" role="tabpanel" aria-labelledby="pills-warninghome-tab">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-2">
+                                <label class="form-label" for="Code">Code :</label>
+                                <input class="form-control" id="Code" readonly type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-10">
+                                <label class="form-label" for="PARTY_NAME">Name :</label>
+                                <input class="form-control" id="PARTY_NAME" type="text" autocomplete="off">
+                            </div>
+                            <span class="text-center span name-validation"></span>
+                            <div class="col-xl-2">
+                                <label class="form-label" for="PARTY_SHORT_NAME">Short Name :</label>
+                                <input class="form-control" id="PARTY_SHORT_NAME" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-10">
+                                <label class="form-label" for="ACT_CODE">ChartAccount:</label>
+                                <div id="chartofaccount"></div>
+                            </div>
+                            <span class="text-center span account-validation"></span>
+                            <div class="col-xl-12">
+                                <label class="form-label" for="PADDRESS">Address :</label>
+                                <textarea class="form-control" id="PADDRESS" rows="1" type="text" autocomplete="off"></textarea>
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="REGION">Region :</label>
+                                <div id="REGION"></div>
+                            </div>
+ @*                            <div class="col-xl-3">
+                                <label class="form-label" for="COMM">Commission%:</label>
+                                <input class="form-control" id="COMM" type="text" autocomplete="off" oninput="empr_helper.DecimalFieldValidation(this)">
+                            </div> *@
+                            <div class="col-xl-3">
+                                <label class="form-label" for="CAT_CODE">Category :</label>
+                                <div id="CATDDLDX"></div>
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="NTN">NTN # :</label>
+                                <input class="form-control" id="NTN" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="EMAIL">Email:</label>
+                                <input class="form-control" id="EMAIL" type="email" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="CNIC">Cnic No :</label>
+                                <input class="form-control cnic" id="CNIC" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="CnicFile">Cnic File :</label>
+                                <input class="form-control" id="CnicFile" type="file" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="CNIC_EXP">Cnic Expire :</label>
+                                <input class="form-control" id="CNIC_EXP" type="date" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="CELL">Cell No :</label>
+                                <input class="form-control ContactNo" id="CELL" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="CONTACT_PERSON">Contact Person:</label>
+                                @* <input class="form-control" id="CONTACT_PERSON" type="text" autocomplete="off" oninput="return $(this).val($(this).val().replace(/[^a-zA-Z]/g, ''))"> *@
+                                <input class="form-control" id="CONTACT_PERSON" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="WB">Primary Contact:</label>
+                                <input class="form-control ContactNo" id="WB" type="text" autocomplete="off" oninput="empr_helper.OnlyNumberAndHyphen(this)">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="TELL">Telephone No:</label>
+                                <input class="form-control" id="TELL" type="text" maxlength="12" autocomplete="off" oninput="empr_helper.OnlyNumberAndHyphen(this)">
+                            </div>
+                            <div class="col-xl-3 mb-1">
+                                <label class="form-label" for="WEBSITE">Website :</label>
+                                <input class="form-control" id="WEBSITE" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-12 text-end">
+                                <button class="btn btn-danger btn-delete delete" style="display:none"><i class="fa fa-trash"></i> Delete</button>
+                                <button class="btn btn-primary btn-save saveAttempt"><i class="fa fa-save"></i> Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-warningprofile" role="tabpanel" aria-labelledby="pills-warningprofile-tab">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-3">
+                                <label class="form-label" for="PAYMENT_TERMS">Terms :</label>
+                                <input class="form-control" oninput="limitNumberLength(this, 4)" id="PAYMENT_TERMS" type="number" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="CREDIT_LIMIT">Limit :</label>
+                                <input class="form-control" oninput="limitNumberLength(this, 9)" id="CREDIT_LIMIT" type="number" autocomplete="off">
+                            </div>
+                            <div class="col-xl-6">
+                                <label class="form-label" for="S_CODE">Salesman :</label>
+                                <div id="salesman"></div>
+                            </div>
+@*                             <div class="col-xl-6">
+                                <label class="form-label" for="REGION">Region :</label>
+                                <div id="REGION"></div>
+                            </div> *@
+                            <div class="col-xl-3">
+                                <label class="form-label" for="COMM">Commission%:</label>
+                                <input class="form-control" id="COMM" type="text" autocomplete="off" oninput="empr_helper.DecimalFieldValidation(this)">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="DISC">Discount%:</label>
+                                <input class="form-control" id="DISC" type="text" autocomplete="off" oninput="empr_helper.DecimalFieldValidation(this)">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="GST">GST # :</label>
+                                @* <input class="form-control" id="GST" type="text" autocomplete="off" oninput="empr_helper.OnlyNumberAndHyphen(this)"> *@
+                                <input class="form-control" id="GST" type="number" step="0.01" min="0" onkeydown="return !['e', 'E', '+', '-'].includes(event.key)" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="SERVICE_TAX">Service Tax :</label>
+                                @* <input class="form-control" id="SERVICE_TAX" type="text" autocomplete="off" oninput="empr_helper.OnlyNumberAndHyphen20(this)"> *@
+                                <input class="form-control" id="SERVICE_TAX" type="number" step="0.01" min="0" onkeydown="return !['e', 'E', '+', '-'].includes(event.key)" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="taxpayer">Tax Payer :</label>
+                                <div id="taxpayer"></div>
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="T_CAT">Tax Cat :</label>
+                                <div id="T_CAT"></div>
+                            </div>
+                            <div class="col-xl-3" ">
+                                <label class="form-label" for="WHT"> WHT:</label>
+                                @* <input class="form-control" id="WHT" type="text" autocomplete="off" oninput="empr_helper.OnlyNumberAndHyphen20(this)"> *@
+                                <input class="form-control" id="WHT" type="number" step="0.01" min="0" onkeydown="return !['e', 'E', '+', '-'].includes(event.key)" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3" id="EXEM_DIV">
+                                <label class="form-label" for="EXEM_DATE"> Exemption Date :</label>
+                                <input class="form-control" id="EXEM_DATE" type="date" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="ENTITY">Entity :</label>
+                                <div id="ENTITY"></div>
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="DocumentFile">Doc File:</label>
+                                <input class="form-control" id="DocumentFile" type="file" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="ASTATUS">Status :</label>
+                                <div id="ASTATUS"></div>
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="ACCOUNT_NUM">Account No :</label>
+                                <input class="form-control" id="ACCOUNT_NUM" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="SERVICE_TAX">Tax :</label>
+                                <input class="form-control" id="TAX" type="number" step="0.01" min="0" onkeydown="return !['e', 'E', '+', '-'].includes(event.key)" autocomplete="off">
+                            </div>
+                            <div class="col-xl-9">
+                                <label class="form-label" for="BANK_NAME">Bank Name :</label>
+                                <input class="form-control" id="BANK_NAME" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="BRANCH_NAME">Branch Name :</label>
+                                <input class="form-control" id="BRANCH_NAME" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-12">
+                                <label class="form-label" for="BANK_ADDRESS">Branch Address</label>
+                                <textarea class="form-control" id="BANK_ADDRESS" type="text" autocomplete="off" rows="1"></textarea>
+                            </div>
+                            <div class="col-xl-12">
+                                <label class="form-label" for="REMARKS">Remarks:</label>
+                                <textarea class="form-control" id="REMARKS" type="text" autocomplete="off" rows="1"></textarea>
+                            </div>
+                            <div class="col-xl-12 mb-1">
+                                <label class="form-label" for="TERMS_CONDITION">Condition:</label>
+                                <textarea class="form-control" id="TERMS_CONDITION" type="text" autocomplete="off" rows="1"></textarea>
+                            </div>
+                            <div class="col-xl-12 text-end">
+                                <button class="btn btn-danger btn-delete delete"><i class="fa fa-trash"></i> Delete</button>
+                                <button class="btn btn-primary btn-save saveAttempt"><i class="fa fa-save"></i> Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-warningcontact" role="tabpanel" aria-labelledby="pills-warningcontact-tab">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <input hidden id="masterID" />
+                            <input hidden id="detailId" />
+                            <input hidden id="CreatedBy" />
+                            <input hidden id="CreatedDate" />
+                            <input hidden id="CreatedComputer" />
+                            <input hidden id="CreatedAddress" />
+                            <input hidden id="CreatedPostal" />
+                            <input hidden id="CreatedMenuId" />
+                            <input hidden id="CreatedAccountId" />
+                            <div class="col-xl-2">
+                                <label class="form-label" for="dCode">Code :</label>
+                                <input class="form-control" id="dCode" readonly type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-10">
+                                <label class="form-label" for="name">Name :</label>
+                                <input class="form-control" id="name" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="contact">Contact Person:</label>
+                                <input class="form-control" id="contact" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="email">Email :</label>
+                                <input class="form-control" pattern="[0-9\-]*" id="email" type="email" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="Cellnumber">Cell No :</label>
+                                <input class="form-control ContactNo" id="Cellnumber" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label" for="telephone">Telephone No:</label>
+                                <input class="form-control ContactNo" id="telephone" type="text" autocomplete="off">
+                            </div>
+                            <div class="col-xl-12 mb-1">
+                                <label class="form-label" for="address">Address :</label>
+                                <textarea rows="1" class="form-control" id="address" type="text" autocomplete="off"></textarea>
+                            </div>
+                            <div class="col-xl-12 text-end">
+                                <button class="btn btn-danger btn-detaildelete" id="deleteBranchInfo" style="display:none"><i class="fa fa-trash"></i> Delete</button>
+                                <button class="btn btn-primary btn-detail" id="saveBranchInfo"><i class="fa fa-save"></i> Save</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="DetailgridContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  Extra Large modal example -->
+    <div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <div id="exportButtonsContainer">
+                                        <div id="excelButton"></div>
+                                        <div id="pdfButton"></div>
+                                    </div>
+                                    <div id="gridContainer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+
+<input type="hidden" id="salesman_hidden" />
+<input type="hidden" id="displayExpr_salesman" />
+
+<input type="hidden" id="entity_hidden" />
+<input type="hidden" id="displayExpr_entity" />
+
+<input type="hidden" id="REGION_hidden" />
+<input type="hidden" id="displayExpr_REGION" />
+
+<input type="hidden" id="category_hidden" />
+<input type="hidden" id="displayExpr_category" />
+
+<input type="hidden" id="chartofaccount_hidden" />
+<input type="hidden" id="displayExpr_chartofaccount" />
+
+<input type="hidden" id="PartytypesDocs_hidden" />
+<input type="hidden" id="PartytypesCNIC_hidden" />
+
+
+@section LinkScriptSection{
+    <script src="~/js/customjs/empr_Helper.js"></script>
+    <script src="~/js/customjs/empr_PartyTypes.js"></script>
+
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+    </script>
+    <script type="text/javascript">
+        $(".TabsDiv").tabs();
+        empr_partyTypes.initEvents();
+    </script>
+}

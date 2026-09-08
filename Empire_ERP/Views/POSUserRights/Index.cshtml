@@ -1,0 +1,181 @@
+﻿<div class="card">
+    <div class="card-header">
+        <button type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal"
+                data-bs-target=".bs-example-modal-xl" id="BtnQuickSearch">
+            <i class="fa fa-search"></i> Quick Search
+        </button>
+        <button type="button" class="btn btn-primary btn-new waves-effect waves-light float-end" id="BtnNew">
+            <i class="fa fa-plus"></i> Add New
+        </button>
+    </div>
+    <div class="card-body Record">
+        <div class="row">
+            <input id="ID" hidden />
+            <div class="col-xl-2">
+                <label class="form-label" for="Code">Code:</label>
+                <input class="form-control" id="Code" readonly type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3">
+                <label class="form-label" for="G_NAME"> Remarks:</label>
+                <input class="form-control" id="G_NAME"  type="text" autocomplete="off">
+            </div>
+            <div class="col-xl-3">
+                <label class="form-label" for="USERNAME">User Name:</label>
+                <div id="USERNAME"></div>
+            </div>
+            <div class="col-xl-2">
+                <label class="form-label" for="SETT_F">Settlement From :</label>
+                <input class="form-control" id="SETT_F" type="number" step="0.01" min="0" onkeydown="return !['e', 'E', '+', '-'].includes(event.key)" autocomplete="off">
+            </div>
+            <div class="col-xl-2">
+                <label class="form-label" for="SETT_T">Settlement to :</label>
+                <input class="form-control" id="SETT_T" type="number" step="0.01" min="0" onkeydown="return !['e', 'E', '+', '-'].includes(event.key)" autocomplete="off">
+            </div>
+         
+            <div class="col d-flex">
+                <div class="form-check" style="margin-top: 15px;margin-left: 5px;">
+                    <label class="form-label" for="RATE">Rate</label>
+                    <input class="form-check-input" type="checkbox" id="RATE" value="">
+                </div>
+                <div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+                    <label class="form-label" for="M_DISC">Bill Wise Discount</label>
+                    <input class="form-check-input" type="checkbox" id="M_DISC" value="">
+                </div>
+                <div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+                    <label class="form-label" for="D_DISC">Item Wise Discount </label>
+                    <input class="form-check-input" type="checkbox" id="D_DISC" value="">
+                </div>
+                <div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+                    <label class="form-label" for="B_RETURN">Bill Wise Return</label>
+                    <input class="form-check-input" type="checkbox" id="B_RETURN" value="">
+                </div>
+                <div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+                   
+                        <label class="form-label" for="I_RETURN">Item Wise Return</label>
+                        <input class="form-check-input" type="checkbox" id="I_RETURN" value="">
+                </div>
+                @* <div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+                        <label class="form-label" for="I_RETURN">I_RETURN</label>
+                        <input class="form-check-input" type="checkbox" id="I_RETURN" value="">
+                </div> *@
+                <div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+                    <label class="form-label" for="S_CHARGES">Service Charges</label>
+                    <input class="form-check-input" type="checkbox" id="S_CHARGES" value="">
+                </div>
+                <div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+                    <label class="form-label" for="C_DISC">Card Discount</label>
+                    <input class="form-check-input" type="checkbox" id="C_DISC" value="">
+                </div>
+                <div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+                      <label class="form-label" for="EXPENSE">Expenses</label>
+                    <input class="form-check-input" type="checkbox" id="EXPENSE" value="">
+                </div>
+                <div class="form-check" style="margin-top: 15px;margin-left: 30px;">
+                    <label class="form-label" for="COMM">Commision</label>
+                    <input class="form-check-input" type="checkbox" id="COMM" value="">
+                </div>
+
+                
+            </div>
+            @* <div class="col-xl-3" style="margin-top: 13px;">
+                <label class="form-label" for="RATE">Rate:</label>
+                <input class="form-check-input" type="checkbox" id="RATE" value="">
+            </div>
+            <div class="col-xl-3" style="margin-top: 13px;">
+                <label class="form-label" for="M_DISC">M_DISC :</label>
+                <input class="form-check-input" type="checkbox" id="M_DISC" value="">
+            </div>
+            <div class="col-xl-3" style="margin-top: 13px;">
+                <label class="form-label" for="D_DISC">D_DISC :</label>
+                <input class="form-check-input" type="checkbox" id="D_DISC" value="">
+            </div>
+            <div class="col-xl-3" style="margin-top: 13px;">
+                <label class="form-label" for="B_RETURN">B_RETURN :</label>
+                <input class="form-check-input" type="checkbox" id="B_RETURN" value="">
+            </div>
+            <div class="col-xl-3" style="margin-top: 13px;">
+                <label class="form-label" for="I_RETURN">I_RETURN :</label>
+                <input class="form-check-input" type="checkbox" id="I_RETURN" value="">
+            </div>
+            <div class="col-xl-3" style="margin-top: 13px;">
+                <label class="form-label" for="S_CHARGES">S_CHARGES :</label>
+                <input class="form-check-input" type="checkbox" id="S_CHARGES" value="">
+            </div>
+            <div class="col-xl-3" style="margin-top: 13px;">
+                <label class="form-label" for="C_DISC">C_DISC :</label>
+                <input class="form-check-input" type="checkbox" id="C_DISC" value="">
+            </div>
+            <div class="col-xl-3" style="margin-top: 13px;">
+                <label class="form-label" for="EXPENSE">Expense :</label>
+                <input class="form-check-input" type="checkbox" id="EXPENSE" value="">
+            </div>
+            <div class="col-xl-3" style="margin-top: 13px;">
+                <label class="form-label" for="COMM">Comm :</label>
+                <input class="form-check-input" type="checkbox" id="COMM" value="">
+            </div> *@
+
+
+
+        </div>
+        <input class="form-control" id="ACT_CODE" type="hidden" readonly autocomplete="off">
+        <input class="form-control" id="UNITTYPE" type="hidden" readonly autocomplete="off">
+        <input class="form-control" id="RATE" type="hidden" readonly autocomplete="off">
+
+
+
+
+        <div class="col-xl-12 text-end pt-5 pb-10 pr-15">
+            <button class="btn btn-danger btn-delete" id="BtnDelete" style="display:none"><i class="fa fa-trash"></i> Delete</button>
+            <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+        </div>
+
+
+
+        <div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myExtraLargeModalLabel">Quick Search</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md-12">
+                            <div class="card text-left">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <div id="gridContainer"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+
+
+@section LinkScriptSection {
+
+        <script type="text/javascript">
+
+            var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+            var Limit = @Html.Raw(Json.Serialize(ViewBag.Limit));
+            var dataClear = @Html.Raw(Json.Serialize(ViewBag.DATA_CLEAR));
+            var Users = @Html.Raw(Json.Serialize(ViewBag.Users));
+
+          
+
+
+
+        </script>
+        <script src="~/js/customjs/empr_PosUserRights.js" asp-append-version="true"></script>
+        <script type="text/javascript">
+            $(function () {
+                empr_PosUserRights.DC_TYPE = @Html.Raw(Json.Serialize(ViewBag.DC_TYPE));
+                empr_PosUserRights.InitEvents();
+                empr_helper.EnableShortCutKeys('#BtnSave', '#BtnNew', '#BtnDelete', '#BtnQuickSearch', '#Code', '#DetailContainer', 0, 'custoM_ACT_CODE');
+            });
+        </script>
+}

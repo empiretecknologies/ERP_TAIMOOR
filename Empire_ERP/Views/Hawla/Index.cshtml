@@ -1,0 +1,121 @@
+﻿<style>
+    #bookType1, #bookType2 {
+        padding: 8px 12px !important;
+        border-radius: 4px !important;
+        border: 1px solid #ced4da !important;
+        box-shadow: none !important;
+    }
+
+</style>
+<div class="card">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-left">
+                <div class="card-header d-flex" style="gap:10px; justify-content: flex-end;">
+                    @* <div class="col-xl-8"> *@
+
+
+                    <div class="col-xl-3">
+                        <label class="form-label" for="TBCODE">Branch To</label>
+                        <div id="TBCODE"></div>
+                    </div>
+                    <button type="button" id="BtnSave" class="btn btn-primary btn-new waves-effect waves-light float-end" style="height: 30px;margin-top: 15px;">
+                        <i class="fa fa-print"></i> Get
+                    </button>
+                </div>
+                <div class="card-body">
+                        <ul class="nav nav-tabs nav-primary" id="myTab" role="tablist">
+                        <li class="nav-item"><a class="nav-link active" id="pills-warninghome-tab" data-bs-toggle="tab" href="#pills-warninghome" role="tab" aria-controls="pills-warninghome" aria-selected="true">Source Branch</a></li>
+                        <li class="nav-item"><a class="nav-link" id="pills-warningcontact-tab" data-bs-toggle="tab" href="#pills-warningcontact" role="tab" aria-controls="pills-warningcontact" aria-selected="false">Destination Branch </a></li>
+                        </ul>
+                    <div class="tab-pane  show active" id="pills-warninghome">
+                        <div id="tab1Wrapper">
+                            <div id="gridContainer"></div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="pills-warningcontact">
+                        <div id="tab2Wrapper" style="display:none;">
+                            <div id="ToBranchgridContainer"></div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="ChangeModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
+    <div class="modal-dialog modal-dialog-top" style="margin-top:135px;">
+        <div class="modal-content animatemodal" style="width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div class="modal-header" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0;">
+                <h5 class="modal-title" id="paymentModalLabel" style="font-weight: 600;">Change Record</h5>
+                <button type="button" id="ChangeModalCloseBtn" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <div class="modalRecord" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end;">
+                    <div class="col-xl-3" style="flex: 1; min-width: 200px;">
+                        <label class="form-label" for="TBCODE" style="font-weight: 500; margin-bottom: 5px; color: #495057;">Debit Account</label>
+                        <div id="bookType1" class="form-control"></div>
+                    </div>
+                    <div class="col-xl-3" style="flex: 1; min-width: 200px;">
+                        <label class="form-label" for="TBCODE" style="font-weight: 500; margin-bottom: 5px; color: #495057;">Credit Account</label>
+                        <div id="bookType2" class="form-control"></div>
+                    </div>
+                </div>
+
+                <div class="modalRecord" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end;">
+                    <div class="col-xl-3" style="flex: 1; min-width: 200px;">
+                        <label class="form-label" for="TBCODE" style="font-weight: 500; margin-bottom: 5px; color: #495057;">Comment</label>
+                        <textarea class="form-control" id="REMARKS" rows="1" type="text" autocomplete="off" style="padding: 8px 12px; border-radius: 4px; border: 1px solid #ced4da;"></textarea>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer" style="background-color: #f8f9fa; border-top: 1px solid #dee2e6; border-radius: 0 0 8px 8px; padding: 15px 20px; display: flex; justify-content: flex-end;">
+                <button type="button" class="btn btn-primary" id="updateBtn" style="padding: 8px 16px; border-radius: 4px; border: none; background-color: #790303; color: white; font-weight: 500;"><i class="fa fa-save"></i> Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="PrintModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" >
+    <div class="modal-dialog modal-dialog-centered" style="margin-left: 40%;">
+        <div class="modal-content animatemodal" style=" width: 316px;border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div class="modal-header" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6; border-radius: 8px 8px 0 0;">
+                <h5 class="modal-title" id="paymentModalLabel" style="font-weight: 600;">Data Transfered</h5>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding: 5px;background-color: #f8f9fa" id="PrintModals">
+                <!-- Content will be loaded here via jQuery -->
+            </div>
+            <div class="modal-footer" style="background-color: #f8f9fa; border-top: 1px solid #dee2e6; border-radius: 0 0 8px 8px; padding: 15px 20px; display: flex; justify-content: space-between;">
+                <button type="button" class="btn closebtn" data-bs-dismiss="modal">
+                    Close
+                </button>
+
+                <button type="button" class="btn screenshot" id="Screenshot">
+                    ScreenShot
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<input type="hidden" id="IsValidate" value="true" />
+
+@section LinkScriptSection {
+    <script type="text/javascript">
+        var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
+        var BranchTo = @Html.Raw(Json.Serialize(ViewBag.BranchTo));
+        var BookTypes = @Html.Raw(Json.Serialize(ViewBag.BookTypes));
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            empr_Hawla.InitEvents();
+        });
+    </script>
+    <script src="~/js/customjs/empr_Hawla.js" asp-append-version="true"></script>
+}
