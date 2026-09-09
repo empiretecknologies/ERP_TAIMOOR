@@ -183,7 +183,7 @@ Controllers live in `Empire_ERP/Controllers`. Most inherit `BaseController` and 
 
 **Sales / POS**
 
-- `POSTransactionsController`, `POSMappingController`, `POSDiscountController`, `POSDiscountItemWiseController`, `POSUserRightsController`, `ClosingShopController`, `MembershipCardController`, `TableController`, `WaiterController`, `SaleTaxInvoiceController`, `TexSalesInvoiceController`, `DeliveryOrderController`, `SalesContractController`, `SalesInvoiceReportController`, `PendingToSRBController`
+- `POSTransactionsController`, `POSMappingController`, `POSDiscountController`, `POSDiscountItemWiseController`, `POSUserRightsController`, `ClosingShopController`, `MembershipCardController`, `TableController`, `WaiterController`, `SaleTaxInvoiceController`, `TexSalesInvoiceController`, `DeliveryOrderController`, `SalesContractController`, `SalesQutationController`, `SalesInvoiceReportController`, `PendingToSRBController`
 
 **Purchase**
 

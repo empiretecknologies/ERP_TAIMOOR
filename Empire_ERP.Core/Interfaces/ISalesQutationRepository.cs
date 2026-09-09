@@ -1,0 +1,14 @@
+using Empire_ERP.Core.Entities;
+
+namespace Empire_ERP.Core.Interfaces
+{
+    public interface ISalesQutationRepository
+    {
+        MyHttpResponseMessage QuickSearch(Common common);
+        MyHttpResponseMessage GetSalesQutationByCode(int code, Common common);
+        MyHttpResponseMessage GetSalesQutationDetailByCode(int code, Common common);
+        MyHttpResponseMessage Save(CustomSalesQutation modelRecord, Common common);
+        MyHttpResponseMessage Delete(int code, Common common);
+        MyHttpResponseMessage DeleteSalesQutationDetailByCode(int code, Common common);
+    }
+}

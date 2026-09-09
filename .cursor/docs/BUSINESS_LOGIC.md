@@ -227,6 +227,22 @@ There is **no** `PartyController.cs` file; party UI is `PartyTypesController`.
 - **SaleTaxInvoice:** `TBL_FBR_SB_MASTER` / `TBL_FBR_SB_DETAIL`, `TBL_FBR_TYPE`; FBR tax formula above; `FBRApi_Status`; print `PROC_PRINT`.
 - **TexSalesInvoice:** `TBL_TSB_MASTER` + menu `TABLE2`; party/MPO/barcode; `STKPROC 71`; tax/discount line fields.
 
+### Sales quotation
+
+**Files:** `SalesQutationController`, `SalesQutationService`, `SalesQutationRepository`  
+**JS:** `empr_SalesQutation.js`  
+**Tables:** menu `TABLE1` / `TABLE2` (expected `TBL_SQ_MASTER` / `TBL_SQ_DETAIL`)
+
+| | |
+|--|--|
+| **Purpose** | Sales quotation with party and item quantities |
+| **Master** | `V_DATE`, `VOUCHER_NO`, `PARTY_CODE`, `ACT_CODE`, `REMARKS`, `ASTATUS` |
+| **Detail** | `DT_CODE`, `ITEM_CODE`, `QTY`, `RATE` (Amount = `QTY × RATE`, display-only) |
+
+**Processing:** Save in `SqlTransaction`; insert/update master; soft-delete then insert/update details. Voucher `{B_SHORT_NAME}/{PERFIX}/{yy-MM}/{padded TRAN_ID}`. Delete sets `DLT='F'` on master and details. Line delete uses detail `DT_CODE`.
+
+**UI item catalog:** Item groups use `IPOSTransactionService.GetItemsGroup`; items for a group use `GetItemsMasterByGroup` via `SalesQutationController.GetItemsMasterByGroup` (same POS role/module filters: `ITEM_TYPE='F'`, `GROUP_TYPE='S'`). Selected lines are kept in a JavaScript array (`itemCode`, `rate`, `qty`) and posted as `Detail` to the existing Save transaction. The detail DevExtreme grid is not shown.
+
 ### Delivery order / sales contract
 
 - Delivery order: pick from purchase/sales pick tables (`ASTATUS='Y'`); `STKPROC 71`; warehouse/color/size/tax on lines.

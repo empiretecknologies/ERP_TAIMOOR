@@ -128,6 +128,9 @@ namespace Empire_ERP.Helpers
             services.AddScoped<IMaterialRequisitionService, MaterialRequisitionService>();
             services.AddScoped<IMaterialRequisitionRepository, MaterialRequisitionRepository>();
 
+            services.AddScoped<ISalesQutationService, SalesQutationService>();
+            services.AddScoped<ISalesQutationRepository, SalesQutationRepository>();
+
             services.AddScoped<IStockTransferService, StockTransferService>();
             services.AddScoped<IStockTransferRepository, StockTransferRepository>();
 
