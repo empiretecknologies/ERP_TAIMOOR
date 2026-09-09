@@ -866,6 +866,7 @@ namespace Empire_ERP.Controllers
         {
             try
             {
+                // partyCode comes from SalesOrder/PurchaseBill selected party (AJAX partyCode)
                 var data = _purchaseBillService.GetPickDataByParty(partyCode, actCode, region, CommonHelper.GetValues(HttpContext));
                 return Json(data);
             }

@@ -58,6 +58,38 @@ namespace Empire_ERP.Core.Entities
         public List<PurchaseBillCommDetail>? Commission { get; set; }
     }
 
+    public class SalesOrderPickData
+    {
+        public string? ID { get; set; }
+        public int? TRAN_ID { get; set; }
+        public int? DT_CODE { get; set; }
+        public int? ITEM_CODE { get; set; }
+        public string? ITEM_NAME { get; set; }
+        public double? QTY { get; set; }
+        public int? RATE { get; set; }
+        public double? AMOUNT { get; set; }
+        public double? AMT { get; set; }
+        public string? V_DATE { get; set; }
+        public string? VOUCHER_NO { get; set; }
+        public int? PARTY_CODE { get; set; }
+        public int? ACT_CODE { get; set; }
+        public string? REMARKS { get; set; }
+        public int? BCODE { get; set; }
+        public int? UNIT { get; set; }
+        public double? NET_AMT { get; set; }
+        public double? DISC { get; set; }
+        public double? DISC_AMT { get; set; }
+        public double? TAX { get; set; }
+        public double? TAX_AMT { get; set; }
+        public double? ADV { get; set; }
+        public double? ADV_AMT { get; set; }
+        public int? WAREHOUSE { get; set; }
+        public string? CHK { get; set; }
+        public bool? CHK1 { get; set; }
+        public int? PICK_ID { get; set; }
+        public int? PICK_ID_D { get; set; }
+    }
+
     public class CurrentItemsInBill
     {
         public int? ITEM_CODE { get; set; }

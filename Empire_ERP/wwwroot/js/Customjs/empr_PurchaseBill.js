@@ -425,10 +425,10 @@ var empr_PurchaseBill = {
                 if (dcType == 'SO') {
                     var selectedSodas = $('#SodaPickGridContainer').dxDataGrid('instance').getSelectedRowKeys();
                     if (selectedSodas.length > 0) {
-                        empr_PurchaseBill.AddSalesQuotationToOrder(selectedSodas[0].id);
+                        empr_PurchaseBill.AddSalesQuotationToOrder(selectedSodas);
                     }
                     else {
-                        empr_helper.notify("Please select the quotation first.", 2);
+                        empr_helper.notify("Please select the items first.", 2);
                     }
                 }
             });
@@ -481,14 +481,13 @@ var empr_PurchaseBill = {
     },
 
     InitSodaPickGrid: function () {
-        if (dcType == 'SQ') {
-            empr_PurchaseBill.GetSalesQuotationPickData();
-            return;
-        }
-
+        debugger;
         var PARTY_CODE = $("#partyhidden").val();
         var ACT_CODE = $("#acthidden").val();
-        var REGION = $('#REGION').dxSelectBox('option', 'value');
+        var REGION = 0;
+        if ($('#REGION').data('dxSelectBox')) {
+            REGION = $('#REGION').dxSelectBox('option', 'value');
+        }
 
         if (PARTY_CODE == "" || PARTY_CODE == null || PARTY_CODE == undefined || PARTY_CODE == 0) {
             empr_helper.notify("Please select party first.", 2);
@@ -498,79 +497,82 @@ var empr_PurchaseBill = {
 
     },
 
-    GetSalesQuotationPickData: function () {
-        ajaxHelper.ajaxGetJson('/PurchaseBill/GetSalesQuotationPickData', function (data) {
-            if (data.msgType == 1) {
-                if (data.data.length > 0) {
-                    if ($('#SodaPickGridContainer').data('dxDataGrid') != undefined) {
-                        $('#SodaPickGridContainer').data('dxDataGrid').dispose();
-                    }
-                    empr_PurchaseBill.CreatePickGrid(data.data);
-                    $('#SodaPickModal').modal('show');
-                } else {
-                    empr_helper.notify("Sales Quotation not found.", 2);
-                }
+    AddSalesQuotationToOrder: function (selectedRows) {
+        if (!selectedRows || selectedRows.length == 0) {
+            empr_helper.notify("Please select the items first.", 2);
+            return;
+        }
+
+        var firstRow = selectedRows[0];
+        if (firstRow.remarks) {
+            $('#REMARKS').val(firstRow.remarks);
+        }
+
+        var mappedRows = selectedRows.map(function (item) {
+            var qty = parseFloat(item.qty) || 0;
+            var rate = parseFloat(item.rate) || 0;
+            var amount = parseFloat(item.amount != null ? item.amount : item.amt);
+            if (isNaN(amount)) {
+                amount = qty * rate;
             }
-            else {
-                empr_helper.notify(data.msg, data.msgType);
-            }
-        }, false, true);
-    },
+            var pickDtCode = item.picK_ID_D > 0 ? item.picK_ID_D : (item.dT_CODE || 0);
+            var stockRecord = empr_PurchaseBill.CurrentStock.find(function (s) {
+                return s.itemId == item.iteM_CODE;
+            });
 
-    AddSalesQuotationToOrder: function (code) {
-        ajaxHelper.ajaxGetJson('/PurchaseBill/GetSalesQuotationPickByCode?code=' + code, function (data) {
-            if (data.msgType == 1) {
-                var masterData = data.data;
-                var detailData = data.data2 || [];
-                if (masterData.length == 1) {
-                    var response = masterData[0];
-                    var filteredData = $.grep(PartyType, function (item) {
-                        return item.partyCode === response.partY_CODE && item.accountCode === response.acT_CODE;
-                    });
-                    if (filteredData.length > 0) {
-                        $('#PARTY_CODE').dxSelectBox('instance').option('value', filteredData[0].key);
-                        $('#partyhidden').val(filteredData[0].partyCode);
-                        $('#acthidden').val(filteredData[0].accountCode);
-                    }
-                    $('#REMARKS').val(response.remarks);
-                }
+            return {
+                ...item,
+                dT_CODE: 0,
+                __KEY__: empr_PurchaseBill.GenerateKey(36),
+                qty: qty,
+                rate: rate,
+                amt: amount,
+                amount: amount,
+                neT_AMT: amount,
+                picK_ID: item.picK_ID || item.traN_ID || 0,
+                picK_ID_D: pickDtCode,
+                currentStock: stockRecord ? stockRecord.balance : 0
+            };
+        });
 
-                $.each(detailData, function (index, item) {
-                    item.dT_CODE = 0;
-                    item.__KEY__ = empr_PurchaseBill.GenerateKey(36);
-                });
+        var grid = $('#DetailContainer').dxDataGrid('instance');
+        grid.saveEditData();
+        var existingData = grid.option('dataSource') || [];
+        var hasItem = existingData.some(function (row) {
+            return row.iteM_CODE != "" && row.iteM_CODE != null && row.iteM_CODE != undefined;
+        });
 
-                var updatedDetailData = detailData.map(item => {
-                    var stockRecord = empr_PurchaseBill.CurrentStock.find(s => s.itemId == item.iteM_CODE);
-                    return {
-                        ...item,
-                        currentStock: stockRecord ? stockRecord.balance : 0
-                    };
-                });
+        if (hasItem) {
+            grid.option('dataSource', existingData.concat(mappedRows));
+        } else {
+            grid.option('dataSource', mappedRows);
+        }
 
-                if (updatedDetailData.length == 0) {
-                    updatedDetailData = [{ __KEY__: empr_PurchaseBill.GenerateKey(36), chK1: false, chk: "0", dT_CODE: 0, warehouse: 2, deL_DATE: todayDate }];
-                }
-
-                empr_PurchaseBill.pickIds = updatedDetailData.map(x => x.picK_ID_D).filter(id => id > 0);
-                if (empr_PurchaseBill.pickIds.length > 0) {
-                    $('#pickItems').hide();
-                }
-                empr_PurchaseBill.CreateGrid(updatedDetailData, false);
-                $('.modal').modal('hide');
-                $('#V_DATE').focus();
-            }
-            else {
-                empr_helper.notify(data.msg, data.msgType);
-            }
-        }, false, true);
+        empr_PurchaseBill.pickIds = (grid.option('dataSource') || []).map(function (x) {
+            return x.picK_ID_D;
+        }).filter(function (id) {
+            return id > 0;
+        });
+        if (empr_PurchaseBill.pickIds.length > 0) {
+            $('#pickItems').hide();
+        }
+        grid.refresh();
+        $('.modal').modal('hide');
+        $('#V_DATE').focus();
     },
 
     GetPickDataByParty: function (PARTY_CODE, ACT_CODE, REGION) {
         ajaxHelper.ajaxGetJson('/PurchaseBill/GetPickDataByParty?partyCode=' + PARTY_CODE + '&actCode=' + ACT_CODE + '&region=' + REGION, function (data) {
             if (data.msgType == 1) {
                 if (data.data.length > 0) {
-                    if (empr_PurchaseBill.formName == 'MPO') {
+                    if (dcType == 'SO') {
+                        if ($('#SodaPickGridContainer').data('dxDataGrid') != undefined) {
+                            $('#SodaPickGridContainer').data('dxDataGrid').dispose();
+                        }
+                        empr_PurchaseBill.CreatePickGrid(data.data);
+                        $('#SodaPickModal').modal('show');
+                    }
+                    else if (empr_PurchaseBill.formName == 'MPO') {
                         empr_PurchaseBill.CreatePickDetailGrid(data.data);
 
                         var modal = new bootstrap.Modal(document.getElementById('SodaPickDetailModal'));
@@ -578,7 +580,7 @@ var empr_PurchaseBill = {
                     }
 
                 } else {
-                    empr_helper.notify("Purchase Order not found.", 2);
+                    empr_helper.notify(dcType == 'SO' ? "Sales Quotation not found." : "Purchase Order not found.", 2);
                 }
             }
             else {
@@ -599,18 +601,30 @@ var empr_PurchaseBill = {
     },
 
     CreatePickGrid: function (dataSrc) {
-        var col = [
-            { dataField: 'id', caption: 'Code', visible: true, },
-            { dataField: 'lB_DATE', caption: 'Date', dataType: 'date', allowEditing: false, format: 'dd-MM-yyy' },
-            { dataField: 'voucheR_NO', caption: 'Voucher No', allowEditing: false, },
-            { dataField: 'partY_NAME', caption: dcType == 'SO' ? 'Party' : 'Seller', allowEditing: false, },
-            { dataField: 'remarks', caption: 'Remarks', allowEditing: false, visible: dcType == 'SO' },
-            { dataField: 'ref', caption: 'Ref', allowEditing: false, visible: dcType != 'SO' },
-            { dataField: 'qty', caption: 'Quantity', allowEditing: false, },
-            { dataField: 'amt', caption: 'Amount', allowEditing: false, },
-            { dataField: 'disc', caption: 'Discount', allowEditing: false, visible: dcType != 'SO' },
-        ];
-        empr_helper.dxGridbindingVouchers('#SodaPickGridContainer', col, dataSrc, "PurchaseBillPick", "single");
+        var col = [];
+        var selectionMode = "single";
+        if (dcType == 'SO') {
+            selectionMode = "multiple";
+            col = [
+                { dataField: 'id', caption: 'Code', visible: false, },
+                { dataField: 'iteM_NAME', caption: 'Item', allowEditing: false, },
+                { dataField: 'qty', caption: 'Qty', allowEditing: false, },
+                { dataField: 'rate', caption: 'Rate', allowEditing: false, },
+                { dataField: 'amt', caption: 'Amount', allowEditing: false, },
+            ];
+        } else {
+            col = [
+                { dataField: 'id', caption: 'Code', visible: true, },
+                { dataField: 'lB_DATE', caption: 'Date', dataType: 'date', allowEditing: false, format: 'dd-MM-yyy' },
+                { dataField: 'voucheR_NO', caption: 'Voucher No', allowEditing: false, },
+                { dataField: 'partY_NAME', caption: 'Seller', allowEditing: false, },
+                { dataField: 'ref', caption: 'Ref', allowEditing: false, },
+                { dataField: 'qty', caption: 'Quantity', allowEditing: false, },
+                { dataField: 'amt', caption: 'Amount', allowEditing: false, },
+                { dataField: 'disc', caption: 'Discount', allowEditing: false, },
+            ];
+        }
+        empr_helper.dxGridbindingVouchers('#SodaPickGridContainer', col, dataSrc, "PurchaseBillPick", selectionMode);
         setTimeout(function () {
             $('#SodaPickGridContainer').dxDataGrid('instance').resize();
         }, 500);
