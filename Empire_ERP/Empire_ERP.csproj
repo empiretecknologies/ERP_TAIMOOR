@@ -22,6 +22,7 @@
     <None Remove="Reports\OLDInvoiceReport.rdlc" />
     <None Remove="Reports\OLDSTKTRPrintReport.rdlc" />
     <None Remove="Reports\PrintReport.rdlc" />
+    <None Remove="Reports\SalesQutationPrintReport.rdlc" />
     <None Remove="Reports\SalesInvoice.rdlc" />
     <None Remove="Reports\SalesTax - Copy.rdlc" />
     <None Remove="Reports\SalesTax.rdlc" />
@@ -157,6 +158,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Reports\PrintReport.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Reports\SalesQutationPrintReport.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Reports\StockTransferReportLabel.rdlc">

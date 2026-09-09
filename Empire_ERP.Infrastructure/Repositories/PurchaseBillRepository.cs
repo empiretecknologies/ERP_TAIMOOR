@@ -757,6 +757,162 @@ namespace Empire_ERP.Infrastructure.Repositories
             return response;
         }
 
+        public MyHttpResponseMessage GetSalesQuotationPickData(Common common)
+        {
+            MyHttpResponseMessage response = new MyHttpResponseMessage();
+            try
+            {
+                List<object> jsonDataResult = new List<object>();
+                using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
+                {
+                    string query = $@"SELECT M.TRAN_ID, M.V_DATE AS LB_DATE, M.VOUCHER_NO, M.PARTY_CODE, M.ACT_CODE, M.REMARKS,
+                                            PT.PARTY_NAME,
+                                            ISNULL((SELECT SUM(ISNULL(D.QTY,0)) FROM TBL_SQ_DETAIL D WHERE D.TRAN_ID = M.TRAN_ID AND D.DLT = 'T' AND D.BCODE = M.BCODE AND D.PERIOD_ID = M.PERIOD_ID), 0) AS QTY,
+                                            ISNULL((SELECT SUM(ISNULL(D.QTY,0) * ISNULL(D.RATE,0)) FROM TBL_SQ_DETAIL D WHERE D.TRAN_ID = M.TRAN_ID AND D.DLT = 'T' AND D.BCODE = M.BCODE AND D.PERIOD_ID = M.PERIOD_ID), 0) AS AMT
+                                     FROM TBL_SQ_MASTER M
+                                     LEFT OUTER JOIN TBL_PARTY_TYPES PT ON PT.PARTY_CODE = M.PARTY_CODE AND PT.ACT_CODE = M.ACT_CODE
+                                     WHERE M.DLT = 'T' AND M.BCODE = '{common.Branch}' AND M.PERIOD_ID = '{common.Period}' AND M.ASTATUS = 'Y'
+                                     ORDER BY M.TRAN_ID DESC";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var row = new
+                        {
+                            ID = Convert.ToString(reader["TRAN_ID"]),
+                            LB_DATE = reader["LB_DATE"] == DBNull.Value ? null : Convert.ToDateTime(reader["LB_DATE"]).ToString("dd-MM-yyyy"),
+                            VOUCHER_NO = reader["VOUCHER_NO"] == DBNull.Value ? "" : Convert.ToString(reader["VOUCHER_NO"]),
+                            PARTY_CODE = reader["PARTY_CODE"] == DBNull.Value ? 0 : Convert.ToInt32(reader["PARTY_CODE"]),
+                            ACT_CODE = reader["ACT_CODE"] == DBNull.Value ? 0 : Convert.ToInt32(reader["ACT_CODE"]),
+                            PARTY_NAME = reader["PARTY_NAME"] == DBNull.Value ? "" : Convert.ToString(reader["PARTY_NAME"]),
+                            REMARKS = reader["REMARKS"] == DBNull.Value ? "" : Convert.ToString(reader["REMARKS"]),
+                            QTY = reader["QTY"] == DBNull.Value ? 0.0 : Convert.ToDouble(reader["QTY"]),
+                            AMT = reader["AMT"] == DBNull.Value ? 0.0 : Convert.ToDouble(reader["AMT"]),
+                        };
+                        jsonDataResult.Add(row);
+                    }
+                    reader.Close();
+                }
+
+                response.data = jsonDataResult;
+                response.msg = "";
+                response.msgType = 1;
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage = _catchMessage + "<br/>" + ex.InnerException.Message;
+                }
+                response.msg = _catchMessage;
+                response.msgType = 2;
+            }
+            return response;
+        }
+
+        public MyHttpResponseMessage GetSalesQuotationPickByCode(int code, Common common)
+        {
+            MyHttpResponseMessage response = new MyHttpResponseMessage();
+            try
+            {
+                List<object> masterResult = new List<object>();
+                List<object> detailResult = new List<object>();
+
+                using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
+                {
+                    string masterQuery = $@"SELECT M.TRAN_ID, M.V_DATE, M.VOUCHER_NO, M.PARTY_CODE, M.ACT_CODE, M.REMARKS, M.ASTATUS,
+                                                   PT.PARTY_NAME
+                                            FROM TBL_SQ_MASTER M
+                                            LEFT OUTER JOIN TBL_PARTY_TYPES PT ON PT.PARTY_CODE = M.PARTY_CODE AND PT.ACT_CODE = M.ACT_CODE
+                                            WHERE M.DLT = 'T' AND M.TRAN_ID = '{code}' AND M.BCODE = '{common.Branch}' AND M.PERIOD_ID = '{common.Period}' AND M.ASTATUS = 'Y'";
+                    SqlCommand masterCommand = new SqlCommand(masterQuery, connection);
+                    connection.Open();
+                    SqlDataReader masterReader = masterCommand.ExecuteReader();
+                    while (masterReader.Read())
+                    {
+                        var row = new
+                        {
+                            ID = Convert.ToString(masterReader["TRAN_ID"]),
+                            ASTATUS = Convert.ToString(masterReader["ASTATUS"]),
+                            V_DATE = masterReader["V_DATE"] == DBNull.Value ? null : Convert.ToDateTime(masterReader["V_DATE"]).ToString("yyyy-MM-dd"),
+                            VOUCHER_NO = masterReader["VOUCHER_NO"] == DBNull.Value ? "" : Convert.ToString(masterReader["VOUCHER_NO"]),
+                            PARTY_CODE = masterReader["PARTY_CODE"] == DBNull.Value ? 0 : Convert.ToInt32(masterReader["PARTY_CODE"]),
+                            ACT_CODE = masterReader["ACT_CODE"] == DBNull.Value ? 0 : Convert.ToInt32(masterReader["ACT_CODE"]),
+                            PARTY_NAME = masterReader["PARTY_NAME"] == DBNull.Value ? "" : Convert.ToString(masterReader["PARTY_NAME"]),
+                            REMARKS = masterReader["REMARKS"] == DBNull.Value ? "" : Convert.ToString(masterReader["REMARKS"]),
+                        };
+                        masterResult.Add(row);
+                    }
+                    masterReader.Close();
+
+                    string detailQuery = $@"SELECT D.TRAN_ID, D.DT_CODE, D.ITEM_CODE, D.QTY, D.RATE, I.ITEM_NAME, I.IUNIT_CODE AS UNIT
+                                            FROM TBL_SQ_DETAIL D
+                                            LEFT OUTER JOIN TBL_ITEMSMASTER I ON I.ITEM_CODE = D.ITEM_CODE
+                                            WHERE D.DLT = 'T' AND D.TRAN_ID = '{code}' AND D.BCODE = '{common.Branch}' AND D.PERIOD_ID = '{common.Period}'
+                                            ORDER BY D.DT_CODE DESC";
+                    SqlCommand detailCommand = new SqlCommand(detailQuery, connection);
+                    SqlDataReader detailReader = detailCommand.ExecuteReader();
+                    while (detailReader.Read())
+                    {
+                        double qty = detailReader["QTY"] == DBNull.Value ? 0 : Convert.ToDouble(detailReader["QTY"]);
+                        double rate = detailReader["RATE"] == DBNull.Value ? 0 : Convert.ToDouble(detailReader["RATE"]);
+                        double amt = qty * rate;
+                        var row = new
+                        {
+                            DT_CODE = 0,
+                            ITEM_CODE = detailReader["ITEM_CODE"] == DBNull.Value ? 0 : Convert.ToInt32(detailReader["ITEM_CODE"]),
+                            ITEM_NAME = detailReader["ITEM_NAME"] == DBNull.Value ? "" : Convert.ToString(detailReader["ITEM_NAME"]),
+                            QTY = qty,
+                            UNIT = detailReader["UNIT"] == DBNull.Value ? 0 : Convert.ToInt32(detailReader["UNIT"]),
+                            RATE = rate,
+                            AMT = amt,
+                            DISC = 0,
+                            DISC_AMT = 0,
+                            TAX = 0,
+                            TAX_AMT = 0,
+                            ADV = 0,
+                            ADV_AMT = 0,
+                            NET_AMT = amt,
+                            WAREHOUSE = 2,
+                            CHK = "0",
+                            CHK1 = false,
+                            PICK_ID = detailReader["TRAN_ID"] == DBNull.Value ? 0 : Convert.ToInt32(detailReader["TRAN_ID"]),
+                            PICK_ID_D = detailReader["DT_CODE"] == DBNull.Value ? 0 : Convert.ToInt32(detailReader["DT_CODE"]),
+                        };
+                        detailResult.Add(row);
+                    }
+                    detailReader.Close();
+                }
+
+                if (masterResult.Count == 0)
+                {
+                    response.data = "";
+                    response.msg = "Sales Quotation not found.";
+                    response.msgType = 2;
+                }
+                else
+                {
+                    response.data = masterResult;
+                    response.data2 = detailResult;
+                    response.msg = "";
+                    response.msgType = 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage = _catchMessage + "<br/>" + ex.InnerException.Message;
+                }
+                response.msg = _catchMessage;
+                response.msgType = 2;
+            }
+            return response;
+        }
+
         public MyHttpResponseMessage GetBarcodeList()
         {
             MyHttpResponseMessage response = new MyHttpResponseMessage();

@@ -2241,3 +2241,45 @@ button.toggle-view {
     opacity: 0.4 !important; /* grey look */
     cursor: not-allowed !important;
 }
+
+/* ----- Responsive POS (aligned with Bootstrap lg 992) ----- */
+@media (max-width: 991.98px) {
+    .modern-pos-container .header.row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .modern-pos-container .header-left,
+    .modern-pos-container .header-right {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        max-width: 100%;
+    }
+
+    .modern-pos-container .main.row > [class*="col-"] {
+        max-width: 100%;
+    }
+
+    .modern-pos-container .ending .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .modern-pos-container .body-left,
+    .modern-pos-container .body-right {
+        flex: 0 0 100%;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .modern-pos-container .payment-grid,
+    .modern-pos-container .payment-grid--2,
+    .modern-pos-container .payment-grid--3 {
+        flex-direction: column;
+    }
+
+    .modern-pos-container .input-group-custom {
+        min-width: 100%;
+    }
+}

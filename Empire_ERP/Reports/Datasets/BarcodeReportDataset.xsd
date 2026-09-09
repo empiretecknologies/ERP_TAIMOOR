@@ -385,6 +385,16 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="SalesQutation" msprop:Generator_RowEvHandlerName="SalesQutationRowChangeEventHandler" msprop:Generator_RowDeletedName="SalesQutationRowDeleted" msprop:Generator_RowDeletingName="SalesQutationRowDeleting" msprop:Generator_RowEvArgName="SalesQutationRowChangeEvent" msprop:Generator_TablePropName="SalesQutation" msprop:Generator_RowChangedName="SalesQutationRowChanged" msprop:Generator_UserTableName="SalesQutation" msprop:Generator_RowChangingName="SalesQutationRowChanging" msprop:Generator_RowClassName="SalesQutationRow" msprop:Generator_TableClassName="SalesQutationDataTable" msprop:Generator_TableVarName="tableSalesQutation">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ItemName" msprop:Generator_ColumnPropNameInTable="ItemNameColumn" msprop:Generator_ColumnPropNameInRow="ItemName" msprop:Generator_UserColumnName="ItemName" msprop:Generator_ColumnVarNameInTable="columnItemName" type="xs:string" minOccurs="0" />
+              <xs:element name="Qty" msprop:Generator_ColumnPropNameInTable="QtyColumn" msprop:Generator_ColumnPropNameInRow="Qty" msprop:Generator_UserColumnName="Qty" msprop:Generator_ColumnVarNameInTable="columnQty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Rate" msprop:Generator_ColumnPropNameInTable="RateColumn" msprop:Generator_ColumnPropNameInRow="Rate" msprop:Generator_UserColumnName="Rate" msprop:Generator_ColumnVarNameInTable="columnRate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Amount" msprop:Generator_ColumnPropNameInTable="AmountColumn" msprop:Generator_ColumnPropNameInRow="Amount" msprop:Generator_UserColumnName="Amount" msprop:Generator_ColumnVarNameInTable="columnAmount" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
   </xs:element>

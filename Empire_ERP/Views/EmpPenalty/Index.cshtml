@@ -1,26 +1,26 @@
 ﻿<div class="card">
     <div class="card-header">
         <input type="hidden" id="MasterId" />
-        <div class="d-flex" style="width: 100%;gap: 10px;">
-            <div class="row">
-                <div class="col-md-8">
+        <div class="d-flex emp-responsive-toolbar" style="width: 100%;gap: 10px;flex-wrap:wrap;">
+            <div class="row w-100 g-2">
+                <div class="col-12 col-md-8">
                     @* <label class="form-label" for="EducatioID">Employee:</label> *@
                     <input type="hidden" id="ACT_GROUP_hidden" />
                     <input type="hidden" id="displayExprAccGroup" />
-                    <div style="width:600px;height:20px;padding: 4px;"><div id="ENAME"></div></div>
+                    <div style="width:600px;max-width:100%;height:20px;padding: 4px;"><div id="ENAME"></div></div>
                 </div>
-                <div class="col-md-3" style="margin-left: -32px; min-width:110px; min-height:24px;">
+                <div class="col-6 col-md-2" style="min-width:110px; min-height:24px;">
                     <button type="button" id="BtnNew"
                             class="btn btn-primary btn-new waves-effect waves-light"
                             style="height: 24px;width: 85px;margin-top: 3px;">
                         ->| GO
                     </button>
                 </div>
-                <div class="col-md-1">
+                <div class="col-6 col-md-2">
                     @*  <button type="button" id="resetForm" class="btn btn-primary btn-new waves-effect waves-light " style="height: 24px ;margin-left: 165px;margin-top: 3px;">
                 Add New
                 </button> *@
-                    <button class="btn btn-primary btn-refresh" id="refresh" style="width: 100px;height: 23px;margin-top: 2px;padding: 2px;margin-left: 125px;">
+                    <button class="btn btn-primary btn-refresh" id="refresh" style="width: 100px;height: 23px;margin-top: 2px;padding: 2px;">
                         <i class="fa fa-refresh"></i>
                         Refresh
                     </button>

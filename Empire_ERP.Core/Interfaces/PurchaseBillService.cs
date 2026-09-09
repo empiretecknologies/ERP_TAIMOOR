@@ -12,6 +12,8 @@ namespace Empire_ERP.Core.Interfaces
         MyHttpResponseMessage GetPurchaseBillCommissionByCode(int code, Common common);
         MyHttpResponseMessage GetPrintData(int code, Common common);
         MyHttpResponseMessage GetPickDataByParty(int partyCode, int actCode, int region, Common common);
+        MyHttpResponseMessage GetSalesQuotationPickData(Common common);
+        MyHttpResponseMessage GetSalesQuotationPickByCode(int code, Common common);
         MyHttpResponseMessage GetBarcodeList();
         MyHttpResponseMessage GetPurchaseBillPickDetailByCode(int code, Common common);
         MyHttpResponseMessage GetPurchaseBillDetailByItem(int code, int qty, Common common);

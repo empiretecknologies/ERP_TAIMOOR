@@ -1,0 +1,585 @@
+/* =============================================================================
+   Empire ERP — Responsive UI (frontend-only)
+   Breakpoints aligned with Bootstrap 5: 576 / 768 / 992 / 1200
+   ============================================================================= */
+
+:root {
+    --erp-bp-sm: 575.98px;
+    --erp-bp-md: 767.98px;
+    --erp-bp-lg: 991.98px;
+    --erp-bp-xl: 1199.98px;
+    --erp-sidebar-width: 250px;
+    --erp-nav-z: 1040;
+    --erp-backdrop-z: 1035;
+}
+
+/* ----- Phase 1: Shell — flex layout (desktop-safe) ----- */
+.main_wrap {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    width: 100%;
+}
+
+.main_wrap .leftsidebar {
+    float: none;
+    flex: 0 0 var(--erp-sidebar-width);
+    max-width: var(--erp-sidebar-width);
+    z-index: 1020;
+}
+
+.main_wrap .rightsidecontent {
+    float: none;
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+    max-width: 100%;
+}
+
+.main_wrap.collapse_sidebar .leftsidebar {
+    flex-basis: 0;
+    max-width: 0;
+}
+
+.main_wrap.collapse_sidebar .rightsidecontent {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Nav toggle + backdrops (hidden on desktop) */
+.erp-nav-toggle,
+.erp-nav-backdrop,
+.erp-sidebar-backdrop,
+.erp-sidebar-fab {
+    display: none;
+}
+
+.erp-nav-bar {
+    position: relative;
+}
+
+/* Breadcrumb / branch row */
+.erp-page-meta {
+    flex-wrap: wrap;
+}
+
+.erp-page-meta .branch-slider {
+    max-width: 100%;
+}
+
+.erp-page-meta .branch-name,
+.erp-page-meta .slide-track {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ----- Phase 2: Shared modals / tables / BS4 spacing bridges ----- */
+.modal-width {
+    width: auto !important;
+    max-width: min(58%, 960px) !important;
+}
+
+#ImageViewModal .modal-content {
+    height: auto !important;
+    width: auto !important;
+    max-width: 100%;
+}
+
+#ImageViewModal .modal-content img {
+    max-width: 100% !important;
+    height: auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Soft-wrap tables on small screens; keep desktop nowrap via max-width query below */
+@media (max-width: 991.98px) {
+    .Record .table th,
+    .Record .table td {
+        white-space: normal;
+    }
+
+    .table-responsive {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-width {
+        max-width: 96% !important;
+        width: 96% !important;
+        margin: 0.5rem auto;
+    }
+
+    .modal-xl .modal-dialog,
+    .modal-dialog.modal-xl {
+        max-width: 96%;
+        margin: 0.5rem auto;
+    }
+
+    .modal-dialog {
+        max-width: 96%;
+        margin: 0.5rem auto;
+    }
+
+    .modal-dialog-centered {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* Kill inline margin-left:40% positioning */
+    .modal-dialog[style*="margin-left"],
+    .modal-dialog.modal-dialog-centered[style*="margin-left"] {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    .modal-content[style*="width: 316px"],
+    .modal-content[style*="width:316px"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .modal-dialog-scrollable .modal-body {
+        overflow-y: auto;
+        max-height: calc(100vh - 180px);
+    }
+
+    .gear-dropdown {
+        left: 8px !important;
+        right: 8px !important;
+        width: auto !important;
+        max-width: none !important;
+    }
+}
+
+/* ----- Phase 4: Emp / fixed toolbar helpers ----- */
+.emp-responsive-toolbar {
+    flex-wrap: wrap !important;
+    align-items: center;
+    gap: 8px !important;
+}
+
+.emp-responsive-toolbar > div[style*="width:600px"],
+.emp-responsive-toolbar > div[style*="width: 600px"] {
+    width: 100% !important;
+    max-width: 600px;
+    height: auto !important;
+}
+
+.emp-responsive-toolbar > div[style*="width:300px"],
+.emp-responsive-toolbar > div[style*="width: 300px"] {
+    width: 100% !important;
+    max-width: 300px;
+    height: auto !important;
+}
+
+.emp-responsive-toolbar .btn[style*="margin-left"] {
+    margin-left: 0 !important;
+}
+
+@media (max-width: 1199.98px) {
+    /* Dense col-xl forms: ensure inputs don't force overflow */
+    .card-body .row > [class*="col-xl-"],
+    .Record .row > [class*="col-xl-"],
+    form .row > [class*="col-xl-"] {
+        min-width: 0;
+    }
+
+    .card-header .d-flex {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .emp-responsive-toolbar > div[style*="width"] {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    .card-header .d-flex > div[style*="width:600px"],
+    .card-header .d-flex > div[style*="width: 600px"],
+    .card-header .d-flex > div[style*="width:300px"],
+    .card-header .d-flex > div[style*="width: 300px"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    .card-header .d-flex .btn[style*="margin-left: 165px"],
+    .card-header .d-flex .btn[style*="margin-left:165px"] {
+        margin-left: 0 !important;
+    }
+
+    /* Action button rows */
+    .text-end.pt-5,
+    .col-xl-12.text-end {
+        text-align: left !important;
+    }
+
+    .col-xl-12.text-end .btn,
+    .text-end.pt-5 .btn,
+    .text-end.pb-10 .btn {
+        margin-bottom: 6px;
+    }
+}
+
+/* ----- Phase 1: Tablet / Mobile shell ----- */
+@media (max-width: 991.98px) {
+    body {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .headertopbar {
+        position: sticky;
+        top: 0;
+        z-index: var(--erp-nav-z);
+    }
+
+    .erp-nav-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 36px;
+        border: 0;
+        border-radius: 4px;
+        background: var(--theme-blue, #055a87);
+        color: #fff;
+        margin: 6px 0;
+        cursor: pointer;
+        z-index: calc(var(--erp-nav-z) + 1);
+    }
+
+    .erp-nav-toggle:focus {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+
+    .erp-nav-bar .erp-nav-collapse {
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        background: var(--theme-blue, #055a87);
+        max-height: min(70vh, 520px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        z-index: var(--erp-nav-z);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .erp-nav-bar.erp-nav-open .erp-nav-collapse {
+        display: block;
+    }
+
+    .erp-nav-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: var(--erp-backdrop-z);
+    }
+
+    .erp-nav-bar.erp-nav-open ~ .erp-nav-backdrop,
+    body.erp-nav-open .erp-nav-backdrop {
+        display: block;
+    }
+
+    /* Stack top menu vertically */
+    .nav.ul-navbar {
+        flex-direction: column;
+        align-items: stretch;
+        flex-wrap: nowrap;
+        padding: 4px 0;
+    }
+
+    .nav.ul-navbar > .nav-item {
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .nav.ul-navbar li.nav-item a.nav-link {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .ul-navbar ul.dropdown-menu {
+        position: static !important;
+        float: none;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-shadow: none;
+        border: 0;
+        background: rgba(0, 0, 0, 0.12);
+        display: none;
+        transform: none !important;
+        inset: auto !important;
+    }
+
+    .ul-navbar .nav-item.erp-submenu-open > .dropdown-menu,
+    .ul-navbar .dropdown-submenu.erp-submenu-open > .dropdown-menu {
+        display: block !important;
+    }
+
+    .ul-navbar .dropdown-menu .submenu,
+    .ul-navbar .dropdown-submenu > .dropdown-menu {
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        display: none;
+        width: 100%;
+        padding-left: 12px;
+    }
+
+    .ul-navbar .dropdown-menu > li:hover > .submenu {
+        display: none; /* disable hover-open on touch; JS toggles */
+    }
+
+    .ul-navbar .dropdown-submenu.erp-submenu-open > .dropdown-menu,
+    .ul-navbar .dropdown-submenu.erp-submenu-open > .submenu {
+        display: flex !important;
+        flex-direction: column;
+    }
+
+    /* Sidebar as off-canvas overlay */
+    .main_wrap {
+        display: block;
+        position: relative;
+    }
+
+    .main_wrap .leftsidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(280px, 86vw) !important;
+        max-width: min(280px, 86vw) !important;
+        height: 100vh !important;
+        margin: 0 !important;
+        z-index: 1050;
+        transform: translateX(-105%);
+        transition: transform 0.25s ease;
+        opacity: 1 !important;
+        overflow-y: auto;
+        box-shadow: none;
+    }
+
+    .main_wrap .leftsidebar * {
+        opacity: 1 !important;
+    }
+
+    .main_wrap:not(.collapse_sidebar) .leftsidebar,
+    .main_wrap.erp-sidebar-open .leftsidebar {
+        transform: translateX(0);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .main_wrap.collapse_sidebar .leftsidebar {
+        width: min(280px, 86vw) !important;
+        max-width: min(280px, 86vw) !important;
+        flex-basis: auto;
+        transform: translateX(-105%);
+    }
+
+    .main_wrap.collapse_sidebar.erp-sidebar-open .leftsidebar {
+        transform: translateX(0);
+    }
+
+    .main_wrap.collapse_sidebar .leftsidebar .toggle_sidebar,
+    .main_wrap .leftsidebar .toggle_sidebar {
+        opacity: 1 !important;
+        position: absolute;
+        top: 12px;
+        right: 10px;
+        left: auto;
+        transform: none;
+        background: transparent;
+        color: var(--theme-blue, #055a87);
+        padding: 4px;
+        z-index: 2;
+    }
+
+    .erp-sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 1045;
+    }
+
+    body.erp-sidebar-open .erp-sidebar-backdrop {
+        display: block;
+    }
+
+    /* Floating reopen handle when sidebar collapsed on tablet/phone */
+    .erp-sidebar-fab {
+        display: inline-flex;
+        position: fixed;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1030;
+        background: var(--theme-blue, #055a87);
+        color: #fff;
+        border: 0;
+        border-radius: 0 6px 6px 0;
+        padding: 18px 6px;
+        cursor: pointer;
+    }
+
+    body.erp-sidebar-open .erp-sidebar-fab,
+    .main_wrap:not(.collapse_sidebar) .erp-sidebar-fab {
+        display: none;
+    }
+
+    .main_wrap .rightsidecontent {
+        width: 100% !important;
+        max-width: 100%;
+        height: auto;
+        min-height: calc(100vh - 120px);
+        overflow-x: hidden;
+        overflow-y: visible;
+        padding: 10px 8px;
+        margin-left: 0 !important;
+    }
+
+    .contain_wrap {
+        overflow-x: hidden;
+    }
+
+    .topexlink .dp-user p {
+        max-width: 90px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 11px;
+    }
+
+    .erp-page-meta .col-lg-4,
+    .erp-page-meta .col-lg-8 {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+        text-align: left !important;
+    }
+
+    .erp-page-meta .branch-slider {
+        display: block !important;
+        width: 100%;
+        margin-top: 4px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .brang_logo {
+        width: 110px;
+        padding: 4px 0;
+    }
+
+    .form-control,
+    .form-select,
+    label.form-label,
+    .col-form-label {
+        font-size: 12px;
+    }
+
+    .btn {
+        white-space: normal;
+    }
+
+    .ul-right-menu.topexlink {
+        right: 0;
+        bottom: 0;
+        max-width: 100%;
+    }
+
+    .ci-user-picture {
+        min-width: 100px;
+        margin-right: 8px;
+    }
+
+    .ci-user-picture img {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* ----- Phase 5: POS helpers (works with posstyle.css) ----- */
+@media (max-width: 991.98px) {
+    #body_categories {
+        min-height: 120px !important;
+        max-height: 160px !important;
+    }
+
+    #body_items {
+        min-height: 220px !important;
+        max-height: 280px !important;
+    }
+
+    #item_adder {
+        height: auto !important;
+        max-height: 280px !important;
+    }
+
+    .modern-pos-container .header-left[style*="margin-left"],
+    .modern-pos-container .header-right[style*="margin-right"] {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .modern-pos-container .partyInput {
+        width: 100% !important;
+    }
+
+    .modern-pos-container #billDisc {
+        width: 100%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .modern-pos-container .main.row {
+        flex-direction: column;
+    }
+
+    .modern-pos-container .body-left,
+    .modern-pos-container .body-right {
+        width: 100% !important;
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .summary-item-verticle {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ----- Phase 3: DX grid containers ----- */
+@media (max-width: 991.98px) {
+    .dx-datagrid,
+    .dx-datagrid-headers,
+    .dx-datagrid-rowsview {
+        max-width: 100%;
+    }
+
+    .dx-toolbar .dx-toolbar-items-container {
+        flex-wrap: wrap;
+    }
+
+    .dx-datagrid-header-panel {
+        overflow-x: auto;
+    }
+}
+
+/* Prevent page-level horizontal scroll */
+html {
+    overflow-x: hidden;
+}
+
+.container-fluid {
+    max-width: 100%;
+}

@@ -47,11 +47,13 @@
         <!-- Custom styles for this template -->
         <link href="~/css/style.css" rel="stylesheet" asp-append-version="true">
         <link href="~/css/posstyle.css" rel="stylesheet" asp-append-version="true">
+        <link href="~/css/responsive.css" rel="stylesheet" asp-append-version="true">
         @*<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">*@
         <link href="~/lib/toast-notification/build/toastr.css" rel="stylesheet" />
-        <link rel="stylesheet" href="~/css/DatePicker.css" />
+        @* DatePicker.css not present under wwwroot/css — omitted to avoid 404 *@
+        @*<link rel="stylesheet" href="~/css/DatePicker.css" />*@
 
-        <link href="~/lib/toast-notification/build/toastr.min.css" rel="stylesheet" />
+        @*<link href="~/lib/toast-notification/build/toastr.min.css" rel="stylesheet" />*@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" integrity="sha512-2eMmukTZtvwlfQoG8ztapwAH5fXaQBzaMqdljLopRSA0i6YKM8kBAOrSSykxu9NN9HrtD45lIqfONLII2AFL/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         @* <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.0/signalr.min.js"></script> *@
@@ -744,8 +746,8 @@
         <div class="rightsidecontent">
             <div class="contain_wrap">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-lg-4 breadcrumb-box  d-flex align-items-center position-relative">
+                    <div class="row erp-page-meta">
+                        <div class="col-lg-4 col-12 breadcrumb-box  d-flex align-items-center position-relative">
 
                             @Html.Raw(ViewBag.BreadCrumbHTML)
                         </div>
@@ -772,8 +774,8 @@
                                 <button id="BtnApply" class="btn btn-sm btn-primary w-40">Apply</button>
                             </div>
                         </div>
-                        <div class="col-lg-8" style="text-align: right;">
-                            <div class="branch-slider" style="display: inline-block;">
+                        <div class="col-lg-8 col-12" style="text-align: right;">
+                            <div class="branch-slider" style="display: inline-block; max-width: 100%;">
                                 <div class="slide-track slide-track-custom">
                                     <span class="branch-name branch-name-custom">
                                         @Html.Raw(ViewBag.Company + "&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;" + ViewBag.BranchForNav + "&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;" + ViewBag.Period)
@@ -811,8 +813,8 @@
         </div>
     </div>
     <div class="modal fade cropImageModal" id="cropImagePop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <button type="button" class="close-modal-custom" data-dismiss="modal" aria-label="Close"><i class="feather icon-x"></i></button>
-        <div class="modal-dialog">
+        <button type="button" class="close-modal-custom" data-bs-dismiss="modal" aria-label="Close"><i class="feather icon-x"></i></button>
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-body p-0">
                     <div class="modal-header-bg"></div>
@@ -825,7 +827,7 @@
                             <h5><i class="fas fa-arrows-alt mr-1"></i> Drag your image as you require</h5>
                         </div>
                         <div class="upload-action-btn text-center px-2">
-                            <button type="button" class="btn btn-danger px-3 ml-sm-2 position-relative replacePhoto"><i class="fa fa-close"></i> Close</button>
+                            <button type="button" class="btn btn-danger px-3 ml-sm-2 position-relative replacePhoto" data-bs-dismiss="modal"><i class="fa fa-close"></i> Close</button>
                             <button type="button" id="cropImageBtn" class="btn btn-primary btn-save px-3 mr-2"><i class="fa fa-save"></i> Upload Image</button>
                         </div>
                     </div>
@@ -834,17 +836,17 @@
         </div>
     </div>
     <div class="modal fade" id="ImageViewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" style="height: 430px; width: 410px;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="max-width: 100%; width: min(410px, 96vw); height: auto;">
                 <div class="modal-body p-0">
                     <div class="up-photo-content pb-5">
                         <div id="upload-demo" class="center-block">
-                            <img src="" style="height: 350px; width: 350px; margin-left: 30px; margin-top: 25px;" />
+                            <img src="" style="max-width: 100%; height: auto; width: min(350px, 90vw); display: block; margin: 25px auto 0;" />
                         </div>
                     </div>
                 </div>
                 <div class="upload-action-btn text-center px-2">
-                    <button type="button" class="btn btn-danger px-3 ml-sm-2 position-relative mb-15" onclick="return $('#ImageViewModal').modal('hide')"><i class="fa fa-close"></i> Close</button>
+                    <button type="button" class="btn btn-danger px-3 ml-sm-2 position-relative mb-15" data-bs-dismiss="modal"><i class="fa fa-close"></i> Close</button>
                 </div>
             </div>
         </div>
@@ -1302,6 +1304,7 @@
         <script src="~/js/dx.all.js" asp-append-version="true"></script>
         @* <script src="https://cdn3.devexpress.com/jslib/23.2.4/js/dx.all.js" asp-append-version="true"></script> *@
 
+        <script src="~/js/responsive.js" asp-append-version="true"></script>
         <script src="~/dx/ajaxhelper.js"></script>
         <script src="~/dx/ati_dxHelper.js"></script>
         <script src="~/js/customjs/empr_helper.js"></script>

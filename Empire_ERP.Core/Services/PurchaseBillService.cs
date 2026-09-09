@@ -52,6 +52,16 @@ namespace Empire_ERP.Core.Services
             return _purchaseBillRepository.GetPickDataByParty(partyCode, actCode, region, common);
         }
 
+        public MyHttpResponseMessage GetSalesQuotationPickData(Common common)
+        {
+            return _purchaseBillRepository.GetSalesQuotationPickData(common);
+        }
+
+        public MyHttpResponseMessage GetSalesQuotationPickByCode(int code, Common common)
+        {
+            return _purchaseBillRepository.GetSalesQuotationPickByCode(code, common);
+        }
+
         public MyHttpResponseMessage GetBarcodeList()
         {
             return _purchaseBillRepository.GetBarcodeList();

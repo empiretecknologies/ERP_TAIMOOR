@@ -99,7 +99,7 @@
 
 .modal-width {
     width: auto !important;
-    max-width: 58%;
+    max-width: min(58%, 960px);
 }
 body {
     background-color: rgb(4 0 59 / 7%);

@@ -881,6 +881,44 @@ namespace Empire_ERP.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetSalesQuotationPickData()
+        {
+            try
+            {
+                var data = _purchaseBillService.GetSalesQuotationPickData(CommonHelper.GetValues(HttpContext));
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                return Json(new { msg = _catchMessage, msgType = 2 });
+            }
+        }
+
+        [HttpGet]
+        public JsonResult GetSalesQuotationPickByCode(int code)
+        {
+            try
+            {
+                var data = _purchaseBillService.GetSalesQuotationPickByCode(code, CommonHelper.GetValues(HttpContext));
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                return Json(new { msg = _catchMessage, msgType = 2 });
+            }
+        }
+
+        [HttpGet]
         public JsonResult GetBarcodeList()
         {
             try

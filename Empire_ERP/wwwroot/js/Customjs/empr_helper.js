@@ -282,6 +282,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,
@@ -612,6 +613,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,
@@ -997,6 +999,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,
@@ -1374,6 +1377,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,
@@ -1863,6 +1867,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,
@@ -2191,6 +2196,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,
@@ -2781,6 +2787,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,
@@ -2982,6 +2989,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,
@@ -3547,6 +3555,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,
@@ -4291,6 +4300,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,
@@ -5680,6 +5690,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,
@@ -6288,6 +6299,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "allowColumnReordering": true,
             "headerFilter": {
@@ -7292,6 +7304,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "allowColumnReordering": true,
             "headerFilter": {
@@ -10022,6 +10035,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "allowColumnReordering": true,
             "headerFilter": {
@@ -11772,6 +11786,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "allowColumnReordering": true,
             "headerFilter": {
@@ -12307,6 +12322,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,
@@ -12851,6 +12867,7 @@
             "rowAlternationEnabled": true,
             "groupPanel": { visible: true },
             "columnAutoWidth": true,
+            "columnHidingEnabled": (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 991.98px)').matches),
             "allowColumnResizing": true,
             "headerFilter": {
                 "visible": true,

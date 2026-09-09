@@ -432,7 +432,7 @@ POS uses `posstyle.css` in addition to the main shell.
 | Pick modal grids | Purchase Bill soda/barcode pick |
 | Standalone login + details | Login |
 | POS full-page UI | `Views/POSTransactions/` + `posstyle.css` |
-| Sales quotation POS-style UI | `Views/SalesQutation/Index.cshtml` + `empr_SalesQutation.js` (group sidebar, clickable item cards, JS detail list, save modal) |
+| Sales quotation POS-style UI | `Views/SalesQutation/Index.cshtml` + `empr_SalesQutation.js` (group sidebar, clickable item cards, JS detail list, save modal, Print only in edit mode, Stock Transfer-style PDF modal) |
 
 ### POS views
 

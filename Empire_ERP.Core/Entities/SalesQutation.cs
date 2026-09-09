@@ -1,3 +1,5 @@
+using System.Data;
+
 namespace Empire_ERP.Core.Entities
 {
     public class SalesQutation
@@ -29,5 +31,29 @@ namespace Empire_ERP.Core.Entities
     {
         public SalesQutation? Master { get; set; }
         public List<SalesQutationDetail>? Detail { get; set; }
+    }
+
+    public class SalesQutationForPrint
+    {
+        public DateTime? V_DATE { get; set; }
+        public string? VOUCHER_NO { get; set; }
+        public string? REMARKS { get; set; }
+        public string? PARTY_NAME { get; set; }
+        public string? COMPANY_NAME { get; set; }
+        public string? COMPANY_ADDRESS { get; set; }
+        public string? COMPANY_PHONE { get; set; }
+        public string? COMPANY_LOGO { get; set; }
+        public string? HEADER_NAME { get; set; }
+        public string? REPORT_NAME { get; set; }
+        public bool? MENU_SIG1 { get; set; }
+        public bool? MENU_SIG2 { get; set; }
+        public bool? MENU_SIG3 { get; set; }
+        public bool? MENU_SIG4 { get; set; }
+    }
+
+    public class CustomSalesQutationForPrintReport
+    {
+        public SalesQutationForPrint? Master { get; set; }
+        public DataTable Detail { get; set; }
     }
 }

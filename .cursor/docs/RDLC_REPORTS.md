@@ -36,7 +36,7 @@ Typed dataset: `Empire_ERP/Reports/Datasets/BarcodeReportDataset.xsd` (generated
 | `BarcodeReportDataset.Designer.cs` / `.cs` / `.xsc` / `.xss` | Generated / cache |
 | `Reports/Datasets/InvoiceReport.rdlc` | Duplicate invoice layout (also under `Reports/InvoiceReport.rdlc`) |
 
-Typed tables include names such as BarcodeReport, StockReport, StockTransferPrintReport, InvoiceReport, PurchaseBill, CashPayment, ListReport, SalesTax, PurchaseOrder, JournalVoucher, MaterialRequisition, PurchaseRequisition, BillOfMaterial, DeliveryOrderReport, InspectionServiceChargesReport, OfferLetter, ImportBillReport, BatchIssue, WorkOrder, SaleTaxInvoice, MPODetail.
+Typed tables include names such as BarcodeReport, StockReport, StockTransferPrintReport, InvoiceReport, PurchaseBill, CashPayment, ListReport, SalesTax, PurchaseOrder, JournalVoucher, MaterialRequisition, PurchaseRequisition, BillOfMaterial, DeliveryOrderReport, InspectionServiceChargesReport, OfferLetter, ImportBillReport, BatchIssue, WorkOrder, SaleTaxInvoice, MPODetail, SalesQutation.
 
 ---
 
@@ -223,6 +223,16 @@ Typed tables include names such as BarcodeReport, StockReport, StockTransferPrin
 **Related Code:** `StockTransferController`, `StockReceiveController`, `StockTransferRequisitionController`, `StockAdjustmentController`  
 **Print Configuration:** 8.3 × 11.7 in portrait  
 **Notes:** Menu-selected among several ST layouts.
+
+**Report:** Sales quotation print  
+**RDLC File:** `SalesQutationPrintReport.rdlc`  
+**Purpose:** Sales quotation voucher print (master + detail)  
+**Data Source:** `SalesQutation` table in `BarcodeReportDataset.xsd`  
+**Parameters:** CompanyName, CompanyAddress, CompanyPhone, Header, TransactionDate, VoucherNo, PartyName, Remarks, CompanyLogo, ShowSignature1–4, ShowCompanyLogo  
+**Dataset:** `SalesQutation`  
+**Related Code:** `SalesQutationController`, `SalesQutationService`, `SalesQutationRepository`  
+**Print Configuration:** 8.3 × 11.7 in portrait (Stock Transfer layout as visual reference only)  
+**Notes:** Detail fields are ItemName, Qty, Rate, Amount (`QTY × RATE`). No Stock Transfer parameters or `StockPrintReportDataSet`. PDF saved under `wwwroot/Client/SalesQutationReport/`.
 
 **Report:** STKTR print  
 **RDLC File:** `STKTRPrintReport.rdlc`  
@@ -508,6 +518,7 @@ Shared dataset name in C#: `CashPaymentReport` bound to `reportData.Detail`. Pag
 | SaleTaxInvoiceController | `Client/SaleTaxInvoice/` |
 | DeliveryFeedingController / FDeliveryFeedingController | `Client/DeliveryFeeding/` (and F variant) |
 | StockTransfer / StockReceive / StockTransferRequisition / StockAdjustment | Dynamic ST reports + sticker |
+| SalesQutationController | `Client/SalesQutationReport/` |
 | BillOfMaterialController | `Client/BillOfMaterial/` |
 | BatchIssueController | PDF |
 | WorkOrderController | PDF |

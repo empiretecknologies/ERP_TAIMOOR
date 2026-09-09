@@ -14,8 +14,13 @@ $(document).ready(function () {
         alertify.prompt().set({ 'reverseButtons': true });
     }
 
-    //leftmenu toggle
-    $('.toggle_sidebar').click(function () {
+    //leftmenu toggle (mobile overlay handled by responsive.js)
+    $('.toggle_sidebar').click(function (e) {
+        if (window.erpResponsive && window.erpResponsive.isNarrow && window.erpResponsive.isNarrow()) {
+            e.preventDefault();
+            window.erpResponsive.toggleSidebarOverlay();
+            return;
+        }
         $('.main_wrap').toggleClass('collapse_sidebar');
     })
 })
@@ -30,7 +35,8 @@ var input = document.getElementById('input'), // input/output button
     clear = document.getElementById('clear'), // clear button
     resultDisplayed = false; // flag to keep an eye on what output is displayed
 
-// adding click handlers to number buttons
+// adding click handlers to number buttons (guard: calculator may be absent)
+if (input && number && number.length) {
 for (var i = 0; i < number.length; i++) {
     number[i].addEventListener("click", function (e) {
 
@@ -57,7 +63,7 @@ for (var i = 0; i < number.length; i++) {
     });
 }
 
-// adding click handlers to number buttons
+// adding click handlers to operator buttons
 for (var i = 0; i < operator.length; i++) {
     operator[i].addEventListener("click", function (e) {
 
@@ -79,6 +85,7 @@ for (var i = 0; i < operator.length; i++) {
 
     });
 }
+} // end calculator presence guard
 
 // on click of 'equal' button
 //result.addEventListener("click", function () {

@@ -2,6 +2,7 @@ using Empire_ERP.Core.Entities;
 using Empire_ERP.Core.Interfaces;
 using Empire_ERP.Core.Services;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace Empire_ERP.Infrastructure.Repositories
 {
@@ -639,6 +640,111 @@ namespace Empire_ERP.Infrastructure.Repositories
                     response.msg = "Something went wrong! please try again later.";
                     response.msgType = 2;
                 }
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                response.msg = _catchMessage;
+                response.msgType = 2;
+            }
+            return response;
+        }
+
+        public MyHttpResponseMessage GetDataForPrintReport(RDLCReport modelRecord, DataTable dataTable, CustomMenuDetail menuDetails, Company currentCompany, Branch currentBranch, Common common)
+        {
+            MyHttpResponseMessage response = new MyHttpResponseMessage();
+            SalesQutationForPrint masterData = new SalesQutationForPrint();
+            CustomSalesQutationForPrintReport reportData = new CustomSalesQutationForPrintReport();
+            try
+            {
+                var Menu = _menuRepository.GetMenu(common.MenuID);
+                string? tableMaster = string.Empty;
+                string? tableDetail = string.Empty;
+                string? menuName = string.Empty;
+                if (Menu.data != null)
+                {
+                    var menu = (Menu)Menu.data;
+                    tableMaster = menu.TABLE1;
+                    tableDetail = menu.TABLE2;
+                    menuName = menu.MENU_NAME;
+                }
+                masterData.COMPANY_NAME = currentCompany.C_NAME;
+                masterData.COMPANY_ADDRESS = currentCompany.C_ADDRESS;
+                masterData.COMPANY_PHONE = currentCompany.C_TEL;
+                masterData.COMPANY_LOGO = currentCompany.C_LOGO;
+                masterData.HEADER_NAME = !String.IsNullOrWhiteSpace(menuDetails.MD_NAME) ? menuDetails.MD_NAME : (!String.IsNullOrWhiteSpace(menuName) ? menuName : "Sales Quotation");
+                masterData.REPORT_NAME = !String.IsNullOrWhiteSpace(menuDetails.REPORT_NAME) ? menuDetails.REPORT_NAME : "SalesQutationPrintReport";
+                masterData.MENU_SIG1 = String.IsNullOrWhiteSpace(menuDetails.MENU_SIG1) ? true : false;
+                masterData.MENU_SIG2 = String.IsNullOrWhiteSpace(menuDetails.MENU_SIG2) ? true : false;
+                masterData.MENU_SIG3 = String.IsNullOrWhiteSpace(menuDetails.MENU_SIG3) ? true : false;
+                masterData.MENU_SIG4 = String.IsNullOrWhiteSpace(menuDetails.MENU_SIG4) ? true : false;
+
+                if (!String.IsNullOrWhiteSpace(tableMaster))
+                {
+                    using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
+                    {
+                        string query = "SELECT M.V_DATE, M.VOUCHER_NO, M.REMARKS, PT.PARTY_NAME " +
+                                       $"FROM {tableMaster} M " +
+                                       $"LEFT OUTER JOIN TBL_PARTY_TYPES PT " +
+                                       $"ON PT.PARTY_CODE = M.PARTY_CODE AND PT.ACT_CODE = M.ACT_CODE " +
+                                       $"WHERE M.DLT = 'T' AND M.BCODE = '{common.Branch}' AND M.PERIOD_ID = '{common.Period}' AND M.TRAN_ID = {modelRecord.TRAN_ID}";
+                        SqlCommand command = new SqlCommand(query, connection);
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            masterData.V_DATE = reader["V_DATE"] == DBNull.Value ? null : Convert.ToDateTime(reader["V_DATE"]);
+                            masterData.VOUCHER_NO = Convert.ToString(reader["VOUCHER_NO"]);
+                            masterData.REMARKS = Convert.ToString(reader["REMARKS"]);
+                            masterData.PARTY_NAME = Convert.ToString(reader["PARTY_NAME"]);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                if (!String.IsNullOrWhiteSpace(tableDetail))
+                {
+                    if (!dataTable.Columns.Contains("ItemName"))
+                    {
+                        dataTable.Columns.Add("ItemName", typeof(string));
+                        dataTable.Columns.Add("Qty", typeof(decimal));
+                        dataTable.Columns.Add("Rate", typeof(decimal));
+                        dataTable.Columns.Add("Amount", typeof(decimal));
+                    }
+                    using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
+                    {
+                        string query = "SELECT IM.ITEM_NAME, D.QTY, D.RATE " +
+                                       $"FROM {tableDetail} D " +
+                                       $"LEFT JOIN TBL_ITEMSMASTER IM WITH (NOLOCK) ON D.ITEM_CODE = IM.ITEM_CODE " +
+                                       $"WHERE D.DLT = 'T' AND D.BCODE = '{common.Branch}' AND D.PERIOD_ID = '{common.Period}' AND D.TRAN_ID = {modelRecord.TRAN_ID} " +
+                                       $"ORDER BY D.DT_CODE";
+                        SqlCommand command = new SqlCommand(query, connection);
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            decimal qty = reader["QTY"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["QTY"]);
+                            decimal rate = reader["RATE"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["RATE"]);
+                            DataRow dataRow = dataTable.NewRow();
+                            dataRow["ItemName"] = Convert.ToString(reader["ITEM_NAME"]);
+                            dataRow["Qty"] = qty;
+                            dataRow["Rate"] = rate;
+                            dataRow["Amount"] = qty * rate;
+                            dataTable.Rows.Add(dataRow);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                reportData.Master = masterData;
+                reportData.Detail = dataTable;
+                response.data = reportData;
+                response.msg = "";
+                response.msgType = 1;
             }
             catch (Exception ex)
             {

@@ -2,23 +2,28 @@ var empr_SalesQutation = {
     selectedItems: [],
     selectedGroupId: null,
     selectedGroupName: '',
+    groupItemsCache: {},
+    highlightToken: 0,
     InitEvents: function () {
         $(document).ready(function () {
             empr_SalesQutation.InitQuickSearchGrid();
             empr_SalesQutation.ResetForm();
             empr_SalesQutation.RenderItemGroups();
+            empr_SalesQutation.InitReportTypeDDL();
             window.addEventListener('message', function (event) {
                 if (event.origin !== window.location.origin) {
                     return;
                 }
                 var data = event.data;
                 if (data && data.traN_ID) {
+                    empr_SalesQutation.ResetForm();
                     $('#Code').val(data.traN_ID);
                     empr_SalesQutation.GetSalesQutationByCode(data.traN_ID);
                 }
             });
             $('body').on('click', '.elm_edit', function () {
                 var id = $(this).attr("reportid");
+                empr_SalesQutation.ResetForm();
                 $('#Code').val(id);
                 empr_helper.selectedBill = id;
                 $('.modal').modal('hide');
@@ -69,6 +74,10 @@ var empr_SalesQutation = {
                     partyBox.option('dropDownOptions', { container: '#SaveQuotationModal' });
                     partyBox.repaint();
                 }
+            });
+
+            $('body').on('click', '#BtnPrint,#BtnGenerateReport', function () {
+                empr_SalesQutation.GeneratePrintReport();
             });
 
             $('body').on('click', '#BtnDelete', function () {
@@ -160,7 +169,11 @@ var empr_SalesQutation = {
     },
 
     loadItemsForGroup: function (groupId) {
-        ajaxHelper.ajaxGetJson('/SalesQutation/GetItemsMasterByGroup?groupId=' + groupId, function (data) {
+        var applyItems = function (data) {
+            if (!$.isArray(data)) {
+                data = [];
+            }
+            empr_SalesQutation.groupItemsCache[groupId] = data;
             var $list = $('#sqItemList');
             $list.empty();
             var items = data || [];
@@ -199,7 +212,72 @@ var empr_SalesQutation = {
                 $list.html('<p class="sq-empty">No items available for this group.</p>');
                 $('.sq-group-count[data-count-for="' + groupId + '"]').text('(0 items)');
             }
-        }, false, true);
+        };
+        if (empr_SalesQutation.groupItemsCache.hasOwnProperty(groupId)) {
+            applyItems(empr_SalesQutation.groupItemsCache[groupId]);
+            return;
+        }
+        ajaxHelper.ajaxGetJson('/SalesQutation/GetItemsMasterByGroup?groupId=' + groupId, applyItems, false, true);
+    },
+
+    HighlightRelatedGroups: function () {
+        var token = ++empr_SalesQutation.highlightToken;
+        $('.sq-group').removeClass('has-data');
+        var selectedCodes = {};
+        var firstItemCode = null;
+        $.each(empr_SalesQutation.selectedItems, function (index, item) {
+            if (item.itemCode != null && item.itemCode !== '') {
+                selectedCodes[String(item.itemCode)] = true;
+                if (firstItemCode == null) {
+                    firstItemCode = String(item.itemCode);
+                }
+            }
+        });
+        if ($.isEmptyObject(selectedCodes)) {
+            return;
+        }
+        var groupOpened = false;
+        var markGroupIfRelated = function (groupId, items, groupName) {
+            if (token !== empr_SalesQutation.highlightToken) {
+                return;
+            }
+            var hasRelatedItem = false;
+            var hasFirstItem = false;
+            $.each(items || [], function (index, item) {
+                if (selectedCodes[String(item.iteM_CODE)]) {
+                    hasRelatedItem = true;
+                    if (firstItemCode != null && String(item.iteM_CODE) === firstItemCode) {
+                        hasFirstItem = true;
+                    }
+                }
+            });
+            if (hasRelatedItem) {
+                $('.sq-group[data-item="' + groupId + '"]').addClass('has-data');
+            }
+            if (hasFirstItem && !groupOpened) {
+                groupOpened = true;
+                empr_SalesQutation.SelectGroup(groupId, groupName);
+                var $groupBtn = $('.sq-group[data-item="' + groupId + '"]');
+                if ($groupBtn.length && $groupBtn[0].scrollIntoView) {
+                    $groupBtn[0].scrollIntoView({ block: 'nearest' });
+                }
+            }
+        };
+        $.each(ItemsGroup || [], function (index, group) {
+            var groupId = group.grouP_CODE;
+            var groupName = group.grouP_NAME || '';
+            if (empr_SalesQutation.groupItemsCache.hasOwnProperty(groupId)) {
+                markGroupIfRelated(groupId, empr_SalesQutation.groupItemsCache[groupId], groupName);
+                return;
+            }
+            ajaxHelper.ajaxGetJson('/SalesQutation/GetItemsMasterByGroup?groupId=' + groupId, function (data) {
+                if (!$.isArray(data)) {
+                    data = [];
+                }
+                empr_SalesQutation.groupItemsCache[groupId] = data;
+                markGroupIfRelated(groupId, data, groupName);
+            }, false, true);
+        });
     },
 
     EscapeHtml: function (text) {
@@ -313,6 +391,9 @@ var empr_SalesQutation = {
 
     LoadSelectedItemsFromDetail: function (detailRows) {
         empr_SalesQutation.selectedItems = [];
+        if (!$.isArray(detailRows)) {
+            detailRows = [];
+        }
         $.each(detailRows || [], function (index, item) {
             if (!item.iteM_CODE) {
                 return;
@@ -334,6 +415,7 @@ var empr_SalesQutation = {
         });
         empr_SalesQutation.ApplySelectedQuantities();
         empr_SalesQutation.UpdateSummary();
+        empr_SalesQutation.HighlightRelatedGroups();
     },
 
     UpdateSummary: function () {
@@ -415,25 +497,40 @@ var empr_SalesQutation = {
             { dataField: 'ediT_COMPUTER_NAME', caption: 'Updated Computer', visible: false, },
             { dataField: 'ediT_IP_ADDRESS', caption: 'Updated IP', visible: false, },
         ];
-        empr_helper.dxGridbindingVouchers('#gridContainer', col, dataSrc, "SalesQutationQS");
+        empr_helper.dxGridbindingVouchers('#gridContainer', col, dataSrc || [], "SalesQutationQS");
         setTimeout(function () {
-            $('#gridContainer').dxDataGrid('instance').resize();
+            var grid = $('#gridContainer').dxDataGrid('instance');
+            if (grid) {
+                grid.resize();
+            }
         }, 500);
     },
 
     GetSalesQutationByCode: function (code) {
         ajaxHelper.ajaxGetJson('/SalesQutation/GetSalesQutationByCode?code=' + code, function (data) {
+            if (!data || !data.master) {
+                empr_helper.notify(typeof data === 'string' ? data : 'Unable to load record.', 2);
+                return;
+            }
             if (data.master.msgType == 1) {
                 var masterData = data.master.data;
-                if (masterData.length == 1) {
+                if ($.isArray(masterData) && masterData.length == 1) {
                     var response = masterData[0];
-                    var filteredData = $.grep(PartyType, function (item) {
-                        return item.partyCode === response.partY_CODE && item.accountCode === response.acT_CODE.toString();
+                    var actCode = response.acT_CODE != null ? String(response.acT_CODE) : '';
+                    var filteredData = $.grep(PartyType || [], function (item) {
+                        return item.partyCode == response.partY_CODE && String(item.accountCode) === actCode;
                     });
+                    empr_helper.selectedBill = response.id;
                     $('#Code').val(response.id);
-                    $('#ASTATUS').dxSelectBox('instance').option('value', response.astatus);
+                    var astatusBox = $('#ASTATUS').dxSelectBox('instance');
+                    if (astatusBox) {
+                        astatusBox.option('value', response.astatus);
+                    }
                     if (filteredData.length > 0) {
-                        $('#PARTY_CODE').dxSelectBox('instance').option('value', filteredData[0].key);
+                        var partyBox = $('#PARTY_CODE').dxSelectBox('instance');
+                        if (partyBox) {
+                            partyBox.option('value', filteredData[0].key);
+                        }
                         $('#partyhidden').val(filteredData[0].partyCode);
                         $('#acthidden').val(filteredData[0].accountCode);
                     }
@@ -455,18 +552,19 @@ var empr_SalesQutation = {
                         $('#BtnSave').show();
                         $('#BtnDelete').show();
                     }
+                    $('#BtnPrint').show();
                 }
 
-                if (data.detail.msgType == 1) {
+                if (data.detail && data.detail.msgType == 1) {
                     empr_SalesQutation.LoadSelectedItemsFromDetail(data.detail.data);
                     $('.Record').addClass('customHighlightForModifiedCells');
                 }
-                else {
-                    empr_helper.notify(data.msg, data.msgType);
+                else if (data.detail) {
+                    empr_helper.notify(data.detail.msg || data.msg, data.detail.msgType || data.msgType);
                 }
             }
             else {
-                empr_helper.notify(data.msg, data.msgType);
+                empr_helper.notify(data.master.msg || data.msg, data.master.msgType);
             }
         }, false, true);
     },
@@ -482,6 +580,63 @@ var empr_SalesQutation = {
         }, false, true);
     },
 
+    GeneratePrintReport: function () {
+        let TRAN_ID = empr_helper.selectedBill || $('#Code').val();
+        let MD_ID = null;
+        var reportType = $('#ReportType').data('dxSelectBox');
+        if (reportType) {
+            MD_ID = reportType.option('value');
+        }
+        if (TRAN_ID == 0 || TRAN_ID == null || TRAN_ID == undefined || TRAN_ID == "") {
+            empr_helper.notify("Please open the bill in edit mode.", 2);
+            return;
+        }
+        var dataModel = {
+            TRAN_ID: TRAN_ID,
+            MD_ID: MD_ID,
+        }
+        ajaxHelper.ajaxPostJsonData(dataModel, "/SalesQutation/GetPrintReport", function (data) {
+            if (data.msgType == 1) {
+                $('#ModalBody').empty();
+                setTimeout(function () {
+                    $('#ModalBody').html("<center><object id='objReport' data='" + window.location.origin + data.data + "' width='1100' height='600'></object></center>");
+                    $('#ShowReportModal').show();
+                    $('#ShowReportModal').modal('show');
+                }, 100);
+            }
+            else {
+                empr_helper.notify(data.msg, data.msgType);
+            }
+        }, false, true);
+    },
+
+    InitReportTypeDDL: function (selectedValue) {
+        ajaxHelper.ajaxGetJson("/SalesQutation/GetReportTypes", function (data) {
+            if (data.msgType == 1) {
+                if (data.data && data.data.length > 0) {
+                    selectedValue = data.data[0].mD_ID;
+                }
+                $('#ReportType').dxSelectBox({
+                    dataSource: data.data,
+                    displayExpr: 'mD_NAME',
+                    valueExpr: 'mD_ID',
+                    value: selectedValue,
+                    searchEnabled: true,
+                    width: '100%',
+                    placeholder: 'Search',
+                    showClearButton: true,
+                    dropDownOptions: {
+                        height: 'auto',
+                    },
+                    pagingEnabled: true,
+                    searchTimeout: 500,
+                    onValueChanged: function (e) {
+                    },
+                });
+            }
+        }, false, true);
+    },
+
     GetDataToSave: function () {
         var ID = $("#Code").val();
         var V_DATE = $("#V_DATE").val();
@@ -489,7 +644,11 @@ var empr_SalesQutation = {
         var PARTY_CODE = $("#partyhidden").val();
         var ACT_CODE = $("#acthidden").val();
         var REMARKS = $("#REMARKS").val();
-        var ASTATUS = $('#ASTATUS').dxSelectBox('option', 'value');
+        var ASTATUS = 'Y';
+        var astatusBox = $('#ASTATUS').dxSelectBox('instance');
+        if (astatusBox) {
+            ASTATUS = astatusBox.option('value');
+        }
         var masterRecord = {
             TRAN_ID: ID,
             V_DATE: V_DATE,
@@ -528,7 +687,7 @@ var empr_SalesQutation = {
             return valid;
         }
         $.each(data, function (index, item) {
-            if (item.qty == "" || item.qty == null || item.qty == undefined) {
+            if (item.qty === "" || item.qty == null || item.qty === undefined) {
                 empr_helper.notify("Please enter item quantity at index " + index, 2);
                 valid = false;
                 return valid;
@@ -538,12 +697,8 @@ var empr_SalesQutation = {
                 valid = false;
                 return valid;
             }
-            if (item.rate == "" || item.rate == null || item.rate == undefined) {
-                empr_helper.notify("Please enter item rate at index " + index, 2);
-                valid = false;
-                return valid;
-            }
-            if (item.rate < 0) {
+            var rateVal = parseFloat(item.rate);
+            if (item.rate === null || item.rate === undefined || (typeof item.rate === 'string' && $.trim(item.rate) === '') || isNaN(rateVal) || rateVal < 0) {
                 empr_helper.notify("Please enter correct item rate at index " + index, 2);
                 valid = false;
                 return valid;
@@ -556,13 +711,13 @@ var empr_SalesQutation = {
         var valid = true;
         var data = empr_SalesQutation.GetDataToSave();
 
-        if (data.Master.V_DATE == '') {
+        if (!data.Master.V_DATE) {
             empr_helper.notify("Transaction date is required.", 2);
             valid = false;
             return valid;
         }
 
-        if (data.Master.PARTY_CODE == '') {
+        if (data.Master.PARTY_CODE == null || data.Master.PARTY_CODE === '') {
             empr_helper.notify("Please select Party Type.", 2);
             valid = false;
             return valid;
@@ -588,20 +743,7 @@ var empr_SalesQutation = {
             empr_helper.notify(data.msg, data.msgType);
             if (data.msgType == 1) {
                 $('#SaveQuotationModal').modal('hide');
-                if (dataModel.Master.TRAN_ID == 0
-                    || dataModel.Master.TRAN_ID == null
-                    || dataModel.Master.TRAN_ID == undefined) {
-                    $('#Code').val(data.data.code);
-                    empr_helper.selectedBill = data.data.code;
-                    $('#VOUCHER_NO').val(data.data.voucherNo);
-                }
-                if (dataClear == 1) {
-                    empr_SalesQutation.GetSalesQutationDetailByCode($('#Code').val());
-                    $('#BtnDelete').show();
-                }
-                else {
-                    empr_SalesQutation.ResetForm();
-                }
+                empr_SalesQutation.ResetForm();
             }
         }, false, true);
     },
@@ -609,18 +751,34 @@ var empr_SalesQutation = {
     ResetForm: function () {
         $('#Code').val('');
         $('#ID').val('');
+        empr_helper.selectedBill = '';
         $('#partyhidden').val('');
         $('#acthidden').val('');
         $('#VOUCHER_NO').val('');
         $('#REMARKS').val('');
         $('#BtnDelete').hide();
+        $('#BtnPrint').hide();
         $('.Record').removeClass('customHighlightForModifiedCells');
         empr_SalesQutation.selectedItems = [];
-        empr_SalesQutation.ApplySelectedQuantities();
+        empr_SalesQutation.highlightToken += 1;
+        $('.sq-group').removeClass('has-data');
+        if (empr_SalesQutation.selectedGroupId != null && empr_SalesQutation.selectedGroupId !== '') {
+            empr_SalesQutation.loadItemsForGroup(empr_SalesQutation.selectedGroupId);
+        } else {
+            empr_SalesQutation.ApplySelectedQuantities();
+        }
         empr_SalesQutation.UpdateSummary();
         empr_SalesQutation.InitPartyType();
-        $('#PARTY_CODE').dxSelectBox('instance').option('value', '');
+        var partyBox = $('#PARTY_CODE').dxSelectBox('instance');
+        if (partyBox) {
+            partyBox.option('value', '');
+        }
         $('#V_DATE').val(todayDate);
+        var astatusBox = $('#ASTATUS').dxSelectBox('instance');
+        if (astatusBox) {
+            var defaultStatus = (typeof statusApp !== 'undefined' && statusApp) ? statusApp : 'Y';
+            astatusBox.option('value', defaultStatus);
+        }
         if (Permissions != "Admin") {
             if (Permissions.r_ADD) {
                 $('#BtnSave').show();

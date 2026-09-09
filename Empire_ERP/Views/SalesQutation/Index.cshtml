@@ -83,7 +83,8 @@
             background: #f4f8fb;
         }
 
-        .sq-group.active {
+        .sq-group.active,
+        .sq-group.has-data {
             background: #e8f2f8;
             border-color: #c5dce9;
         }
@@ -324,7 +325,8 @@
             color: #1f2a37;
         }
 
-        .sq-footer .btn-save {
+        .sq-footer .btn-save,
+        .sq-footer .btn-print {
             min-width: 110px;
         }
 
@@ -435,7 +437,8 @@
 
     <div class="sq-footer">
         <div class="sq-summary" id="sqSummary">Total Items: 0 | Total Amount: 0.00</div>
-        <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
+        <button type="button" class="btn btn-success btn-print" id="BtnPrint" style="display:none"><i class="fa fa-print"></i> Print</button>
+        <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Next -></button>
     </div>
 </div>
 
@@ -489,6 +492,36 @@
                                 <div id="gridContainer"></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-xl" id="ShowReportModal" style="display:none" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myExtraLargeModalLabel">Print Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-xl-4">
+                            <label class="form-label" for="ReportType">ReportType:</label>
+                            <div id="ReportType"></div>
+                        </div>
+                        <div class="col-xl-2 mt-20">
+                            <button type="button" class="btn btn-primary mr-5" data-bs-toggle="modal" id="BtnGenerateReport">
+                                <i class="fa fa-file-arrow-down"></i> Get Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <div class="card text-left" id="ModalBody">
                     </div>
                 </div>
             </div>
