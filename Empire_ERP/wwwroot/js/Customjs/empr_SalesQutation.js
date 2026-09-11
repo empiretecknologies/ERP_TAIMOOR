@@ -4,6 +4,10 @@ var empr_SalesQutation = {
     selectedGroupName: '',
     groupItemsCache: {},
     highlightToken: 0,
+    searchToken: 0,
+    searchPrefetchStarted: false,
+    searchPrefetchCallbacks: [],
+    CurrentStock: [],
     InitEvents: function () {
         $(document).ready(function () {
             empr_SalesQutation.InitQuickSearchGrid();
@@ -98,6 +102,10 @@ var empr_SalesQutation = {
                 empr_SalesQutation.SelectGroup(groupId, $(this).data('name'));
             });
 
+            $('body').on('input', '#sqItemSearch', function () {
+                empr_SalesQutation.SearchItemsAcrossGroups();
+            });
+
             $('body').on('click', '.sq-item-card', function (e) {
                 if ($(e.target).closest('.sq-rate-field').length) {
                     return;
@@ -124,6 +132,16 @@ var empr_SalesQutation = {
                 empr_SalesQutation.DecreaseItemQty(itemCode);
             });
 
+            $('body').on('click', '#BtnViewCart', function () {
+                empr_SalesQutation.RenderCartItems();
+                $('#ViewCartModal').modal('show');
+            });
+
+            $('body').on('click', '.sq-cart-remove', function () {
+                var itemCode = $(this).data('item');
+                empr_SalesQutation.RemoveCartItem(itemCode);
+            });
+
             if (Permissions != "Admin") {
                 !Permissions.r_ADD && $('#BtnNew').hide();
                 !Permissions.r_VIEW && $('#BtnQuickSearch').hide();
@@ -136,7 +154,10 @@ var empr_SalesQutation = {
         var $list = $('#sqGroupList');
         $list.empty();
         if (ItemsGroup && ItemsGroup.length > 0) {
-            ItemsGroup.forEach(function (item, index) {
+            var groups = ItemsGroup.slice().sort(function (a, b) {
+                return String(a.grouP_NAME || '').localeCompare(String(b.grouP_NAME || ''), undefined, { numeric: true, sensitivity: 'base' });
+            });
+            groups.forEach(function (item, index) {
                 var groupCode = item.grouP_CODE;
                 var groupName = item.grouP_NAME || '';
                 var groupNameHtml = empr_SalesQutation.EscapeHtml(groupName);
@@ -174,6 +195,9 @@ var empr_SalesQutation = {
             if (!$.isArray(data)) {
                 data = [];
             }
+            data = data.slice().sort(function (a, b) {
+                return String(a.iteM_NAME || '').localeCompare(String(b.iteM_NAME || ''), undefined, { numeric: true, sensitivity: 'base' });
+            });
             empr_SalesQutation.groupItemsCache[groupId] = data;
             var $list = $('#sqItemList');
             $list.empty();
@@ -190,25 +214,30 @@ var empr_SalesQutation = {
                     if (isNaN(displayRate)) {
                         displayRate = 0;
                     }
+                    var stockQty = empr_SalesQutation.GetStockQty(item);
+                    var itemName = item.iteM_NAME || '';
+                    var itemCode = item.iteM_ID || '';
                     return `
-                        <div class="sq-item-card${qty > 0 ? ' selected' : ''}" data-item="${item.iteM_CODE}" data-rate="${rate}">
+                        <div class="sq-item-card${qty > 0 ? ' selected' : ''}" data-item="${item.iteM_CODE}" data-itemid="${empr_SalesQutation.EscapeHtml(itemCode)}" data-itemname="${empr_SalesQutation.EscapeHtml(itemName)}" data-itemcode="${empr_SalesQutation.EscapeHtml(itemCode)}" data-rate="${rate}">
                             <div class="sq-qty-badge">
                                 <button type="button" class="sq-qty-minus" title="Decrease">-</button>
                                 <span class="sq-qty-value">${qty}</span>
                             </div>
                             ${empr_SalesQutation.ImageHtml(item.ipic, item.iteM_NAME, false)}
                             <div class="sq-item-body">
-                                <p class="sq-item-name">${empr_SalesQutation.EscapeHtml(item.iteM_NAME || '')}</p>
+                                <p class="sq-item-name">${empr_SalesQutation.EscapeHtml(itemName)}</p>
                                 <div class="sq-item-rate sq-rate-field">
                                     <label>Rate</label>
                                     <input type="number" class="sq-rate-input" value="${displayRate.toFixed(2)}" min="0" step="any">
                                 </div>
+                                <div class="sq-item-stock${stockQty < 0 ? ' sq-item-stock-negative' : ''}">Stock Qty: <span class="sq-item-stock-value">${stockQty}</span></div>
                             </div>
                         </div>
                     `;
                 });
                 $list.append('<div class="sq-item-grid">' + itemsHtml.join('') + '</div>');
                 $('.sq-group-count[data-count-for="' + groupId + '"]').text('(' + items.length + ' items)');
+                empr_SalesQutation.FilterVisibleItems();
             } else {
                 $list.html('<p class="sq-empty">No items available for this group.</p>');
                 $('.sq-group-count[data-count-for="' + groupId + '"]').text('(0 items)');
@@ -224,12 +253,177 @@ var empr_SalesQutation = {
         ajaxHelper.ajaxGetJson('/PurchaseBill/GetCurrentStock', function (data) {
             debugger;
             if (data.length > 0) {
-                empr_PurchaseBill.CurrentStock = data;
+                empr_SalesQutation.CurrentStock = data;
             }
             else {
                 empr_helper.notify(data.msg, data.msgType);
             }
+            empr_SalesQutation.RefreshVisibleStockQty();
         }, false, true);
+    },
+
+    GetStockQty: function (item) {
+        var stocks = empr_SalesQutation.CurrentStock || [];
+        var itemKey = item && item.iteM_CODE != null ? item.iteM_CODE : item;
+        var itemId = item && item.iteM_ID != null ? item.iteM_ID : '';
+        var stockRecord = stocks.find(function (s) {
+            var stockItemId = s.itemId != null ? s.itemId : s.ItemId;
+            return stockItemId == itemKey || (itemId !== '' && stockItemId == itemId);
+        });
+        if (!stockRecord) {
+            return 0;
+        }
+        var balance = stockRecord.balance != null ? stockRecord.balance : stockRecord.Balance;
+        var qty = parseFloat(balance);
+        return isNaN(qty) ? 0 : qty;
+    },
+
+    RefreshVisibleStockQty: function () {
+        $('#sqItemList .sq-item-card').each(function () {
+            var $card = $(this);
+            var qty = empr_SalesQutation.GetStockQty({
+                iteM_CODE: $card.data('item'),
+                iteM_ID: $card.attr('data-itemid')
+            });
+            $card.find('.sq-item-stock-value').text(qty);
+            $card.find('.sq-item-stock').toggleClass('sq-item-stock-negative', qty < 0);
+        });
+    },
+
+    FilterVisibleItems: function () {
+        var term = $.trim($('#sqItemSearch').val() || '').toLowerCase();
+        var $cards = $('#sqItemList .sq-item-card');
+        if (!$cards.length) {
+            return;
+        }
+        if (!term) {
+            $cards.removeClass('sq-item-hidden');
+            return;
+        }
+        $cards.each(function () {
+            var $card = $(this);
+            var name = String($card.attr('data-itemname') || '').toLowerCase();
+            var code = String($card.attr('data-itemcode') || '').toLowerCase();
+            var itemKey = String($card.attr('data-item') || '').toLowerCase();
+            var match = name.indexOf(term) !== -1 || code.indexOf(term) !== -1 || itemKey.indexOf(term) !== -1;
+            $card.toggleClass('sq-item-hidden', !match);
+        });
+    },
+
+    ItemMatchesTerm: function (item, term) {
+        if (!term) {
+            return true;
+        }
+        var name = String(item.iteM_NAME || '').toLowerCase();
+        var code = String(item.iteM_ID || '').toLowerCase();
+        var itemKey = String(item.iteM_CODE || '').toLowerCase();
+        return name.indexOf(term) !== -1 || code.indexOf(term) !== -1 || itemKey.indexOf(term) !== -1;
+    },
+
+    SearchItemsAcrossGroups: function () {
+        var term = $.trim($('#sqItemSearch').val() || '').toLowerCase();
+        var token = ++empr_SalesQutation.searchToken;
+        if (!term) {
+            empr_SalesQutation.FilterVisibleItems();
+            return;
+        }
+        empr_SalesQutation.EnsureGroupItemsLoaded(function () {
+            if (token !== empr_SalesQutation.searchToken) {
+                return;
+            }
+            empr_SalesQutation.ActivateMatchingSearchGroup(term);
+        });
+    },
+
+    EnsureGroupItemsLoaded: function (done) {
+        var allCached = true;
+        $.each(ItemsGroup || [], function (index, group) {
+            if (!empr_SalesQutation.groupItemsCache.hasOwnProperty(group.grouP_CODE)) {
+                allCached = false;
+                return false;
+            }
+        });
+        if (allCached) {
+            if (done) {
+                done();
+            }
+            return;
+        }
+        if (done) {
+            empr_SalesQutation.searchPrefetchCallbacks.push(done);
+        }
+        if (empr_SalesQutation.searchPrefetchStarted) {
+            return;
+        }
+        empr_SalesQutation.searchPrefetchStarted = true;
+        var pending = 0;
+        var finish = function () {
+            var callbacks = empr_SalesQutation.searchPrefetchCallbacks.slice();
+            empr_SalesQutation.searchPrefetchCallbacks = [];
+            $.each(callbacks, function (index, callback) {
+                callback();
+            });
+        };
+        $.each(ItemsGroup || [], function (index, group) {
+            var groupId = group.grouP_CODE;
+            if (empr_SalesQutation.groupItemsCache.hasOwnProperty(groupId)) {
+                return;
+            }
+            pending += 1;
+            ajaxHelper.ajaxGetJson('/SalesQutation/GetItemsMasterByGroup?groupId=' + groupId, function (data) {
+                if (!$.isArray(data)) {
+                    data = [];
+                }
+                data = data.slice().sort(function (a, b) {
+                    return String(a.iteM_NAME || '').localeCompare(String(b.iteM_NAME || ''), undefined, { numeric: true, sensitivity: 'base' });
+                });
+                empr_SalesQutation.groupItemsCache[groupId] = data;
+                pending -= 1;
+                if (pending === 0) {
+                    finish();
+                }
+            }, false, true);
+        });
+        if (pending === 0) {
+            finish();
+        }
+    },
+
+    ActivateMatchingSearchGroup: function (term) {
+        var currentGroupId = empr_SalesQutation.selectedGroupId;
+        var currentGroupMatches = false;
+        var targetGroup = null;
+        var groups = (ItemsGroup || []).slice().sort(function (a, b) {
+            return String(a.grouP_NAME || '').localeCompare(String(b.grouP_NAME || ''), undefined, { numeric: true, sensitivity: 'base' });
+        });
+        $.each(groups, function (index, group) {
+            var items = empr_SalesQutation.groupItemsCache[group.grouP_CODE] || [];
+            var hasMatch = false;
+            $.each(items, function (itemIndex, item) {
+                if (empr_SalesQutation.ItemMatchesTerm(item, term)) {
+                    hasMatch = true;
+                    return false;
+                }
+            });
+            if (!hasMatch) {
+                return;
+            }
+            if (group.grouP_CODE == currentGroupId) {
+                currentGroupMatches = true;
+            }
+            if (targetGroup == null) {
+                targetGroup = group;
+            }
+        });
+        if (currentGroupMatches || !targetGroup) {
+            empr_SalesQutation.FilterVisibleItems();
+            return;
+        }
+        empr_SalesQutation.SelectGroup(targetGroup.grouP_CODE, targetGroup.grouP_NAME || '');
+        var $groupBtn = $('.sq-group[data-item="' + targetGroup.grouP_CODE + '"]');
+        if ($groupBtn.length && $groupBtn[0].scrollIntoView) {
+            $groupBtn[0].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
     },
     HighlightRelatedGroups: function () {
         var token = ++empr_SalesQutation.highlightToken;
@@ -441,6 +635,91 @@ var empr_SalesQutation = {
             }
         });
         $('#sqSummary').text('Total Items: ' + totalItems + ' | Total Amount: ' + totalAmount.toFixed(2));
+        $('#sqMobileTotalItems').text(totalItems);
+        $('#sqMobileTotalAmount').text(totalAmount.toFixed(2));
+        $('#sqCartTotalItems').text(totalItems);
+        $('#sqCartTotalAmount').text(totalAmount.toFixed(2));
+    },
+
+    GetItemName: function (itemCode) {
+        var $card = $('.sq-item-card[data-item="' + itemCode + '"]');
+        if ($card.length) {
+            var cardName = $card.attr('data-itemname');
+            if (cardName) {
+                return cardName;
+            }
+        }
+        var foundName = '';
+        $.each(empr_SalesQutation.groupItemsCache || {}, function (groupId, items) {
+            if (foundName) {
+                return;
+            }
+            $.each(items || [], function (index, item) {
+                if (item.iteM_CODE == itemCode) {
+                    foundName = item.iteM_NAME || '';
+                    return false;
+                }
+            });
+        });
+        if (foundName) {
+            return foundName;
+        }
+        if (typeof Items !== 'undefined' && Items && Items.length) {
+            var dropItem = $.grep(Items, function (item) {
+                return item.key == itemCode;
+            })[0];
+            if (dropItem && dropItem.value) {
+                return dropItem.value;
+            }
+        }
+        return itemCode != null ? String(itemCode) : '';
+    },
+
+    RenderCartItems: function () {
+        var $body = $('#sqCartBody');
+        var items = (empr_SalesQutation.selectedItems || []).filter(function (item) {
+            return item.itemCode && parseFloat(item.qty) > 0;
+        });
+        if (!items.length) {
+            $body.html('<p class="sq-empty sq-cart-empty">No items in cart.</p>');
+            return;
+        }
+        var html = $.map(items, function (item) {
+            var qty = parseFloat(item.qty) || 0;
+            var rate = parseFloat(item.rate) || 0;
+            var amount = qty * rate;
+            var name = empr_SalesQutation.GetItemName(item.itemCode);
+            return `
+                <div class="sq-cart-row">
+                    <div class="sq-cart-row-info">
+                        <div class="sq-cart-item-name">${empr_SalesQutation.EscapeHtml(name)}</div>
+                        <div class="sq-cart-item-meta">
+                            <span>Rate: ${rate.toFixed(2)}</span>
+                            <span>Qty: ${qty}</span>
+                            <span>Amount: ${amount.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger btn-sm sq-cart-remove" data-item="${item.itemCode}">Remove</button>
+                </div>
+            `;
+        });
+        $body.html(html.join(''));
+    },
+
+    RemoveCartItem: function (itemCode) {
+        if (itemCode == null || itemCode === '') {
+            return;
+        }
+        var existing = empr_SalesQutation.GetSelectedItem(itemCode);
+        if (!existing) {
+            return;
+        }
+        empr_SalesQutation.selectedItems = empr_SalesQutation.selectedItems.filter(function (item) {
+            return item.itemCode != itemCode;
+        });
+        empr_SalesQutation.RefreshCardQty(itemCode);
+        empr_SalesQutation.UpdateSummary();
+        empr_SalesQutation.RenderCartItems();
     },
 
     InitPartyType: function () {
