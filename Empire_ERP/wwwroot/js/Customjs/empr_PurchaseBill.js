@@ -422,14 +422,15 @@ var empr_PurchaseBill = {
             });
 
             $('body').on('click', '#BtnAddSodaToDelivery', function () {
-                if (dcType == 'SO') {
-                    var selectedSodas = $('#SodaPickGridContainer').dxDataGrid('instance').getSelectedRowKeys();
-                    if (selectedSodas.length > 0) {
-                        empr_PurchaseBill.AddSalesQuotationToOrder(selectedSodas);
-                    }
-                    else {
-                        empr_helper.notify("Please select the items first.", 2);
-                    }
+                //if (dcType == 'SO') {
+
+                //}
+                var selectedSodas = $('#SodaPickGridContainer').dxDataGrid('instance').getSelectedRowKeys();
+                if (selectedSodas.length > 0) {
+                    empr_PurchaseBill.AddSalesQuotationToOrder(selectedSodas);
+                }
+                else {
+                    empr_helper.notify("Please select the items first.", 2);
                 }
             });
 
@@ -572,7 +573,7 @@ var empr_PurchaseBill = {
                         empr_PurchaseBill.CreatePickGrid(data.data);
                         $('#SodaPickModal').modal('show');
                     }
-                    else if (empr_PurchaseBill.formName == 'MPO') {
+                    else{
                         empr_PurchaseBill.CreatePickDetailGrid(data.data);
 
                         var modal = new bootstrap.Modal(document.getElementById('SodaPickDetailModal'));
@@ -602,28 +603,15 @@ var empr_PurchaseBill = {
 
     CreatePickGrid: function (dataSrc) {
         var col = [];
-        var selectionMode = "single";
-        if (dcType == 'SO') {
-            selectionMode = "multiple";
-            col = [
-                { dataField: 'id', caption: 'Code', visible: false, },
-                { dataField: 'iteM_NAME', caption: 'Item', allowEditing: false, },
-                { dataField: 'qty', caption: 'Qty', allowEditing: false, },
-                { dataField: 'rate', caption: 'Rate', allowEditing: false, },
-                { dataField: 'amt', caption: 'Amount', allowEditing: false, },
-            ];
-        } else {
-            col = [
-                { dataField: 'id', caption: 'Code', visible: true, },
-                { dataField: 'lB_DATE', caption: 'Date', dataType: 'date', allowEditing: false, format: 'dd-MM-yyy' },
-                { dataField: 'voucheR_NO', caption: 'Voucher No', allowEditing: false, },
-                { dataField: 'partY_NAME', caption: 'Seller', allowEditing: false, },
-                { dataField: 'ref', caption: 'Ref', allowEditing: false, },
-                { dataField: 'qty', caption: 'Quantity', allowEditing: false, },
-                { dataField: 'amt', caption: 'Amount', allowEditing: false, },
-                { dataField: 'disc', caption: 'Discount', allowEditing: false, },
-            ];
-        }
+        var selectionMode = "multiple";
+        //selectionMode = "multiple";
+        col = [
+            { dataField: 'id', caption: 'Code', visible: false, },
+            { dataField: 'iteM_NAME', caption: 'Item', allowEditing: false, },
+            { dataField: 'qty', caption: 'Qty', allowEditing: false, },
+            { dataField: 'rate', caption: 'Rate', allowEditing: false, },
+            { dataField: 'amt', caption: 'Amount', allowEditing: false, },
+        ];
         empr_helper.dxGridbindingVouchers('#SodaPickGridContainer', col, dataSrc, "PurchaseBillPick", selectionMode);
         setTimeout(function () {
             $('#SodaPickGridContainer').dxDataGrid('instance').resize();

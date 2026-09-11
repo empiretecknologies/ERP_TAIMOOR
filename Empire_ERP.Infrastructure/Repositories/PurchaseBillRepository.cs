@@ -580,39 +580,39 @@ namespace Empire_ERP.Infrastructure.Repositories
                     pickType = menu.PICK_TYPE;
                     dcType = menu.DCTYPE;
                 }
-                if(true)
+                if (dcType == "SO")
                 {
                     List<SalesOrderPickData> jsonDataResult = new List<SalesOrderPickData>();
                     using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
                     {
                         string pickQuery = @"
-SELECT
-    M.TRAN_ID,
-    D.DT_CODE,
-    D.ITEM_CODE,
-    I.ITEM_NAME,
-    D.QTY,
-    D.RATE,
-    (ISNULL(D.QTY, 0) * ISNULL(CONVERT(FLOAT, D.RATE), 0)) AS AMOUNT,
-    M.V_DATE,
-    M.VOUCHER_NO,
-    M.PARTY_CODE,
-    M.ACT_CODE,
-    M.REMARKS,
-    D.BCODE,
-    I.IUNIT_CODE AS UNIT
-FROM TBL_SQ_MASTER M
-INNER JOIN TBL_SQ_DETAIL D
-    ON M.TRAN_ID = D.TRAN_ID
-   AND D.DLT = 'T'
-LEFT OUTER JOIN TBL_ITEMSMASTER I
-    ON I.ITEM_CODE = D.ITEM_CODE
-WHERE M.DLT = 'T'
-  AND M.BCODE = @BCODE
-  AND M.PERIOD_ID = @PERIOD_ID
-  AND M.ASTATUS = 'Y'
-  AND M.PARTY_CODE = @PARTY_CODE
-ORDER BY M.TRAN_ID DESC, D.DT_CODE DESC";
+                        SELECT
+                            M.TRAN_ID,
+                            D.DT_CODE,
+                            D.ITEM_CODE,
+                            I.ITEM_NAME,
+                            D.QTY,
+                            D.RATE,
+                            (ISNULL(D.QTY, 0) * ISNULL(CONVERT(FLOAT, D.RATE), 0)) AS AMOUNT,
+                            M.V_DATE,
+                            M.VOUCHER_NO,
+                            M.PARTY_CODE,
+                            M.ACT_CODE,
+                            M.REMARKS,
+                            D.BCODE,
+                            I.IUNIT_CODE AS UNIT
+                        FROM TBL_SQ_MASTER M
+                        INNER JOIN TBL_SQ_DETAIL D
+                            ON M.TRAN_ID = D.TRAN_ID
+                           AND D.DLT = 'T'
+                        LEFT OUTER JOIN TBL_ITEMSMASTER I
+                            ON I.ITEM_CODE = D.ITEM_CODE
+                        WHERE M.DLT = 'T'
+                          AND M.BCODE = @BCODE
+                          AND M.PERIOD_ID = @PERIOD_ID
+                          AND M.ASTATUS = 'Y'
+                          AND M.PARTY_CODE = @PARTY_CODE
+                        ORDER BY M.TRAN_ID DESC, D.DT_CODE DESC";
 
                         SqlCommand command = new SqlCommand(pickQuery, connection);
                         command.Parameters.AddWithValue("@BCODE", common.Branch);
@@ -667,12 +667,165 @@ ORDER BY M.TRAN_ID DESC, D.DT_CODE DESC";
                     response.msg = "";
                     response.msgType = 1;
                 }
-                else
+                else 
                 {
-                    response.data = "";
-                    response.msg = "Pick data is not mapped. Please contact the administrator.";
-                    response.msgType = 2;
+                    if (!string.IsNullOrWhiteSpace(table))
+                    {
+                        List<object> jsonDataResult3 = new List<object>();
+                        using (SqlConnection connection3 = new SqlConnection(new SQLService().getconnstring()))
+                        {
+                            string query = $@"SELECT 
+                                                A.TRAN_ID, A.V_DATE AS LB_DATE, A.VOUCHER_NO, A.TERMS,
+                                                A.PARTY_CODE, A.CURR_CODE, A.CRATE, I.HS_CODE, A.ACT_CODE, AC.PARTY_NAME AS PARTY_NAME, A.REF,
+                                                A.BTYPE, A.DISC AS DISC_M, A.LOCAL_CHARGES, A.DOC, A.COMM_VAL, A.RINV_NO, A.RINV_DATE,
+
+
+-- Issue carton
+                    ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {pickDetailTable} WHERE DT_CODE = B.DT_CODE), 0) AS ISSUE_CRTN,
+                    -- Received carton
+                    ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {detailTable} D
+                            LEFT OUTER JOIN {table} M ON D.TRAN_ID = M.TRAN_ID
+                            WHERE D.PICK_ID_D = B.DT_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0) AS R_CRTN,
+                    -- Balance carton
+                    ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {pickDetailTable} WHERE DT_CODE = B.DT_CODE), 0) - 
+                    ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {detailTable} D
+                            LEFT OUTER JOIN {table} M ON D.TRAN_ID = M.TRAN_ID
+                            WHERE D.PICK_ID_D = B.DT_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0) AS B_CRTN,
+
+
+                                                -- Issue Qty
+                                                ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {pickDetailTable} WHERE DT_CODE = B.DT_CODE), 0) AS ISSUE_QTY,
+                                                -- Returned Qty
+                                                ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {detailTable} D
+                                                        LEFT OUTER JOIN {table} M ON D.TRAN_ID = M.TRAN_ID
+                                                        WHERE D.PICK_ID_D = B.DT_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0) AS R_QTY,
+                                                -- Balance Qty
+                                                ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {pickDetailTable} WHERE DT_CODE = B.DT_CODE), 0) - 
+                                                ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {detailTable} D
+                                                        LEFT OUTER JOIN {table} M ON D.TRAN_ID = M.TRAN_ID
+                                                        WHERE D.PICK_ID_D = B.DT_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0) AS B_QTY,
+                                                U.GROUP_CODE AS UNIT, U.GROUP_NAME AS UNIT_NAME, B.RATE, B.AMT,
+                                                B.PACK, B.QTY, B.WEIGHT, W.CODE AS WAREHOUSE_CODE, W.DESCR AS WAREHOUSE_NAME,
+                                                B.DT_CODE, B.DISC, B.DISC_AMT, B.ADV, B.ADV_AMT, B.TAX, B.TAX_AMT, G.GROUP_CODE AS GRADE, G.GROUP_NAME AS GRADE_NAME, B.NET_AMT,
+                                                CL.GROUP_NAME AS COLOR, SL.GROUP_NAME AS SIZE, A.COMM, A.COMM_AMT,
+                                                CL.GROUP_CODE AS COLOR_ID, SL.GROUP_CODE AS SIZE_ID, A.SCODE, A.SACODE, B.ITEM_CODE, B.DEL_DATE, B.DUE_DATE, B.DUE_DAYS, I.ITEM_NAME,
+                                                MB.MENU_PAGE, MB.MENU_PARENT_CODE, A.MENU_ID
+                                            FROM {pickTable} A
+                                            LEFT OUTER JOIN {pickDetailTable} B ON B.TRAN_ID = A.TRAN_ID AND B.DLT = 'T' AND B.BCODE = A.BCODE AND B.PERIOD_ID = A.PERIOD_ID
+                                            LEFT OUTER JOIN {detailTable} VC ON VC.PICK_ID_D = B.DT_CODE AND VC.BCODE = B.BCODE AND VC.DLT = 'T' AND VC.PERIOD_ID = B.PERIOD_ID
+                                            LEFT OUTER JOIN {table} SBM ON VC.TRAN_ID = SBM.TRAN_ID AND SBM.DLT = 'T' 
+                                            LEFT OUTER JOIN TBL_PARTY_TYPES AC ON AC.PARTY_CODE = A.PARTY_CODE AND AC.ACT_CODE = A.ACT_CODE
+                                            LEFT OUTER JOIN TBL_COLOR CL ON CL.GROUP_CODE = B.COLOR
+                                            LEFT OUTER JOIN TBL_SIZE SL ON SL.GROUP_CODE = B.SIZE
+                                            LEFT OUTER JOIN TBL_UNIT U ON U.GROUP_CODE = B.UNIT
+                                            LEFT OUTER JOIN TBL_ITEMSMASTER I ON I.ITEM_CODE = B.ITEM_CODE
+                                            LEFT OUTER JOIN TBL_WAREHOUSE W ON W.CODE = B.WAREHOUSE
+                                            LEFT OUTER JOIN TBL_GRADE G ON G.GROUP_CODE = B.GRADE
+                                            LEFT OUTER JOIN TBL_MENU_BUILDER MB ON MB.ID = A.MENU_ID
+                                            WHERE A.BCODE = '{common.Branch}' 
+                                              AND A.PERIOD_ID = '{common.Period}' 
+                                              AND AC.PARTY_CODE = '{partyCode}' 
+                                              AND AC.ACT_CODE = '{actCode}' 
+                                              AND A.DLT = 'T' AND A.ASTATUS = 'Y' AND B.DLT = 'T'
+                                            GROUP BY 
+                                                A.TRAN_ID, A.V_DATE, A.VOUCHER_NO, A.TERMS, A.PARTY_CODE, A.CURR_CODE, A.CRATE, I.HS_CODE,
+                                                A.BTYPE, A.DISC, A.LOCAL_CHARGES, A.DOC, A.COMM_VAL, A.RINV_NO, A.RINV_DATE,
+                                                A.ACT_CODE, AC.PARTY_NAME, A.REF, U.GROUP_CODE, U.GROUP_NAME, B.RATE, B.AMT,
+                                                B.DT_CODE, B.DISC, B.DISC_AMT, B.ADV, B.ADV_AMT, B.TAX, B.TAX_AMT, G.GROUP_CODE, G.GROUP_NAME, B.NET_AMT,
+                                                CL.GROUP_NAME, SL.GROUP_NAME, A.COMM, A.COMM_AMT,
+                                                CL.GROUP_CODE, SL.GROUP_CODE, A.SCODE, A.SACODE, B.ITEM_CODE,
+                                                B.PACK, B.QTY, B.WEIGHT, W.CODE, W.DESCR, 
+                                                B.DEL_DATE, B.DUE_DATE, B.DUE_DAYS, I.ITEM_NAME, MB.MENU_PAGE, MB.MENU_PARENT_CODE, A.MENU_ID, VC.PICK_ID_D
+                                            HAVING 
+                                                (ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {pickDetailTable} WHERE DT_CODE = B.DT_CODE), 0) -
+								 ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {detailTable} D
+										 LEFT JOIN {table} M ON D.TRAN_ID = M.TRAN_ID
+										 WHERE D.PICK_ID_D = B.DT_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0)) <> 0
+                                                        order by DT_CODE desc";
+
+                            SqlCommand sqlCommand3 = new SqlCommand(query, connection3);
+                            connection3.Open();
+                            SqlDataReader reader3 = sqlCommand3.ExecuteReader();
+                            while (reader3.Read())
+                            {
+                                var row3 = new
+                                {
+                                    ID = Convert.ToString(reader3["TRAN_ID"]),
+                                    LB_DATE = ((reader3["LB_DATE"] == DBNull.Value) ? null : Convert.ToDateTime(reader3["LB_DATE"]).ToString("dd-MM-yyyy")),
+                                    RINV_DATE = ((reader3["RINV_DATE"] == DBNull.Value || Convert.ToDateTime(reader3["RINV_DATE"]) == new DateTime(1900, 1, 1)) ? null : Convert.ToDateTime(reader3["RINV_DATE"]).ToString("yyyy-MM-dd")),
+                                    DEL_DATE = ((reader3["DEL_DATE"] == DBNull.Value) ? null : Convert.ToDateTime(reader3["DEL_DATE"]).ToString("yyyy-MM-dd")),
+                                    DUE_DATE = ((reader3["DUE_DATE"] == DBNull.Value) ? null : Convert.ToDateTime(reader3["DUE_DATE"]).ToString("yyyy-MM-dd")),
+                                    VOUCHER_NO = ((reader3["VOUCHER_NO"] == DBNull.Value) ? "" : Convert.ToString(reader3["VOUCHER_NO"])),
+                                    PARTY_CODE = ((reader3["PARTY_CODE"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["PARTY_CODE"])),
+                                    SPARTY_CODE = ((reader3["SCODE"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["SCODE"])),
+                                    ACT_CODE = ((reader3["ACT_CODE"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["ACT_CODE"])),
+                                    SACT_CODE = ((reader3["SACODE"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["SACODE"])),
+                                    PARTY_DDL = Convert.ToString(reader3["PARTY_CODE"]) + Convert.ToString(reader3["ACT_CODE"]),
+                                    PARTY_NAME = ((reader3["PARTY_NAME"] == DBNull.Value) ? "" : Convert.ToString(reader3["PARTY_NAME"])),
+                                    REF = ((reader3["REF"] == DBNull.Value) ? "" : Convert.ToString(reader3["REF"])),
+                                    RINV_NO = ((reader3["RINV_NO"] == DBNull.Value) ? "" : Convert.ToString(reader3["RINV_NO"])),
+                                    HS_CODE = ((reader3["HS_CODE"] == DBNull.Value) ? "" : Convert.ToString(reader3["HS_CODE"])),
+                                    IQTY = ((reader3["ISSUE_QTY"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["ISSUE_QTY"])),
+                                    TOTAL_PACK = ((reader3["B_QTY"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["B_QTY"])),
+                                    RQTY = ((reader3["R_QTY"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["R_QTY"])),
+                                    UNIT = ((reader3["UNIT"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["UNIT"])),
+                                    UNIT_NAME = ((reader3["UNIT_NAME"] == DBNull.Value) ? "" : Convert.ToString(reader3["UNIT_NAME"])),
+                                    RATE = ((reader3["RATE"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["RATE"])),
+                                    LOCAL_CHARGES = ((reader3["LOCAL_CHARGES"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["LOCAL_CHARGES"])),
+                                    DISC_M = ((reader3["DISC_M"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["DISC_M"])),
+                                    COMM_VAL = ((reader3["COMM_VAL"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["COMM_VAL"])),
+                                    DISC = ((reader3["DISC"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["DISC"])),
+                                    DISC_AMT = ((reader3["DISC_AMT"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["DISC_AMT"])),
+                                    ADV = ((reader3["ADV"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["ADV"])),
+                                    ADV_AMT = ((reader3["ADV_AMT"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["ADV_AMT"])),
+                                    TAX = ((reader3["TAX"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["TAX"])),
+                                    TAX_AMT = ((reader3["TAX_AMT"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["TAX_AMT"])),
+                                    PACK = ((reader3["PACK"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["PACK"])),
+
+                                    QTY = ((reader3["B_CRTN"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["B_CRTN"])),
+
+                                    CURR_CODE = ((reader3["CURR_CODE"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["CURR_CODE"])),
+                                    CRATE = ((reader3["CRATE"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["CRATE"])),
+                                    DUE_DAYS = ((reader3["DUE_DAYS"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["DUE_DAYS"])),
+                                    WEIGHT = ((reader3["WEIGHT"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["WEIGHT"])),
+                                    AMT = ((reader3["AMT"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["AMT"])),
+                                    COLOR_NAME = ((reader3["COLOR"] == DBNull.Value) ? "" : Convert.ToString(reader3["COLOR"])),
+                                    SIZE_NAME = ((reader3["SIZE"] == DBNull.Value) ? "" : Convert.ToString(reader3["SIZE"])),
+                                    DOC = ((reader3["DOC"] == DBNull.Value) ? "" : Convert.ToString(reader3["DOC"])),
+                                    COLOR = ((reader3["COLOR_ID"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["COLOR_ID"])),
+                                    SIZE = ((reader3["SIZE_ID"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["SIZE_ID"])),
+                                    PICK_ID_D = ((reader3["DT_CODE"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["DT_CODE"])),
+                                    ITEM_CODE = ((reader3["ITEM_CODE"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["ITEM_CODE"])),
+                                    ITEM_NAME = ((reader3["ITEM_NAME"] == DBNull.Value) ? "" : Convert.ToString(reader3["ITEM_NAME"])),
+                                    WAREHOUSE = ((reader3["WAREHOUSE_CODE"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["WAREHOUSE_CODE"])),
+                                    WAREHOUSE_NAME = ((reader3["WAREHOUSE_NAME"] == DBNull.Value) ? "" : Convert.ToString(reader3["WAREHOUSE_NAME"])),
+                                    TERMS = ((reader3["TERMS"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["TERMS"])),
+                                    GRADE = ((reader3["GRADE"] == DBNull.Value) ? 0 : Convert.ToInt32(reader3["GRADE"])),
+                                    GRADE_NAME = ((reader3["GRADE_NAME"] == DBNull.Value) ? "" : Convert.ToString(reader3["GRADE_NAME"])),
+                                    COMM_AMT = ((reader3["COMM_AMT"] == DBNull.Value) ? "" : Convert.ToString(reader3["COMM_AMT"])),
+                                    BTYPE = ((reader3["BTYPE"] == DBNull.Value) ? "" : Convert.ToString(reader3["BTYPE"])),
+                                    COMM = ((reader3["COMM"] == DBNull.Value) ? 0.0 : Convert.ToDouble(reader3["COMM"])),
+                                    LINK = string.Concat(new string[]
+                                    {
+                                        "/",
+                                        Convert.ToString(reader3["MENU_PAGE"]),
+                                        "?MOID=",
+                                        Convert.ToString(reader3["MENU_PARENT_CODE"]),
+                                        "&Code=",
+                                        Convert.ToString(reader3["MENU_ID"])
+                                    })
+                                };
+                                jsonDataResult3.Add(row3);
+                            }
+                            reader3.Close();
+                        }
+
+                        response.data = jsonDataResult3;
+                        response.msg = "";
+                        response.msgType = 1;
+                    }
                 }
+                
             }
             catch (Exception ex)
             {

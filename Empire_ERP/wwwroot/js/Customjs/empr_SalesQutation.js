@@ -7,6 +7,7 @@ var empr_SalesQutation = {
     InitEvents: function () {
         $(document).ready(function () {
             empr_SalesQutation.InitQuickSearchGrid();
+            empr_SalesQutation.GetCurrentStock();
             empr_SalesQutation.ResetForm();
             empr_SalesQutation.RenderItemGroups();
             empr_SalesQutation.InitReportTypeDDL();
@@ -219,7 +220,17 @@ var empr_SalesQutation = {
         }
         ajaxHelper.ajaxGetJson('/SalesQutation/GetItemsMasterByGroup?groupId=' + groupId, applyItems, false, true);
     },
-
+    GetCurrentStock: function () {
+        ajaxHelper.ajaxGetJson('/PurchaseBill/GetCurrentStock', function (data) {
+            debugger;
+            if (data.length > 0) {
+                empr_PurchaseBill.CurrentStock = data;
+            }
+            else {
+                empr_helper.notify(data.msg, data.msgType);
+            }
+        }, false, true);
+    },
     HighlightRelatedGroups: function () {
         var token = ++empr_SalesQutation.highlightToken;
         $('.sq-group').removeClass('has-data');

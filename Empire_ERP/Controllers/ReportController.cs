@@ -63,11 +63,14 @@ namespace Empire_ERP.Controllers
                 if (flatList.Count == 0)
                     continue;
 
-                DataTable dt = JsonConvert.DeserializeObject<DataTable>(JsonConvert.SerializeObject(flatList));
+                // Build from every row's keys so a missing group field on row 1
+                // cannot leave later group columns as DBNull on that row.
+                DataTable dt = BuildGridDataTable(flatList, gridReq.GroupColumnsCap);
 
                 if (dt == null || dt.Rows.Count == 0)
                     continue;
 
+                FillBlankNestedGroupValues(dt, gridReq.GroupColumnsCap);
                 SortDataTableByGroups(ref dt, gridReq.GroupColumnsCap);
 
                 var visibleCols = dt.Columns
@@ -651,47 +654,46 @@ namespace Empire_ERP.Controllers
             // Loop through all data rows
             foreach (DataRow row in dt.Rows)
             {
-                // Check each group level for changes
+                List<string> rowGroupValues = new List<string>(groupColumns.Count);
+                for (int i = 0; i < groupColumns.Count; i++)
+                    rowGroupValues.Add(GetGroupCellValue(row, groupColumns[i]));
+
+                // First level whose value differs from the open group.
+                // Headers for this level AND every deeper level must be written
+                // before the data row, otherwise the first child row is printed
+                // under the parent (e.g. Model's first row under Client).
+                int changeLevel = -1;
                 for (int level = 0; level < groupColumns.Count; level++)
                 {
-                    string groupColumn = groupColumns[level];
-                    string currentGroupValue = row[groupColumn]?.ToString() ?? "";
-
-                    // Check if this group level has changed
-                    if (currentGroupValue != currentGroupValues[level])
+                    if (!string.Equals(rowGroupValues[level], currentGroupValues[level], StringComparison.Ordinal))
                     {
-                        // If this is the first group level (level 0), we need to close all child groups first
+                        changeLevel = level;
+                        break;
+                    }
+                }
+
+                if (changeLevel >= 0)
+                {
+                    for (int level = groupColumns.Count - 1; level >= changeLevel; level--)
+                    {
+                        if (!string.IsNullOrEmpty(currentGroupValues[level]))
+                            AddTotals(table, visibleColumns, groupLevelTotals[level], GetFont, lastDate, lastAmount);
+                    }
+
+                    for (int level = changeLevel; level < groupColumns.Count; level++)
+                    {
+                        string groupColumn = groupColumns[level];
+                        string currentGroupValue = rowGroupValues[level];
+                        currentGroupValues[level] = currentGroupValue;
+
+                        foreach (var key in groupLevelTotals[level].Keys.ToList())
+                            groupLevelTotals[level][key] = 0;
+
+                        if (string.IsNullOrEmpty(currentGroupValue))
+                            continue;
+
                         if (level == 0)
                         {
-                            // First, add totals for all child levels (from deepest to shallowest) before closing parent
-                            for (int childLevel = groupColumns.Count - 1; childLevel > 0; childLevel--)
-                            {
-                                if (!string.IsNullOrEmpty(currentGroupValues[childLevel]))
-                                {
-                                    AddTotals(table, visibleColumns, groupLevelTotals[childLevel], GetFont, lastDate, lastAmount);
-                                }
-                            }
-
-                            // Then add totals for previous first group if exists
-                            if (!string.IsNullOrEmpty(currentGroupValues[0]))
-                            {
-                                AddTotals(table, visibleColumns, groupLevelTotals[0], GetFont, lastDate, lastAmount);
-                            }
-                        }
-                        else
-                        {
-                            // For child levels (level > 0), add totals for previous value at this level
-                            if (!string.IsNullOrEmpty(currentGroupValues[level]))
-                            {
-                                AddTotals(table, visibleColumns, groupLevelTotals[level], GetFont, lastDate, lastAmount);
-                            }
-                        }
-
-                        // If this is the first group level (level 0), add group header and column headers
-                        if (level == 0)
-                        {
-
-                            // Add first group header (font size 8)
                             Font firstGroupFont = new Font(bfBold, 7.5f, Font.NORMAL, BaseColor.BLACK);
                             PdfPCell firstGroupCell = new PdfPCell(new Phrase($"{groupColumn} : {currentGroupValue}", firstGroupFont));
                             firstGroupCell.Colspan = visibleColumns.Count;
@@ -700,12 +702,10 @@ namespace Empire_ERP.Controllers
                             firstGroupCell.HorizontalAlignment = Element.ALIGN_LEFT;
                             firstGroupCell.BackgroundColor = BaseColor.WHITE;
 
-                            // Check if this first group has child groups
                             bool hasChildGroups = groupColumns.Count > 1 && dt.AsEnumerable()
-                                .Any(r => r[groupColumn]?.ToString() == currentGroupValue &&
-                                          !string.IsNullOrWhiteSpace(r[groupColumns[1]]?.ToString()));
+                                .Any(r => GetGroupCellValue(r, groupColumn) == currentGroupValue &&
+                                          !string.IsNullOrWhiteSpace(GetGroupCellValue(r, groupColumns[1])));
 
-                            // Add bottom border if first group has child groups
                             if (hasChildGroups)
                             {
                                 firstGroupCell.Border = Rectangle.BOTTOM_BORDER;
@@ -743,15 +743,9 @@ namespace Empire_ERP.Controllers
 
                                 table.AddCell(headerCell);
                             }
-
-
-                            // Reset first level totals
-                            foreach (var key in groupLevelTotals[0].Keys.ToList())
-                                groupLevelTotals[0][key] = 0;
                         }
                         else
                         {
-                            // For subsequent group levels (level 1, 2, etc.), add group header (font size 7)
                             Font subGroupFont = new Font(bfBold, 7f, Font.NORMAL, BaseColor.BLACK);
                             PdfPCell subGroupCell = new PdfPCell(new Phrase($"{groupColumn} : {currentGroupValue}", subGroupFont));
                             subGroupCell.Colspan = visibleColumns.Count;
@@ -762,35 +756,6 @@ namespace Empire_ERP.Controllers
                             subGroupCell.Border = Rectangle.NO_BORDER;
 
                             table.AddCell(subGroupCell);
-
-                            // Reset this level totals
-                            foreach (var key in groupLevelTotals[level].Keys.ToList())
-                                groupLevelTotals[level][key] = 0;
-                        }
-
-                        // Update current group value for this level
-                        currentGroupValues[level] = currentGroupValue;
-
-                        // Reset all lower level group values
-                        for (int resetLevel = level + 1; resetLevel < groupColumns.Count; resetLevel++)
-                        {
-                            currentGroupValues[resetLevel] = "";
-                            foreach (var key in groupLevelTotals[resetLevel].Keys.ToList())
-                                groupLevelTotals[resetLevel][key] = 0;
-                        }
-
-                        // If level 0 changed, continue checking child levels in the same row
-                        // This ensures first child group header is added immediately
-                        if (level == 0 && groupColumns.Count > 1)
-                        {
-                            // Continue to check child levels in the same row
-                            // Don't break, let the loop continue to check level 1, 2, etc.
-                            continue;
-                        }
-                        else
-                        {
-                            // Break after processing the first changed level (for child levels)
-                            break;
                         }
                     }
                 }
@@ -887,16 +852,188 @@ namespace Empire_ERP.Controllers
             document.Add(table);
         }
 
+        void FillBlankNestedGroupValues(DataTable dt, List<string> groupColumns)
+        {
+            if (dt == null || dt.Rows.Count == 0 || groupColumns == null || groupColumns.Count == 0)
+                return;
+
+            foreach (var col in groupColumns)
+            {
+                if (!string.IsNullOrEmpty(col) && !dt.Columns.Contains(col))
+                    dt.Columns.Add(col, typeof(string));
+            }
+
+            int n = dt.Rows.Count;
+            int gCount = groupColumns.Count;
+            string[][] values = new string[n][];
+
+            for (int i = 0; i < n; i++)
+            {
+                values[i] = new string[gCount];
+                for (int g = 0; g < gCount; g++)
+                    values[i][g] = GetGroupCellValue(dt.Rows[i], groupColumns[g]);
+            }
+
+            // Outer-to-inner: an empty child key (e.g. Model on the first row of a Client)
+            // inherits the nearest non-empty value that still shares the same parents.
+            // That stops the first detail row from rendering under the parent header.
+            for (int g = 0; g < gCount; g++)
+            {
+                for (int i = n - 1; i >= 0; i--)
+                {
+                    if (!string.IsNullOrEmpty(values[i][g]))
+                        continue;
+
+                    // Copy only from a following row. The PDF is shifted by one: the group
+                    // key arrives on the next detail row, so the current row must inherit it.
+                    string found = null;
+                    for (int j = i + 1; j < n; j++)
+                    {
+                        bool sameParents = true;
+                        for (int a = 0; a < g; a++)
+                        {
+                            if (!string.Equals(values[j][a], values[i][a], StringComparison.Ordinal))
+                            {
+                                sameParents = false;
+                                break;
+                            }
+                        }
+                        if (!sameParents)
+                            break;
+                        if (!string.IsNullOrEmpty(values[j][g]))
+                        {
+                            found = values[j][g];
+                            break;
+                        }
+                    }
+
+                    if (found != null)
+                    {
+                        values[i][g] = found;
+                        dt.Rows[i][groupColumns[g]] = found;
+                    }
+                }
+            }
+        }
+
+        DataTable BuildGridDataTable(List<Dictionary<string, object>> rows, List<string> groupColumns)
+        {
+            DataTable dt = new DataTable();
+            if (rows == null || rows.Count == 0)
+                return dt;
+
+            foreach (var row in rows)
+            {
+                if (row == null) continue;
+                foreach (var key in row.Keys)
+                {
+                    if (!string.IsNullOrEmpty(key) && !dt.Columns.Contains(key))
+                        dt.Columns.Add(key, typeof(string));
+                }
+            }
+
+            if (groupColumns != null)
+            {
+                foreach (var g in groupColumns)
+                {
+                    if (!string.IsNullOrEmpty(g) && !dt.Columns.Contains(g))
+                        dt.Columns.Add(g, typeof(string));
+                }
+            }
+
+            foreach (var row in rows)
+            {
+                DataRow dr = dt.NewRow();
+                if (row != null)
+                {
+                    foreach (DataColumn col in dt.Columns)
+                    {
+                        if (row.TryGetValue(col.ColumnName, out var val))
+                        {
+                            dr[col.ColumnName] = ConvertGridCellToString(val);
+                            continue;
+                        }
+
+                        string matchKey = row.Keys.FirstOrDefault(k =>
+                            string.Equals(k, col.ColumnName, StringComparison.OrdinalIgnoreCase));
+                        dr[col.ColumnName] = matchKey != null
+                            ? ConvertGridCellToString(row[matchKey])
+                            : "";
+                    }
+                }
+                dt.Rows.Add(dr);
+            }
+
+            return dt;
+        }
+
+        string GetGroupCellValue(DataRow row, string columnName)
+        {
+            if (row == null || row.Table == null || string.IsNullOrEmpty(columnName) || !row.Table.Columns.Contains(columnName))
+                return "";
+
+            object v = row[columnName];
+            if (v == null || v == DBNull.Value)
+                return "";
+
+            return Convert.ToString(v) ?? "";
+        }
+
+        string ConvertGridCellToString(object val)
+        {
+            if (val == null || val == DBNull.Value)
+                return "";
+
+            if (val is JValue jv)
+            {
+                if (jv.Type == JTokenType.Null || jv.Type == JTokenType.Undefined)
+                    return "";
+                val = jv.Value;
+                if (val == null)
+                    return "";
+            }
+
+            if (val is DateTime dateVal)
+                return dateVal.ToString("yyyy-MM-dd");
+
+            return Convert.ToString(val) ?? "";
+        }
+
         void SortDataTableByGroups(ref DataTable dt, List<string> groupColumns)
         {
             if (dt == null || dt.Rows.Count == 0 || groupColumns == null || groupColumns.Count == 0)
                 return;
 
-            string sortExpression = string.Join(", ", groupColumns.Select(c => $"{c} ASC"));
+            foreach (var col in groupColumns)
+            {
+                if (!dt.Columns.Contains(col))
+                    dt.Columns.Add(col, typeof(string));
+            }
 
-            DataView dv = dt.DefaultView;
-            dv.Sort = sortExpression;
-            dt = dv.ToTable();
+            // Keep case-sensitive group keys contiguous while preserving first-appearance order
+            // (matches DevExtreme grid grouping; DataView sort is case-insensitive by default and
+            // can interleave hol-2218 / HOL-2218 rows from raw dataSource order).
+            var rows = dt.AsEnumerable().ToList();
+            var groupOrder = new Dictionary<string, int>(StringComparer.Ordinal);
+            int nextOrder = 0;
+
+            string MakeKey(DataRow r) =>
+                string.Join("\u001f", groupColumns.Select(c => GetGroupCellValue(r, c)));
+
+            foreach (var r in rows)
+            {
+                string key = MakeKey(r);
+                if (!groupOrder.ContainsKey(key))
+                    groupOrder[key] = nextOrder++;
+            }
+
+            var sortedRows = rows
+                .Select((r, idx) => new { Row = r, Index = idx })
+                .OrderBy(x => groupOrder[MakeKey(x.Row)])
+                .ThenBy(x => x.Index)
+                .Select(x => x.Row);
+
+            dt = sortedRows.Any() ? sortedRows.CopyToDataTable() : dt.Clone();
         }
         private System.Drawing.Imaging.ImageCodecInfo GetEncoder(System.Drawing.Imaging.ImageFormat format)
         {
