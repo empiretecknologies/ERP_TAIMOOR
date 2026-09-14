@@ -50,6 +50,15 @@ namespace Empire_ERP.Infrastructure.Repositories
                         SqlCommand command = new SqlCommand(query, connection);
                         connection.Open();
                         SqlDataReader reader = command.ExecuteReader();
+                        bool hasPartyCode = false;
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            if (reader.GetName(i).Equals("PARTY_CODE", StringComparison.OrdinalIgnoreCase))
+                            {
+                                hasPartyCode = true;
+                                break;
+                            }
+                        }
                         while (reader.Read())
                         {
                             var row = new
@@ -62,6 +71,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                                 //BALANCE = Convert.ToString(reader["BALANCE"]),
                                 BALANCE = reader["BALANCE"] != DBNull.Value ? Convert.ToDecimal(reader["BALANCE"]) : 0m,
                                 DOC = Convert.ToString(reader["IPIC"]),
+                                PARTY_CODE = hasPartyCode && reader["PARTY_CODE"] != DBNull.Value ? Convert.ToString(reader["PARTY_CODE"]) : "",
                             };
                             jsonDataResult.Add(row);
                         }
@@ -79,6 +89,51 @@ namespace Empire_ERP.Infrastructure.Repositories
                     response.msg = "Something went wrong! please try again later.";
                     response.msgType = 2;
                 }
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                response.msg = _catchMessage;
+                response.msgType = 2;
+            }
+            return response;
+        }
+
+        public MyHttpResponseMessage GetPartyBranches(int partyCode, int actCode)
+        {
+            MyHttpResponseMessage response = new MyHttpResponseMessage();
+            try
+            {
+                List<object> jsonDataResult = new List<object>();
+                using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
+                {
+                    string query = $@"SELECT BRANCH_NAME, PARTY_CODE, ACT_CODE
+                                      FROM TBL_PARTY_BRANCHES
+                                      WHERE DLT = 'T'
+                                      AND PARTY_CODE = '{partyCode}'
+                                      AND ACT_CODE = '{actCode}'
+                                      ORDER BY BRANCH_NAME";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var row = new
+                        {
+                            branchName = Convert.ToString(reader["BRANCH_NAME"])
+                        };
+                        jsonDataResult.Add(row);
+                    }
+                    reader.Close();
+                }
+
+                response.data = jsonDataResult;
+                response.msg = "";
+                response.msgType = 1;
             }
             catch (Exception ex)
             {

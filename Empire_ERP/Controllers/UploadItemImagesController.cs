@@ -25,12 +25,35 @@ namespace Empire_ERP.Controllers
 
 		public IActionResult Index()
 		{
-            ViewBag.Permissions = CommonHelper.GetValues(HttpContext).RoleType == "A"
+            var common = CommonHelper.GetValues(HttpContext);
+            ViewBag.Permissions = common.RoleType == "A"
                 ? "Admin"
-                : CommonHelper.GetPermissionByMenueID(CommonHelper.GetValues(HttpContext).RoleID, CommonHelper.GetValues(HttpContext).MenuID);
+                : CommonHelper.GetPermissionByMenueID(common.RoleID, common.MenuID);
             ViewBag.ItemGroups = DropdownService.SubsidiaritiesItemGroups();
+            ViewBag.Parties = common.RoleType == "A"
+                ? DropdownService.PartyTypeDropdownForPartyReport(0, common.Branch, 0)
+                : DropdownService.PartyTypeDropdownForPartyReport(common.RoleID, common.Branch, common.ShowSelected);
             return View();
 		}
+
+        [HttpGet]
+        public JsonResult GetPartyBranches(int partyCode, int actCode)
+        {
+            try
+            {
+                var data = _UploadItemImagesService.GetPartyBranches(partyCode, actCode);
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                return Json(_catchMessage);
+            }
+        }
 
 		[HttpGet]
 		public JsonResult GetItemMaster()

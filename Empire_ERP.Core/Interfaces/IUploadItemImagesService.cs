@@ -10,6 +10,7 @@ namespace Empire_ERP.Core.Interfaces
     public interface IUploadItemImagesService
     {
 		MyHttpResponseMessage GetItemMaster( string? SDate,string? currentDate , Common common);
+        MyHttpResponseMessage GetPartyBranches(int partyCode, int actCode);
         MyHttpResponseMessage Save(List<UploadItemImages> modelRecord, Common common);
     }
 }

@@ -21,6 +21,11 @@ namespace Empire_ERP.Core.Services
             return _UploadItemImagesRepository.GetItemMaster(sDate,currentDate,common);
         }
 
+        public MyHttpResponseMessage GetPartyBranches(int partyCode, int actCode)
+        {
+            return _UploadItemImagesRepository.GetPartyBranches(partyCode, actCode);
+        }
+
         public MyHttpResponseMessage Save(List<UploadItemImages> modelRecord, Common common)
         {
             return _UploadItemImagesRepository.Save(modelRecord, common);

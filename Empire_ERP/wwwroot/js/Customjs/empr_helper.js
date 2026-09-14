@@ -870,34 +870,10 @@
                     });
 
                 } else {
-                    // ---------- EXCEL EXPORT ----------
-                    const workbook = new ExcelJS.Workbook();
-                    const worksheet = workbook.addWorksheet(fileName);
-
-                    DevExpress.excelExporter.exportDataGrid({
-                        component: e.component,
-                        worksheet,
-                        autoFilterEnabled: true,
-                        customizeCell: function (options) {
-                            const { gridCell, excelCell } = options;
-                            const targetFields = [
-                                'debit', 'credit', 'balance', 'balance2', 'amt', 'rate', 'posQty', 'disc',
-                                'mDisc_Amt', 'netAmt', 'totalBalance', 'stock', 'profitAndLoss', 'pAmt',
-                                'pbRate', 'wRate', 'wAmt', 'cashTax', 'bankTax', 'partyTax', 'totalSales',
-                                'cash', 'cardType', 'party'
-                            ];
-
-                            if (gridCell.rowType !== 'header' && targetFields.includes(gridCell.column.dataField)) {
-                                if (typeof gridCell.value === 'number') {
-                                    excelCell.numFmt = '#,##0';
-                                }
-                            }
-                        }
-                    }).then(() => {
-                        workbook.xlsx.writeBuffer().then(buffer => {
-                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName + '.xlsx');
-                        });
-                    });
+                    e.cancel = true;
+                    if (typeof empr_UploadItemImages !== 'undefined' && empr_UploadItemImages.ExportExcel) {
+                        empr_UploadItemImages.ExportExcel(e);
+                    }
                 }
             },
 

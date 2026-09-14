@@ -4,16 +4,21 @@
             <div class="card text-left">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-xl-8 d-flex align-items-center gap-4">
+                        <div class="col-xl-10 d-flex align-items-center gap-4">
 
-                            <div class="col-4">
+                            <div class="col-3">
                                 <label class="form-label" for="GROUP_CODE">Item Group :</label>
                                 <div id="GROUP_CODE"></div>
                             </div>
 
-                            <div class="col-4">
+                            <div class="col-3">
                                 <label class="form-label" for="STOCK_STATUS">Stock Status :</label>
                                 <div id="STOCK_STATUS"></div>
+                            </div>
+
+                            <div class="col-3">
+                                <label class="form-label" for="PARTY_CODE">Party :</label>
+                                <div id="PARTY_CODE"></div>
                             </div>
 
                             <div class="mt-2">
@@ -50,6 +55,7 @@
     <script type="text/javascript">
         var Permissions = @Html.Raw(Json.Serialize(ViewBag.Permissions));
         var ItemGroups = @Html.Raw(Json.Serialize(ViewBag.ItemGroups));
+        var Parties = @Html.Raw(Json.Serialize(ViewBag.Parties));
     </script>
     <script type="text/javascript">
         $(function () {

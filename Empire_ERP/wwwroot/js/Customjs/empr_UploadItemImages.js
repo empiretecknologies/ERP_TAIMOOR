@@ -9,6 +9,7 @@ var empr_UploadItemImages = {
             empr_UploadItemImages.InitGrid();
             empr_UploadItemImages.InitItemGroupDDL();
             empr_UploadItemImages.InitStockStatusDDL();
+            empr_UploadItemImages.InitPartyDDL();
             console.log("item groups name ", ItemGroups)
         });
 
@@ -65,6 +66,16 @@ var empr_UploadItemImages = {
             // STOCK_STATUS ab ek array hoga, jaise: ['N', 'Z'] ya []
             var STOCK_STATUS = $('#STOCK_STATUS').dxTagBox('option', 'value') || [];
             var CODE = $('#GROUP_CODE').dxSelectBox('option', 'value');
+            var PARTY_VALUE = $('#PARTY_CODE').dxSelectBox('option', 'value');
+            var PARTY_CODE = '';
+            if (PARTY_VALUE !== null && PARTY_VALUE !== undefined && PARTY_VALUE !== '') {
+                var partyItem = (typeof Parties !== 'undefined' && Parties) ? Parties.filter(function (p) { return p.key == PARTY_VALUE; }) : [];
+                if (partyItem.length > 0 && partyItem[0].partyCode !== undefined) {
+                    PARTY_CODE = partyItem[0].partyCode;
+                } else {
+                    PARTY_CODE = PARTY_VALUE;
+                }
+            }
 
             var allData = empr_UploadItemImages.gridData || [];
             debugger;
@@ -98,8 +109,17 @@ var empr_UploadItemImages = {
                     matchStatus = STOCK_STATUS.includes(currentStatus);
                 }
 
+                // --- Party Filter ---
+                var matchParty = true;
+                if (PARTY_CODE !== null && PARTY_CODE !== '0' && PARTY_CODE !== 0 && PARTY_CODE !== undefined && PARTY_CODE !== "") {
+                    var rowParty = x.partY_CODE;
+                    if (rowParty !== undefined && rowParty !== null && rowParty !== '') {
+                        matchParty = (rowParty == PARTY_CODE);
+                    }
+                }
+
                 // Dono conditions check karein
-                return matchCode && matchStatus;
+                return matchCode && matchStatus && matchParty;
             });
 
             // 3. Grid load karein
@@ -135,7 +155,7 @@ var empr_UploadItemImages = {
     CreateGrid: function (dataSrc) {
         console.log(dataSrc)
         var col = [
-            { dataField: 'iteM_CODE', caption: 'Item Code', visible: false },
+            { dataField: 'iteM_CODE', caption: 'Item Code', visible: false, allowExporting: true },
             { dataField: 'iteM_NAME', caption: 'Items', allowEditing: false },
             {
                 dataField: 'grouP_NAME', caption: 'Group Name', width: 200, allowEditing: false
@@ -495,6 +515,158 @@ var empr_UploadItemImages = {
             },
             showSelectionControls: true,
             applyValueMode: "instantly"
+        });
+    },
+
+    InitPartyDDL: function (selectedValue) {
+        $('#PARTY_CODE').dxSelectBox({
+            displayExpr: 'value',
+            valueExpr: 'key',
+            value: selectedValue,
+            searchEnabled: true,
+            width: '100%',
+            placeholder: 'Search',
+            showClearButton: true,
+            dropDownOptions: {
+                height: 'auto',
+            },
+            dataSource: {
+                store: typeof Parties !== 'undefined' ? Parties : [],
+                paginate: true,
+                pageSize: 50
+            },
+            pagingEnabled: true,
+            searchTimeout: 500,
+        });
+    },
+
+    GetSelectedParty: function () {
+        var partyValue = null;
+        try {
+            partyValue = $('#PARTY_CODE').dxSelectBox('option', 'value');
+        } catch (e) {
+            return null;
+        }
+        if (partyValue === null || partyValue === undefined || partyValue === '' || partyValue === 0 || partyValue === '0') {
+            return null;
+        }
+        var partyItem = (typeof Parties !== 'undefined' && Parties) ? Parties.filter(function (p) { return p.key == partyValue; }) : [];
+        if (!partyItem.length) {
+            return null;
+        }
+        var partyCode = partyItem[0].partyCode;
+        var actCode = partyItem[0].accountCode;
+        if (partyCode === undefined || partyCode === null || partyCode === '' || partyCode === 0 || partyCode === '0') {
+            return null;
+        }
+        return {
+            partyCode: partyCode,
+            actCode: actCode
+        };
+    },
+
+    ExportExcel: function (e) {
+        var selectedParty = empr_UploadItemImages.GetSelectedParty();
+        if (!selectedParty) {
+            empr_helper.notify("Please select Party.", 2);
+            return;
+        }
+
+        ajaxHelper.ajaxGetJson('/UploadItemImages/GetPartyBranches?partyCode=' + selectedParty.partyCode + '&actCode=' + (selectedParty.actCode || 0), function (data) {
+            if (data.msgType != 1) {
+                empr_helper.notify(data.msg || "Unable to load party branches.", 2);
+                return;
+            }
+            empr_UploadItemImages.WriteExcelFile(e.component, data.data || []);
+        }, false, true);
+    },
+
+    WriteExcelFile: function (grid, branches) {
+        const exportFileName = "ItemImageUpload";
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet(exportFileName);
+        const hiddenFields = [];
+
+        grid.beginUpdate();
+        (grid.option("columns") || []).forEach(function (col) {
+            if (!col || !col.dataField) {
+                return;
+            }
+            if (grid.columnOption(col.dataField, "visible") === false) {
+                hiddenFields.push(col.dataField);
+                grid.columnOption(col.dataField, "visible", true);
+            }
+        });
+        grid.endUpdate();
+
+        function restoreHiddenColumns() {
+            grid.beginUpdate();
+            hiddenFields.forEach(function (dataField) {
+                grid.columnOption(dataField, "visible", false);
+            });
+            grid.endUpdate();
+        }
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: grid,
+            worksheet: worksheet,
+            autoFilterEnabled: true,
+            customizeCell: function (options) {
+                const gridCell = options.gridCell;
+                const excelCell = options.excelCell;
+                const targetFields = [
+                    'debit', 'credit', 'balance', 'balance2', 'amt', 'rate', 'posQty', 'disc',
+                    'mDisc_Amt', 'netAmt', 'totalBalance', 'stock', 'profitAndLoss', 'pAmt',
+                    'pbRate', 'wRate', 'wAmt', 'cashTax', 'bankTax', 'partyTax', 'totalSales',
+                    'cash', 'cardType', 'party'
+                ];
+
+                if (gridCell.rowType !== 'header' && gridCell.column && targetFields.includes(gridCell.column.dataField)) {
+                    if (typeof gridCell.value === 'number') {
+                        excelCell.numFmt = '#,##0';
+                    }
+                }
+
+                if (gridCell.rowType === 'data' && gridCell.column && gridCell.column.dataField === 'doc') {
+                    excelCell.value = gridCell.value || '';
+                }
+            }
+        }).then(function () {
+            restoreHiddenColumns();
+
+            var headerRow = worksheet.getRow(1);
+            var startCol = worksheet.columnCount + 1;
+            (branches || []).forEach(function (branch, index) {
+                var branchName = branch.branchName || branch.brancH_NAME || '';
+                var col = startCol + index;
+                var headerCell = worksheet.getCell(1, col);
+                headerCell.value = (branchName || '') + ' QTY';
+                headerCell.font = headerRow.getCell(1).font;
+                headerCell.alignment = { vertical: 'middle', horizontal: 'center' };
+                worksheet.getColumn(col).width = 16;
+            });
+
+            if (branches && branches.length) {
+                worksheet.eachRow(function (row, rowNumber) {
+                    if (rowNumber === 1) {
+                        return;
+                    }
+                    branches.forEach(function (branch, index) {
+                        var qtyValue = branch.qty;
+                        if (qtyValue === undefined || qtyValue === null || qtyValue === '') {
+                            qtyValue = null;
+                        }
+                        row.getCell(startCol + index).value = qtyValue;
+                        row.getCell(startCol + index).alignment = { vertical: 'middle', horizontal: 'center' };
+                    });
+                });
+            }
+
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), exportFileName + '.xlsx');
+            });
+        }).catch(function () {
+            restoreHiddenColumns();
         });
     }
 }
