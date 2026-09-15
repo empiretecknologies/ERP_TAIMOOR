@@ -33,9 +33,29 @@ namespace Empire_ERP.Core.Services
             return _salesQutationRepository.GetSalesQutationDetailByCode(code, common);
         }
 
+        public MyHttpResponseMessage GetPartyLastItemRates(int partyCode, int actCode, Common common)
+        {
+            return _salesQutationRepository.GetPartyLastItemRates(partyCode, actCode, common);
+        }
+
         public MyHttpResponseMessage Save(CustomSalesQutation modelRecord, Common common)
         {
             return _salesQutationRepository.Save(modelRecord, common);
+        }
+
+        public MyHttpResponseMessage GetPartyBranches(int partyCode, int actCode)
+        {
+            return _salesQutationRepository.GetPartyBranches(partyCode, actCode);
+        }
+
+        public MyHttpResponseMessage GetExcelItemLookup()
+        {
+            return _salesQutationRepository.GetExcelItemLookup();
+        }
+
+        public MyHttpResponseMessage SaveExcelBatch(List<CustomSalesQutation> modelRecords, Common common)
+        {
+            return _salesQutationRepository.SaveExcelBatch(modelRecords, common);
         }
 
         public MyHttpResponseMessage Delete(int code, Common common)

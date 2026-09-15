@@ -183,7 +183,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                     List<object> jsonDataResult = new List<object>();
                     using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
                     {
-                        string query = "SELECT DT_CODE,ITEM_CODE,QTY,RATE " +
+                        string query = "SELECT DT_CODE,ITEM_CODE,QTY,RATE,BARCODE " +
                                        $"FROM {table} WHERE DLT = 'T' AND TRAN_ID = '{code}' AND BCODE = '{common.Branch}' " +
                                        $"AND PERIOD_ID = '{common.Period}' ORDER BY DT_CODE DESC";
                         SqlCommand command = new SqlCommand(query, connection);
@@ -198,7 +198,8 @@ namespace Empire_ERP.Infrastructure.Repositories
                                 DT_CODE = Convert.ToString(reader["DT_CODE"]),
                                 ITEM_CODE = reader["ITEM_CODE"] == DBNull.Value ? 0 : Convert.ToInt32(reader["ITEM_CODE"]),
                                 QTY = Convert.ToString(reader["QTY"]),
-                                RATE = Convert.ToString(reader["RATE"]),
+                                RATE = reader["RATE"] == DBNull.Value ? "" : Convert.ToString(reader["RATE"]),
+                                BARCODE = reader["BARCODE"] == DBNull.Value ? "" : Convert.ToString(reader["BARCODE"]),
                                 AMT = qty * rate,
                             };
                             jsonDataResult.Add(row);
@@ -216,6 +217,76 @@ namespace Empire_ERP.Infrastructure.Repositories
                     response.msg = "Something went wrong! please try again later.";
                     response.msgType = 2;
                 }
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                response.msg = _catchMessage;
+                response.msgType = 2;
+            }
+            return response;
+        }
+
+        public MyHttpResponseMessage GetPartyLastItemRates(int partyCode, int actCode, Common common)
+        {
+            MyHttpResponseMessage response = new MyHttpResponseMessage();
+            try
+            {
+                var Menu = _menuRepository.GetMenu(common.MenuID);
+                string? table = string.Empty, detailTable = string.Empty;
+                if (Menu.data != null)
+                {
+                    var menu = (Menu)Menu.data;
+                    table = menu.TABLE1;
+                    detailTable = menu.TABLE2;
+                }
+
+                List<object> jsonDataResult = new List<object>();
+                if (!String.IsNullOrWhiteSpace(table) && !String.IsNullOrWhiteSpace(detailTable) && partyCode > 0)
+                {
+                    using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
+                    {
+                        string query = $@"SELECT ITEM_CODE, RATE, BARCODE
+                                        FROM (
+                                            SELECT D.ITEM_CODE, D.RATE, D.BARCODE,
+                                                   ROW_NUMBER() OVER (PARTITION BY D.ITEM_CODE ORDER BY M.TRAN_ID DESC, D.DT_CODE DESC) AS RN
+                                            FROM {detailTable} D
+                                            INNER JOIN {table} M
+                                                ON M.TRAN_ID = D.TRAN_ID
+                                               AND M.BCODE = D.BCODE
+                                               AND M.PERIOD_ID = D.PERIOD_ID
+                                            WHERE M.DLT = 'T'
+                                              AND D.DLT = 'T'
+                                              AND M.PARTY_CODE = '{partyCode}'
+                                              AND M.ACT_CODE = '{actCode}'
+                                              AND M.BCODE = '{common.Branch}'
+                                              AND M.PERIOD_ID = '{common.Period}'
+                                        ) X
+                                        WHERE RN = 1";
+                        SqlCommand command = new SqlCommand(query, connection);
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            var row = new
+                            {
+                                ITEM_CODE = reader["ITEM_CODE"] == DBNull.Value ? 0 : Convert.ToInt32(reader["ITEM_CODE"]),
+                                RATE = reader["RATE"] == DBNull.Value ? "" : Convert.ToString(reader["RATE"]),
+                                BARCODE = reader["BARCODE"] == DBNull.Value ? "" : Convert.ToString(reader["BARCODE"]),
+                            };
+                            jsonDataResult.Add(row);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                response.data = jsonDataResult;
+                response.msg = "";
+                response.msgType = 1;
             }
             catch (Exception ex)
             {
@@ -426,14 +497,14 @@ namespace Empire_ERP.Infrastructure.Repositories
                                         if (detailCode > 0)
                                         {
                                             detailQuery = $"INSERT INTO {detailTable}" +
-                                                           "(TRAN_ID,DT_CODE,ITEM_CODE,QTY,RATE," +
+                                                           "(TRAN_ID,DT_CODE,ITEM_CODE,QTY,RATE,BARCODE," +
                                                            "BCODE,PERIOD_ID,ADD_USER_ID,ADD_DATE," +
                                                            "ADD_COMPUTER_NAME,ADD_IP_ADDRESS,EDIT_USER_ID," +
                                                            "EDIT_DATE,EDIT_COMPUTER_NAME,EDIT_IP_ADDRESS," +
                                                            "ADD_POSTALCODE,EDIT_POSTALCODE," +
                                                            "MENU_ID,DLT)" +
                                                            "VALUES" +
-                                                           "('" + modelRecord.Master.TRAN_ID + "','" + detailCode + "','" + item.ITEM_CODE + "','" + item.QTY + "','" + item.RATE + "'," +
+                                                           "('" + modelRecord.Master.TRAN_ID + "','" + detailCode + "','" + item.ITEM_CODE + "','" + item.QTY + "','" + item.RATE + "','" + item.BARCODE + "'," +
                                                            "'" + branch + "','" + period + "','" + username + "','" + CommonService.GetDateTime("Pakistan Standard Time") + "'," +
                                                            "'" + Computer + "','" + Ip + "','" + username + "'," +
                                                            "'" + CommonService.GetDateTime("Pakistan Standard Time") + "','" + Computer + "','" + Ip + "'," +
@@ -451,6 +522,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                                         detailQuery = $"UPDATE {detailTable} SET ITEM_CODE = '" + item.ITEM_CODE + @"',
                                                         QTY = '" + item.QTY + @"',
                                                         RATE = '" + item.RATE + @"',
+                                                        BARCODE = '" + item.BARCODE + @"',
                                                         EDIT_USER_ID = '" + username + @"',
                                                         EDIT_DATE = '" + CommonService.GetDateTime("Pakistan Standard Time") + @"',
                                                         EDIT_COMPUTER_NAME = '" + Computer + @"',
@@ -506,6 +578,340 @@ namespace Empire_ERP.Infrastructure.Repositories
                     response.data = "";
                     response.msg = "Something went wrong! please try again later.";
                     response.msgType = 2;
+                }
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                response.msgType = 2;
+                response.msg = _catchMessage;
+            }
+            return response;
+        }
+
+        public MyHttpResponseMessage GetPartyBranches(int partyCode, int actCode)
+        {
+            MyHttpResponseMessage response = new MyHttpResponseMessage();
+            try
+            {
+                List<object> jsonDataResult = new List<object>();
+                using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
+                {
+                    string query = $@"SELECT BRANCH_NAME
+                                      FROM TBL_PARTY_BRANCHES
+                                      WHERE DLT = 'T'
+                                      AND PARTY_CODE = '{partyCode}'
+                                      AND ACT_CODE = '{actCode}'
+                                      ORDER BY BRANCH_NAME";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var row = new
+                        {
+                            branchName = Convert.ToString(reader["BRANCH_NAME"])
+                        };
+                        jsonDataResult.Add(row);
+                    }
+                    reader.Close();
+                }
+
+                response.data = jsonDataResult;
+                response.msg = "";
+                response.msgType = 1;
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                response.msg = _catchMessage;
+                response.msgType = 2;
+            }
+            return response;
+        }
+
+        public MyHttpResponseMessage GetExcelItemLookup()
+        {
+            MyHttpResponseMessage response = new MyHttpResponseMessage();
+            try
+            {
+                List<object> jsonDataResult = new List<object>();
+                using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
+                {
+                    string query = @"SELECT ITEM_CODE, ITEM_ID, ITEM_NAME
+                                     FROM TBL_ITEMSMASTER
+                                     WHERE DLT = 'T' AND ASTATUS = 'Y'";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var row = new
+                        {
+                            itemCode = reader["ITEM_CODE"] == DBNull.Value ? 0 : Convert.ToInt32(reader["ITEM_CODE"]),
+                            itemId = Convert.ToString(reader["ITEM_ID"]),
+                            itemName = Convert.ToString(reader["ITEM_NAME"])
+                        };
+                        jsonDataResult.Add(row);
+                    }
+                    reader.Close();
+                }
+
+                response.data = jsonDataResult;
+                response.msg = "";
+                response.msgType = 1;
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                response.msg = _catchMessage;
+                response.msgType = 2;
+            }
+            return response;
+        }
+
+        private HashSet<int> GetExistingItemCodes(IEnumerable<int> itemCodes)
+        {
+            HashSet<int> existing = new HashSet<int>();
+            var codes = itemCodes.Where(c => c > 0).Distinct().ToList();
+            if (codes.Count == 0)
+            {
+                return existing;
+            }
+
+            using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
+            {
+                connection.Open();
+                for (int i = 0; i < codes.Count; i += 500)
+                {
+                    var chunk = codes.Skip(i).Take(500).ToList();
+                    string inList = string.Join(",", chunk);
+                    string query = $"SELECT ITEM_CODE FROM TBL_ITEMSMASTER WHERE DLT = 'T' AND ASTATUS = 'Y' AND ITEM_CODE IN ({inList})";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        if (reader["ITEM_CODE"] != DBNull.Value)
+                        {
+                            existing.Add(Convert.ToInt32(reader["ITEM_CODE"]));
+                        }
+                    }
+                    reader.Close();
+                }
+            }
+            return existing;
+        }
+
+        public MyHttpResponseMessage SaveExcelBatch(List<CustomSalesQutation> modelRecords, Common common)
+        {
+            MyHttpResponseMessage response = new MyHttpResponseMessage();
+            try
+            {
+                if (modelRecords == null || modelRecords.Count == 0)
+                {
+                    response.msg = "No valid Master Records to save.";
+                    response.msgType = 2;
+                    return response;
+                }
+
+                var preparedRecords = new List<CustomSalesQutation>();
+                foreach (var record in modelRecords)
+                {
+                    if (record == null || record.Master == null)
+                    {
+                        continue;
+                    }
+                    if (record.Master.PARTY_CODE == null || record.Master.PARTY_CODE == 0)
+                    {
+                        response.msg = "Please select Party Type.";
+                        response.msgType = 2;
+                        return response;
+                    }
+                    if (record.Master.V_DATE == null)
+                    {
+                        response.msg = "Transaction date is required.";
+                        response.msgType = 2;
+                        return response;
+                    }
+
+                    var validDetails = new List<SalesQutationDetail>();
+                    foreach (var item in record.Detail ?? new List<SalesQutationDetail>())
+                    {
+                        if (item == null || item.ITEM_CODE == null || item.ITEM_CODE == 0)
+                        {
+                            continue;
+                        }
+                        if (item.QTY == null || item.QTY <= 0)
+                        {
+                            continue;
+                        }
+                        if (item.RATE == null || item.RATE < 0)
+                        {
+                            response.msg = "Please enter correct item rate.";
+                            response.msgType = 2;
+                            return response;
+                        }
+                        validDetails.Add(item);
+                    }
+
+                    if (validDetails.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    record.Master.TRAN_ID = null;
+                    record.Detail = validDetails;
+                    preparedRecords.Add(record);
+                }
+
+                if (preparedRecords.Count == 0)
+                {
+                    response.msg = "No valid Master Records to save.";
+                    response.msgType = 2;
+                    return response;
+                }
+
+                var itemCodes = preparedRecords
+                    .SelectMany(r => r.Detail.Select(d => d.ITEM_CODE ?? 0))
+                    .Where(c => c > 0)
+                    .Distinct()
+                    .ToList();
+                var existingItemCodes = GetExistingItemCodes(itemCodes);
+                var missingItem = itemCodes.FirstOrDefault(c => !existingItemCodes.Contains(c));
+                if (missingItem > 0)
+                {
+                    response.msg = "Invalid ItemCode: " + missingItem + ".";
+                    response.msgType = 2;
+                    return response;
+                }
+
+                var Menu = _menuRepository.GetMenu(common.MenuID);
+                string? table = string.Empty, detailTable = string.Empty;
+                if (Menu.data != null)
+                {
+                    var menu = (Menu)Menu.data;
+                    table = menu.TABLE1;
+                    detailTable = menu.TABLE2;
+                }
+
+                if (String.IsNullOrWhiteSpace(table) || String.IsNullOrWhiteSpace(detailTable))
+                {
+                    response.data = "";
+                    response.msg = "Something went wrong! please try again later.";
+                    response.msgType = 2;
+                    return response;
+                }
+
+                var Ip = common.IPAddress;
+                var Computer = common.ComputerName;
+                var Postal = common.PostalCode;
+                var username = common.Username;
+                var branch = common.Branch;
+                var period = common.Period;
+                var menuID = common.MenuID;
+                string connectionString = new SQLService().getconnstring();
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    SqlTransaction transaction = connection.BeginTransaction();
+                    SqlCommand command = connection.CreateCommand();
+                    command.Transaction = transaction;
+                    try
+                    {
+                        int nextMasterId = GenerateNextId(common, command);
+                        int nextDetailId = GenerateNextDetailId(common, command);
+                        if (nextMasterId <= 0 || nextDetailId <= 0)
+                        {
+                            transaction.Rollback();
+                            response.msg = "Something went wrong! please try again later.";
+                            response.msgType = 2;
+                            return response;
+                        }
+
+                        int savedCount = 0;
+                        foreach (var modelRecord in preparedRecords)
+                        {
+                            int code = nextMasterId;
+                            nextMasterId += 1;
+                            string voucherNo = GenerateVoucherNo(common, code, CommonService.GetDateTime("Pakistan Standard Time"));
+                            if (String.IsNullOrWhiteSpace(voucherNo))
+                            {
+                                transaction.Rollback();
+                                response.msg = "Something went wrong! please try again later.";
+                                response.msgType = 2;
+                                return response;
+                            }
+
+                            string query = $"INSERT INTO {table}" +
+                                    "(TRAN_ID,V_DATE,VOUCHER_NO,PARTY_CODE," +
+                                    "ACT_CODE,REMARKS,BCODE,PERIOD_ID," +
+                                    "ADD_USER_ID,ADD_DATE,ADD_COMPUTER_NAME," +
+                                    "ADD_IP_ADDRESS,EDIT_USER_ID,EDIT_DATE," +
+                                    "EDIT_COMPUTER_NAME,EDIT_IP_ADDRESS,ADD_POSTALCODE," +
+                                    "EDIT_POSTALCODE,ASTATUS,MENU_ID,DLT)" +
+                                    "VALUES" +
+                                    "('" + code + "','" + modelRecord.Master.V_DATE + "','" + voucherNo + "','" + modelRecord.Master.PARTY_CODE + "'," +
+                                    "'" + modelRecord.Master.ACT_CODE + "','" + modelRecord.Master.REMARKS + "','" + branch + "','" + period + "'," +
+                                    "'" + username + "','" + CommonService.GetDateTime("Pakistan Standard Time") + "','" + Computer + "'," +
+                                    "'" + Ip + "','" + username + "','" + CommonService.GetDateTime("Pakistan Standard Time") + "'," +
+                                    "'" + Computer + "','" + Ip + "','" + Postal + "','" + Postal + "','" + (string.IsNullOrWhiteSpace(modelRecord.Master.ASTATUS) ? "Y" : modelRecord.Master.ASTATUS) + "','" + menuID + "','T')";
+                            command.CommandText = query;
+                            command.ExecuteNonQuery();
+
+                            foreach (var item in modelRecord.Detail)
+                            {
+                                int detailCode = nextDetailId;
+                                nextDetailId += 1;
+                                string detailQuery = $"INSERT INTO {detailTable}" +
+                                               "(TRAN_ID,DT_CODE,ITEM_CODE,QTY,RATE,BARCODE," +
+                                               "BCODE,PERIOD_ID,ADD_USER_ID,ADD_DATE," +
+                                               "ADD_COMPUTER_NAME,ADD_IP_ADDRESS,EDIT_USER_ID," +
+                                               "EDIT_DATE,EDIT_COMPUTER_NAME,EDIT_IP_ADDRESS," +
+                                               "ADD_POSTALCODE,EDIT_POSTALCODE," +
+                                               "MENU_ID,DLT)" +
+                                               "VALUES" +
+                                               "('" + code + "','" + detailCode + "','" + item.ITEM_CODE + "','" + item.QTY + "','" + item.RATE + "','" + (item.BARCODE ?? "") + "'," +
+                                               "'" + branch + "','" + period + "','" + username + "','" + CommonService.GetDateTime("Pakistan Standard Time") + "'," +
+                                               "'" + Computer + "','" + Ip + "','" + username + "'," +
+                                               "'" + CommonService.GetDateTime("Pakistan Standard Time") + "','" + Computer + "','" + Ip + "'," +
+                                               "'" + Postal + "','" + Postal + "','" + menuID + "','T')";
+                                command.CommandText = detailQuery;
+                                command.ExecuteNonQuery();
+                            }
+                            savedCount += 1;
+                        }
+
+                        transaction.Commit();
+                        response.data = new { savedCount = savedCount };
+                        response.msgType = 1;
+                        response.msg = savedCount == 1
+                            ? "Record Added Successfully"
+                            : savedCount + " Master Records added successfully.";
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        string _catchMessage = ex.Message;
+                        if (ex.InnerException != null)
+                        {
+                            _catchMessage += "<br/>" + ex.InnerException.Message;
+                        }
+                        response.msg = _catchMessage;
+                        response.msgType = 2;
+                    }
                 }
             }
             catch (Exception ex)

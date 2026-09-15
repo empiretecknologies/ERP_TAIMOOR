@@ -7,6 +7,7 @@ namespace Empire_ERP.Core.Entities
         public int? ITEM_CODE { get; set; }
         public double? QTY { get; set; }
         public double? RATE { get; set; }
+        public string? BARCODE { get; set; }
         public int? BCODE { get; set; }
         public int? PERIOD_ID { get; set; }
         public string? ADD_USER_ID { get; set; }

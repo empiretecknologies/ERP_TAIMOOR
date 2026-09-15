@@ -585,6 +585,7 @@ var empr_UploadItemImages = {
         const exportFileName = "ItemImageUpload";
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet(exportFileName);
+        const imageCells = [];
         const hiddenFields = [];
 
         grid.beginUpdate();
@@ -605,6 +606,45 @@ var empr_UploadItemImages = {
                 grid.columnOption(dataField, "visible", false);
             });
             grid.endUpdate();
+        }
+
+        function resolveDocUrl(path) {
+            var raw = String(path || '').trim();
+            if (!raw) {
+                return '';
+            }
+            if (/^https?:\/\//i.test(raw)) {
+                return raw;
+            }
+            return raw.charAt(0) === '/' ? raw : '/' + raw;
+        }
+
+        function loadDocImage(path) {
+            var url = resolveDocUrl(path);
+            return new Promise(function (resolve, reject) {
+                if (!url) {
+                    reject();
+                    return;
+                }
+                var img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = function () {
+                    try {
+                        var canvas = document.createElement('canvas');
+                        canvas.width = 120;
+                        canvas.height = 120;
+                        var ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, 120, 120);
+                        ctx.drawImage(img, 0, 0, 120, 120);
+                        resolve(canvas.toDataURL('image/jpeg', 0.8));
+                    } catch (e) {
+                        reject();
+                    }
+                };
+                img.onerror = reject;
+                img.src = url;
+            });
         }
 
         DevExpress.excelExporter.exportDataGrid({
@@ -628,7 +668,18 @@ var empr_UploadItemImages = {
                 }
 
                 if (gridCell.rowType === 'data' && gridCell.column && gridCell.column.dataField === 'doc') {
-                    excelCell.value = gridCell.value || '';
+                    var docValue = gridCell.value || '';
+                    excelCell.alignment = { vertical: 'middle', horizontal: 'center' };
+                    if (docValue) {
+                        excelCell.value = null;
+                        imageCells.push({
+                            row: excelCell.fullAddress.row,
+                            col: excelCell.fullAddress.col,
+                            path: docValue
+                        });
+                    } else {
+                        excelCell.value = '';
+                    }
                 }
             }
         }).then(function () {
@@ -662,6 +713,29 @@ var empr_UploadItemImages = {
                 });
             }
 
+            var embedNext = Promise.resolve();
+            imageCells.forEach(function (cell) {
+                embedNext = embedNext.then(function () {
+                    return loadDocImage(cell.path).then(function (dataUrl) {
+                        var imageId = workbook.addImage({
+                            base64: dataUrl,
+                            extension: 'jpeg'
+                        });
+                        worksheet.getRow(cell.row).height = 55;
+                        worksheet.getColumn(cell.col).width = 12;
+                        worksheet.getCell(cell.row, cell.col).value = null;
+                        worksheet.addImage(imageId, {
+                            tl: { col: cell.col - 1 + 0.1, row: cell.row - 1 + 0.1 },
+                            br: { col: cell.col - 0.1, row: cell.row - 0.1 },
+                            editAs: 'oneCell'
+                        });
+                    }).catch(function () {
+                        worksheet.getCell(cell.row, cell.col).value = cell.path || '';
+                    });
+                });
+            });
+            return embedNext;
+        }).then(function () {
             workbook.xlsx.writeBuffer().then(function (buffer) {
                 saveAs(new Blob([buffer], { type: 'application/octet-stream' }), exportFileName + '.xlsx');
             });

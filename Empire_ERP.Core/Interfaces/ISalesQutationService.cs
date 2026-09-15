@@ -8,7 +8,11 @@ namespace Empire_ERP.Core.Interfaces
         MyHttpResponseMessage QuickSearch(Common common);
         MyHttpResponseMessage GetSalesQutationByCode(int code, Common common);
         MyHttpResponseMessage GetSalesQutationDetailByCode(int code, Common common);
+        MyHttpResponseMessage GetPartyLastItemRates(int partyCode, int actCode, Common common);
         MyHttpResponseMessage Save(CustomSalesQutation modelRecord, Common common);
+        MyHttpResponseMessage GetPartyBranches(int partyCode, int actCode);
+        MyHttpResponseMessage GetExcelItemLookup();
+        MyHttpResponseMessage SaveExcelBatch(List<CustomSalesQutation> modelRecords, Common common);
         MyHttpResponseMessage Delete(int code, Common common);
         MyHttpResponseMessage DeleteSalesQutationDetailByCode(int code, Common common);
         MyHttpResponseMessage GetDataForPrintReport(RDLCReport modelRecord, DataTable details, Common common);

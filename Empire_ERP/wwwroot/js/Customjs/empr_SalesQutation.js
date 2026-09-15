@@ -8,6 +8,17 @@ var empr_SalesQutation = {
     searchPrefetchStarted: false,
     searchPrefetchCallbacks: [],
     CurrentStock: [],
+    partyLastItemData: [],
+    excelItemLookup: [],
+    excelSaving: false,
+    excelPanelOpen: false,
+    excelState: {
+        fileName: '',
+        branches: [],
+        masters: [],
+        failedRows: [],
+        canComplete: false
+    },
     InitEvents: function () {
         $(document).ready(function () {
             empr_SalesQutation.InitQuickSearchGrid();
@@ -15,6 +26,7 @@ var empr_SalesQutation = {
             empr_SalesQutation.ResetForm();
             empr_SalesQutation.RenderItemGroups();
             empr_SalesQutation.InitReportTypeDDL();
+            $('#SaveQuotationModal').modal('show');
             window.addEventListener('message', function (event) {
                 if (event.origin !== window.location.origin) {
                     return;
@@ -43,25 +55,6 @@ var empr_SalesQutation = {
                     else if (($("#Code").val() > 0) && !Permissions.r_EDIT) {
                         empr_helper.notify("You are not allowed to edit records !", 2);
                     } else {
-                        if (empr_SalesQutation.ValidateDetails()) {
-                            $('#SaveQuotationModal').modal('show');
-                        }
-                    }
-                } else {
-                    if (empr_SalesQutation.ValidateDetails()) {
-                        $('#SaveQuotationModal').modal('show');
-                    }
-                }
-            });
-
-            $('body').on('click', '#BtnModalSave', function () {
-                if (Permissions != "Admin") {
-                    if (!$("#Code").val() && !Permissions.r_ADD) {
-                        empr_helper.notify("You are not allowed to add new record !", 2);
-                    }
-                    else if (($("#Code").val() > 0) && !Permissions.r_EDIT) {
-                        empr_helper.notify("You are not allowed to edit records !", 2);
-                    } else {
                         if (empr_SalesQutation.ValidateMainInfo()) {
                             empr_SalesQutation.Save();
                         }
@@ -71,6 +64,71 @@ var empr_SalesQutation = {
                         empr_SalesQutation.Save();
                     }
                 }
+            });
+
+            $('body').on('click', '#BtnModalSave', function () {
+                if (empr_SalesQutation.HasUploadedExcel()) {
+                    return;
+                }
+                if (empr_SalesQutation.ValidatePartySelection()) {
+                    empr_SalesQutation.UpdatePartyNameDisplay();
+                    empr_SalesQutation.LoadPartyLastItemData();
+                    $('#SaveQuotationModal').modal('hide');
+                }
+            });
+
+            $('body').on('click', '#BtnUploadFile', function () {
+                empr_SalesQutation.ShowExcelUploadPanel();
+            });
+
+            $('body').on('click', '#BtnSelectExcel', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $('#sqExcelFile').val('');
+                $('#sqExcelFile').trigger('click');
+            });
+
+            $('body').on('click', '#sqExcelDrop', function (e) {
+                if ($(e.target).closest('#BtnSelectExcel, #BtnExcelClear, #sqExcelFile').length) {
+                    return;
+                }
+                $('#sqExcelFile').val('');
+                $('#sqExcelFile').trigger('click');
+            });
+
+            $('body').on('change', '#sqExcelFile', function () {
+                var file = this.files && this.files[0] ? this.files[0] : null;
+                empr_SalesQutation.ProcessExcelFile(file);
+            });
+
+            $('body').on('dragover dragenter', '#sqExcelDrop', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).addClass('sq-excel-dragover');
+            });
+
+            $('body').on('dragleave drop', '#sqExcelDrop', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).removeClass('sq-excel-dragover');
+            });
+
+            $('body').on('drop', '#sqExcelDrop', function (e) {
+                var files = e.originalEvent && e.originalEvent.dataTransfer
+                    ? e.originalEvent.dataTransfer.files
+                    : null;
+                var file = files && files[0] ? files[0] : null;
+                empr_SalesQutation.ProcessExcelFile(file);
+            });
+
+            $('body').on('click', '#BtnExcelClear', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                empr_SalesQutation.ResetExcelUpload(false, true);
+            });
+
+            $('body').on('click', '#BtnExcelComplete', function () {
+                empr_SalesQutation.CompleteExcelUpload();
             });
 
             $('#SaveQuotationModal').on('shown.bs.modal', function () {
@@ -91,6 +149,11 @@ var empr_SalesQutation = {
 
             $('body').on('click', '#BtnNew', function () {
                 empr_SalesQutation.ResetForm();
+                $('#SaveQuotationModal').modal('show');
+            });
+
+            $('body').on('click', '#BtnChangeParty', function () {
+                $('#SaveQuotationModal').modal('show');
             });
 
             $('body').on('click', '#BtnQuickSearch', function () {
@@ -107,22 +170,28 @@ var empr_SalesQutation = {
             });
 
             $('body').on('click', '.sq-item-card', function (e) {
-                if ($(e.target).closest('.sq-rate-field').length) {
+                if ($(e.target).closest('.sq-rate-field, .sq-barcode-field').length) {
                     return;
                 }
                 var $card = $(this);
                 var itemCode = $card.data('item');
                 var rate = $card.find('.sq-rate-input').val();
-                empr_SalesQutation.IncreaseItemQty(itemCode, rate);
+                var barcode = $card.find('.sq-barcode-input').val();
+                empr_SalesQutation.IncreaseItemQty(itemCode, rate, barcode);
             });
 
-            $('body').on('click mousedown', '.sq-rate-field', function (e) {
+            $('body').on('click mousedown', '.sq-rate-field, .sq-barcode-field', function (e) {
                 e.stopPropagation();
             });
 
             $('body').on('change', '.sq-rate-input', function () {
                 var $card = $(this).closest('.sq-item-card');
                 empr_SalesQutation.UpdateItemRate($card.data('item'), $(this).val());
+            });
+
+            $('body').on('change input', '.sq-barcode-input', function () {
+                var $card = $(this).closest('.sq-item-card');
+                empr_SalesQutation.UpdateItemBarcode($card.data('item'), $(this).val());
             });
 
             $('body').on('click', '.sq-qty-minus', function (e) {
@@ -204,21 +273,16 @@ var empr_SalesQutation = {
             var items = data || [];
             if (items.length > 0) {
                 var itemsHtml = $.map(items, function (item) {
-                    var rate = item.salE_RATE != null && item.salE_RATE !== '' ? parseFloat(item.salE_RATE) : 0;
-                    if (isNaN(rate)) {
-                        rate = 0;
-                    }
+                    var values = empr_SalesQutation.GetRateBarcodeForItem(item.iteM_CODE);
                     var selected = empr_SalesQutation.GetSelectedItem(item.iteM_CODE);
                     var qty = selected ? selected.qty : 0;
-                    var displayRate = selected ? parseFloat(selected.rate) : rate;
-                    if (isNaN(displayRate)) {
-                        displayRate = 0;
-                    }
+                    var rateValue = empr_SalesQutation.FormatRateDisplay(values.rate);
+                    var barcodeValue = values.barcode || '';
                     var stockQty = empr_SalesQutation.GetStockQty(item);
                     var itemName = item.iteM_NAME || '';
                     var itemCode = item.iteM_ID || '';
                     return `
-                        <div class="sq-item-card${qty > 0 ? ' selected' : ''}" data-item="${item.iteM_CODE}" data-itemid="${empr_SalesQutation.EscapeHtml(itemCode)}" data-itemname="${empr_SalesQutation.EscapeHtml(itemName)}" data-itemcode="${empr_SalesQutation.EscapeHtml(itemCode)}" data-rate="${rate}">
+                        <div class="sq-item-card${qty > 0 ? ' selected' : ''}" data-item="${item.iteM_CODE}" data-itemid="${empr_SalesQutation.EscapeHtml(itemCode)}" data-itemname="${empr_SalesQutation.EscapeHtml(itemName)}" data-itemcode="${empr_SalesQutation.EscapeHtml(itemCode)}" data-rate="${empr_SalesQutation.EscapeHtml(rateValue)}">
                             <div class="sq-qty-badge">
                                 <button type="button" class="sq-qty-minus" title="Decrease">-</button>
                                 <span class="sq-qty-value">${qty}</span>
@@ -228,7 +292,11 @@ var empr_SalesQutation = {
                                 <p class="sq-item-name">${empr_SalesQutation.EscapeHtml(itemName)}</p>
                                 <div class="sq-item-rate sq-rate-field">
                                     <label>Rate</label>
-                                    <input type="number" class="sq-rate-input" value="${displayRate.toFixed(2)}" min="0" step="any">
+                                    <input type="number" class="sq-rate-input" value="${rateValue}" min="0" step="any">
+                                </div>
+                                <div class="sq-item-barcode sq-barcode-field">
+                                    <label>Barcode</label>
+                                    <input type="text" class="sq-barcode-input" value="${empr_SalesQutation.EscapeHtml(barcodeValue)}" autocomplete="off">
                                 </div>
                                 <div class="sq-item-stock${stockQty < 0 ? ' sq-item-stock-negative' : ''}">Stock Qty: <span class="sq-item-stock-value">${stockQty}</span></div>
                             </div>
@@ -511,18 +579,21 @@ var empr_SalesQutation = {
         });
     },
 
-    IncreaseItemQty: function (itemCode, rate) {
+    IncreaseItemQty: function (itemCode, rate, barcode) {
         if (itemCode == null || itemCode === '') {
             return;
         }
-        rate = parseFloat(rate);
-        if (isNaN(rate) || rate < 0) {
-            rate = 0;
+        var parsedRate = empr_SalesQutation.ParseRateValue(rate);
+        if (barcode === undefined) {
+            var $card = $('.sq-item-card[data-item="' + itemCode + '"]');
+            barcode = $card.find('.sq-barcode-input').val() || '';
         }
+        barcode = barcode != null ? String(barcode) : '';
         var existing = empr_SalesQutation.GetSelectedItem(itemCode);
         if (existing) {
             existing.qty = (parseFloat(existing.qty) || 0) + 1;
-            existing.rate = rate;
+            existing.rate = parsedRate;
+            existing.barcode = barcode;
         } else {
             if (Limit != 0 && empr_SalesQutation.selectedItems.length >= Limit) {
                 empr_helper.notify("You can only add  " + Limit + " records.", 2);
@@ -530,7 +601,8 @@ var empr_SalesQutation = {
             }
             empr_SalesQutation.selectedItems.push({
                 itemCode: itemCode,
-                rate: rate,
+                rate: parsedRate,
+                barcode: barcode,
                 qty: 1
             });
         }
@@ -538,14 +610,104 @@ var empr_SalesQutation = {
         empr_SalesQutation.UpdateSummary();
     },
 
+    ParseRateValue: function (rate) {
+        if (rate === null || rate === undefined || (typeof rate === 'string' && $.trim(rate) === '')) {
+            return '';
+        }
+        var parsed = parseFloat(rate);
+        if (isNaN(parsed) || parsed < 0) {
+            return '';
+        }
+        return parsed;
+    },
+
+    FormatRateDisplay: function (rate) {
+        var parsed = empr_SalesQutation.ParseRateValue(rate);
+        if (parsed === '') {
+            return '';
+        }
+        return parsed.toFixed(2);
+    },
+
+    GetPartyLastItem: function (itemCode) {
+        var data = empr_SalesQutation.partyLastItemData || [];
+        return data.find(function (item) {
+            var code = item.iteM_CODE != null ? item.iteM_CODE : item.item_CODE;
+            return code == itemCode;
+        });
+    },
+
+    GetRateBarcodeForItem: function (itemCode) {
+        var selected = empr_SalesQutation.GetSelectedItem(itemCode);
+        if (selected) {
+            return {
+                rate: selected.rate,
+                barcode: selected.barcode || ''
+            };
+        }
+        var last = empr_SalesQutation.GetPartyLastItem(itemCode);
+        if (last) {
+            return {
+                rate: last.rate,
+                barcode: last.barcode || ''
+            };
+        }
+        return {
+            rate: '',
+            barcode: ''
+        };
+    },
+
+    LoadPartyLastItemData: function () {
+        var partyCode = $('#partyhidden').val();
+        var actCode = $('#acthidden').val();
+        if (!partyCode) {
+            empr_SalesQutation.partyLastItemData = [];
+            empr_SalesQutation.ApplyPartyLastItemData();
+            return;
+        }
+        ajaxHelper.ajaxGetJson('/SalesQutation/GetPartyLastItemRates?partyCode=' + partyCode + '&actCode=' + (actCode || 0), function (data) {
+            if (data && data.msgType == 1) {
+                empr_SalesQutation.partyLastItemData = data.data || [];
+            }
+            else {
+                empr_SalesQutation.partyLastItemData = [];
+            }
+            empr_SalesQutation.ApplyPartyLastItemData();
+        }, false, true);
+    },
+
+    ApplyPartyLastItemData: function () {
+        $('#sqItemList .sq-item-card').each(function () {
+            var $card = $(this);
+            var itemCode = $card.data('item');
+            var values = empr_SalesQutation.GetRateBarcodeForItem(itemCode);
+            var rateValue = empr_SalesQutation.FormatRateDisplay(values.rate);
+            $card.attr('data-rate', rateValue);
+            $card.data('rate', rateValue);
+            $card.find('.sq-rate-input').val(rateValue);
+            $card.find('.sq-barcode-input').val(values.barcode || '');
+        });
+    },
+
     UpdateItemRate: function (itemCode, rate) {
         var $card = $('.sq-item-card[data-item="' + itemCode + '"]');
+        if (rate === null || rate === undefined || (typeof rate === 'string' && $.trim(rate) === '')) {
+            $card.attr('data-rate', '');
+            $card.data('rate', '');
+            var selectedEmpty = empr_SalesQutation.GetSelectedItem(itemCode);
+            if (selectedEmpty) {
+                selectedEmpty.rate = '';
+                empr_SalesQutation.UpdateSummary();
+            }
+            return;
+        }
         rate = parseFloat(rate);
         if (isNaN(rate) || rate < 0) {
             empr_helper.notify("Please enter correct item rate.", 2);
             var selected = empr_SalesQutation.GetSelectedItem(itemCode);
-            var fallback = selected ? selected.rate : ($card.data('rate') || 0);
-            $card.find('.sq-rate-input').val((parseFloat(fallback) || 0).toFixed(2));
+            var fallback = selected ? selected.rate : '';
+            $card.find('.sq-rate-input').val(empr_SalesQutation.FormatRateDisplay(fallback));
             return;
         }
         $card.attr('data-rate', rate);
@@ -554,6 +716,14 @@ var empr_SalesQutation = {
         if (existing) {
             existing.rate = rate;
             empr_SalesQutation.UpdateSummary();
+        }
+    },
+
+    UpdateItemBarcode: function (itemCode, barcode) {
+        barcode = barcode != null ? String(barcode) : '';
+        var existing = empr_SalesQutation.GetSelectedItem(itemCode);
+        if (existing) {
+            existing.barcode = barcode;
         }
     },
 
@@ -604,16 +774,14 @@ var empr_SalesQutation = {
                 return;
             }
             var qty = parseFloat(item.qty);
-            var rate = parseFloat(item.rate);
             if (isNaN(qty) || qty <= 0) {
                 return;
             }
-            if (isNaN(rate) || rate < 0) {
-                rate = 0;
-            }
+            var rate = empr_SalesQutation.ParseRateValue(item.rate);
             empr_SalesQutation.selectedItems.push({
                 itemCode: item.iteM_CODE,
                 rate: rate,
+                barcode: item.barcode || '',
                 qty: qty,
                 dT_CODE: item.dT_CODE
             });
@@ -735,9 +903,32 @@ var empr_SalesQutation = {
                 if (filteredData.length > 0) {
                     $('#partyhidden').val(filteredData[0].partyCode);
                     $('#acthidden').val(filteredData[0].accountCode);
+                    empr_SalesQutation.SetPartyDropdownError(false);
                 }
             }
+            empr_SalesQutation.UpdatePartyNameDisplay();
+            if (empr_SalesQutation.excelState.fileName) {
+                empr_SalesQutation.RevalidateLoadedExcel();
+            }
         });
+        empr_SalesQutation.UpdatePartyNameDisplay();
+    },
+
+    UpdatePartyNameDisplay: function () {
+        var partyName = '';
+        var partyBox = $('#PARTY_CODE').dxSelectBox('instance');
+        if (partyBox) {
+            var value = partyBox.option('value');
+            if (value != null && value !== '') {
+                var filteredData = $.grep(PartyType || [], function (item) {
+                    return item.key === value;
+                });
+                if (filteredData.length > 0) {
+                    partyName = filteredData[0].value || '';
+                }
+            }
+        }
+        $('#PARTY_NAME_DISPLAY').val(partyName);
     },
 
     bindDxDdl: function (divId, data, selectedvalues, keyExp, dataField, placeholder, onvalueChangeFun) {
@@ -797,6 +988,7 @@ var empr_SalesQutation = {
     },
 
     GetSalesQutationByCode: function (code) {
+        $('#SaveQuotationModal').modal('hide');
         ajaxHelper.ajaxGetJson('/SalesQutation/GetSalesQutationByCode?code=' + code, function (data) {
             if (!data || !data.master) {
                 empr_helper.notify(typeof data === 'string' ? data : 'Unable to load record.', 2);
@@ -824,6 +1016,8 @@ var empr_SalesQutation = {
                         $('#partyhidden').val(filteredData[0].partyCode);
                         $('#acthidden').val(filteredData[0].accountCode);
                     }
+                    empr_SalesQutation.UpdatePartyNameDisplay();
+                    empr_SalesQutation.LoadPartyLastItemData();
                     $('#REMARKS').val(response.remarks);
                     $('#V_DATE').val(response.v_DATE);
                     $('#VOUCHER_NO').val(response.voucheR_NO);
@@ -957,6 +1151,7 @@ var empr_SalesQutation = {
                 iteM_CODE: item.itemCode,
                 qty: item.qty,
                 rate: item.rate,
+                barcode: item.barcode || '',
                 dT_CODE: item.dT_CODE
             });
         });
@@ -997,6 +1192,21 @@ var empr_SalesQutation = {
         return valid;
     },
 
+    ValidatePartySelection: function () {
+        var partyCode = $("#partyhidden").val();
+        if (partyCode == null || partyCode === '') {
+            empr_helper.notify("Please select Party Type.", 2);
+            empr_SalesQutation.SetPartyDropdownError(true);
+            return false;
+        }
+        empr_SalesQutation.SetPartyDropdownError(false);
+        return true;
+    },
+
+    SetPartyDropdownError: function (isInvalid) {
+        $('#PARTY_CODE').toggleClass('sq-party-invalid', !!isInvalid);
+    },
+
     ValidateMainInfo: function () {
         var valid = true;
         var data = empr_SalesQutation.GetDataToSave();
@@ -1007,8 +1217,8 @@ var empr_SalesQutation = {
             return valid;
         }
 
-        if (data.Master.PARTY_CODE == null || data.Master.PARTY_CODE === '') {
-            empr_helper.notify("Please select Party Type.", 2);
+        if (!empr_SalesQutation.ValidatePartySelection()) {
+            $('#SaveQuotationModal').modal('show');
             valid = false;
             return valid;
         }
@@ -1034,6 +1244,9 @@ var empr_SalesQutation = {
             if (data.msgType == 1) {
                 $('#SaveQuotationModal').modal('hide');
                 empr_SalesQutation.ResetForm();
+                setTimeout(function () {
+                    $('#SaveQuotationModal').modal('show');
+                }, 2500);
             }
         }, false, true);
     },
@@ -1044,12 +1257,16 @@ var empr_SalesQutation = {
         empr_helper.selectedBill = '';
         $('#partyhidden').val('');
         $('#acthidden').val('');
+        $('#PARTY_NAME_DISPLAY').val('');
+        empr_SalesQutation.SetPartyDropdownError(false);
         $('#VOUCHER_NO').val('');
         $('#REMARKS').val('');
         $('#BtnDelete').hide();
         $('#BtnPrint').hide();
         $('.Record').removeClass('customHighlightForModifiedCells');
         empr_SalesQutation.selectedItems = [];
+        empr_SalesQutation.partyLastItemData = [];
+        empr_SalesQutation.ResetExcelUpload();
         empr_SalesQutation.highlightToken += 1;
         $('.sq-group').removeClass('has-data');
         if (empr_SalesQutation.selectedGroupId != null && empr_SalesQutation.selectedGroupId !== '') {
@@ -1099,8 +1316,793 @@ var empr_SalesQutation = {
                 if (data.msgType == 1) {
                     empr_SalesQutation.ResetForm();
                     $('#BtnDelete').hide();
+                    $('#SaveQuotationModal').modal('show');
                 }
             }, false, true);
         });
     },
+
+    ResetExcelUpload: function (keepStatus, keepPanel) {
+        empr_SalesQutation.excelSaving = false;
+        empr_SalesQutation.excelState = {
+            fileName: '',
+            branches: [],
+            masters: [],
+            failedRows: [],
+            canComplete: false,
+            rawRows: null
+        };
+        $('#sqExcelFile').val('');
+        $('#sqExcelFileName').text('');
+        $('#BtnExcelClear').hide();
+        $('#BtnExcelComplete').hide();
+        $('#sqExcelReview').hide().empty();
+        $('#SaveQuotationModal').removeClass('sq-excel-review-open');
+        $('#SaveQuotationModal .modal-dialog').removeClass('modal-xl').addClass('modal-md');
+        if (!keepStatus) {
+            empr_SalesQutation.SetExcelStatus('', '');
+        }
+        if (keepPanel) {
+            empr_SalesQutation.RefreshExcelModalFooter();
+        }
+        else {
+            empr_SalesQutation.HideExcelUploadPanel();
+        }
+    },
+
+    ShowExcelUploadPanel: function () {
+        var $panel = $('#sqExcelUpload');
+        empr_SalesQutation.excelPanelOpen = true;
+        if ($panel.is(':visible')) {
+            empr_SalesQutation.RefreshExcelModalFooter();
+            return;
+        }
+        $panel.stop(true, true).css({ overflow: 'hidden', opacity: 0 }).slideDown(320, function () {
+            $panel.css('overflow', 'visible');
+        }).animate({ opacity: 1 }, { duration: 320, queue: false });
+        empr_SalesQutation.RefreshExcelModalFooter();
+    },
+
+    HideExcelUploadPanel: function () {
+        var $panel = $('#sqExcelUpload');
+        empr_SalesQutation.excelPanelOpen = false;
+        if (!$panel.is(':visible')) {
+            empr_SalesQutation.RefreshExcelModalFooter();
+            return;
+        }
+        $panel.stop(true, true).animate({ opacity: 0 }, { duration: 220, queue: false }).slideUp(280, function () {
+            $panel.css('opacity', '');
+            empr_SalesQutation.RefreshExcelModalFooter();
+        });
+    },
+
+    HasUploadedExcel: function () {
+        return !!(empr_SalesQutation.excelState && empr_SalesQutation.excelState.fileName);
+    },
+
+    RefreshExcelModalFooter: function () {
+        var hasFile = empr_SalesQutation.HasUploadedExcel();
+        var canAdd = Permissions == "Admin" || (Permissions && Permissions.r_ADD);
+        if (hasFile) {
+            $('#BtnModalSave').hide();
+            if (canAdd) {
+                $('#BtnExcelComplete').show();
+            }
+            else {
+                $('#BtnExcelComplete').hide();
+            }
+        }
+        else {
+            $('#BtnModalSave').show();
+            $('#BtnExcelComplete').hide();
+        }
+        $('#SaveQuotationModal .modal-footer').show();
+    },
+
+    SetExcelStatus: function (message, type) {
+        var $status = $('#sqExcelStatus');
+        $status.removeClass('sq-excel-error sq-excel-success');
+        if (type) {
+            $status.addClass('sq-excel-' + type);
+        }
+        $status.text(message || '');
+    },
+
+    NormalizeExcelHeader: function (value) {
+        return String(value == null ? '' : value).replace(/\s+/g, '').toLowerCase();
+    },
+
+    GetExcelCellValue: function (cell) {
+        if (!cell || cell.value === null || cell.value === undefined) {
+            return '';
+        }
+        var value = cell.value;
+        if (typeof value === 'object') {
+            if (value.result !== undefined && value.result !== null) {
+                return value.result;
+            }
+            if (value.text !== undefined && value.text !== null) {
+                return value.text;
+            }
+            if (value.richText && value.richText.length) {
+                return value.richText.map(function (part) {
+                    return part && part.text ? part.text : '';
+                }).join('');
+            }
+            if (value.hyperlink) {
+                return value.text || value.hyperlink;
+            }
+            return '';
+        }
+        return value;
+    },
+
+    TrimExcelValue: function (value) {
+        if (value === null || value === undefined) {
+            return '';
+        }
+        return $.trim(String(value));
+    },
+
+    ParseExcelNumber: function (value, allowEmpty) {
+        var text = empr_SalesQutation.TrimExcelValue(value);
+        if (text === '') {
+            return allowEmpty ? { ok: true, value: null, empty: true } : { ok: false, value: null, empty: true };
+        }
+        text = text.replace(/,/g, '');
+        var parsed = parseFloat(text);
+        if (isNaN(parsed)) {
+            return { ok: false, value: null, empty: false };
+        }
+        return { ok: true, value: parsed, empty: false };
+    },
+
+    FindExcelItem: function (itemCodeValue) {
+        var code = empr_SalesQutation.TrimExcelValue(itemCodeValue);
+        if (!code) {
+            return null;
+        }
+        var lookup = empr_SalesQutation.excelItemLookup || [];
+        var found = lookup.find(function (item) {
+            return String(item.itemCode) === code || String(item.itemId || '').toLowerCase() === code.toLowerCase();
+        });
+        if (found) {
+            return found;
+        }
+        if (typeof Items !== 'undefined' && Items && Items.length) {
+            var dropItem = $.grep(Items, function (item) {
+                return String(item.key) === code;
+            })[0];
+            if (dropItem) {
+                return {
+                    itemCode: dropItem.key,
+                    itemId: dropItem.key,
+                    itemName: dropItem.value
+                };
+            }
+        }
+        return null;
+    },
+
+    GetPartyBranchNames: function (done) {
+        var partyCode = $('#partyhidden').val();
+        var actCode = $('#acthidden').val() || 0;
+        if (!partyCode) {
+            done([]);
+            return;
+        }
+        ajaxHelper.ajaxGetJson('/SalesQutation/GetPartyBranches?partyCode=' + partyCode + '&actCode=' + actCode, function (data) {
+            if (data && data.msgType == 1) {
+                done(data.data || []);
+            }
+            else {
+                empr_helper.notify((data && data.msg) ? data.msg : "Unable to load party branches.", 2);
+                done([]);
+            }
+        }, false, true);
+    },
+
+    EnsureExcelItemLookup: function (done) {
+        if (empr_SalesQutation.excelItemLookup && empr_SalesQutation.excelItemLookup.length) {
+            done();
+            return;
+        }
+        ajaxHelper.ajaxGetJson('/SalesQutation/GetExcelItemLookup', function (data) {
+            if (data && data.msgType == 1) {
+                empr_SalesQutation.excelItemLookup = data.data || [];
+            }
+            else {
+                empr_SalesQutation.excelItemLookup = [];
+            }
+            done();
+        }, false, true);
+    },
+
+    ProcessExcelFile: function (file) {
+        if (!file) {
+            return;
+        }
+        if (!empr_SalesQutation.ValidatePartySelection()) {
+            $('#sqExcelFile').val('');
+            return;
+        }
+        var fileName = file.name || '';
+        var ext = fileName.split('.').pop().toLowerCase();
+        if (ext !== 'xlsx') {
+            empr_SalesQutation.ResetExcelUpload(false, true);
+            empr_SalesQutation.SetExcelStatus('Please select a valid Excel file (.xlsx).', 'error');
+            return;
+        }
+        if (typeof ExcelJS === 'undefined') {
+            empr_SalesQutation.SetExcelStatus('Excel reader is not available.', 'error');
+            return;
+        }
+
+        empr_SalesQutation.excelState.fileName = fileName;
+        $('#sqExcelFileName').text(fileName);
+        $('#BtnExcelClear').show();
+        $('#sqExcelReview').hide().empty();
+        empr_SalesQutation.RefreshExcelModalFooter();
+        empr_SalesQutation.SetExcelStatus('Reading Excel file...', '');
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var workbook = new ExcelJS.Workbook();
+            workbook.xlsx.load(e.target.result, { ignoreNodes: ['drawing', 'legacyDrawing'] }).then(function () {
+                var parsed = empr_SalesQutation.ParseExcelWorkbook(workbook);
+                if (!parsed.ok) {
+                    empr_SalesQutation.excelState.rawRows = null;
+                    empr_SalesQutation.excelState.masters = [];
+                    empr_SalesQutation.excelState.failedRows = parsed.failedRows || [];
+                    empr_SalesQutation.excelState.canComplete = false;
+                    empr_SalesQutation.SetExcelModalSize(true);
+                    empr_SalesQutation.RenderExcelReview();
+                    empr_SalesQutation.SetExcelStatus(parsed.message || 'Excel validation failed.', 'error');
+                    return;
+                }
+                empr_SalesQutation.excelState.rawRows = parsed;
+                empr_SalesQutation.EnsureExcelItemLookup(function () {
+                    empr_SalesQutation.GetPartyBranchNames(function (branches) {
+                        empr_SalesQutation.ValidateExcelData(parsed, branches);
+                    });
+                });
+            }).catch(function () {
+                empr_SalesQutation.SetExcelStatus('Unable to read the Excel file. Please upload a valid .xlsx file.', 'error');
+            });
+        };
+        reader.onerror = function () {
+            empr_SalesQutation.SetExcelStatus('Unable to read the selected file.', 'error');
+        };
+        reader.readAsArrayBuffer(file);
+    },
+
+    RevalidateLoadedExcel: function () {
+        if (!empr_SalesQutation.excelState.rawRows) {
+            return;
+        }
+        if (!empr_SalesQutation.ValidatePartySelection()) {
+            return;
+        }
+        empr_SalesQutation.SetExcelStatus('Validating Excel file...', '');
+        empr_SalesQutation.EnsureExcelItemLookup(function () {
+            empr_SalesQutation.GetPartyBranchNames(function (branches) {
+                empr_SalesQutation.ValidateExcelData(empr_SalesQutation.excelState.rawRows, branches);
+            });
+        });
+    },
+
+    ParseExcelWorkbook: function (workbook) {
+        var worksheet = workbook.worksheets && workbook.worksheets.length ? workbook.worksheets[0] : null;
+        if (!worksheet) {
+            return { ok: false, message: 'Excel file does not contain a worksheet.' };
+        }
+
+        var headerRow = worksheet.getRow(1);
+        var headers = [];
+        var maxCol = worksheet.columnCount || 0;
+        headerRow.eachCell({ includeEmpty: false }, function (cell, colNumber) {
+            if (colNumber > maxCol) {
+                maxCol = colNumber;
+            }
+        });
+        for (var col = 1; col <= maxCol; col++) {
+            headers.push({
+                col: col,
+                text: empr_SalesQutation.TrimExcelValue(empr_SalesQutation.GetExcelCellValue(headerRow.getCell(col))),
+                key: empr_SalesQutation.NormalizeExcelHeader(empr_SalesQutation.GetExcelCellValue(headerRow.getCell(col)))
+            });
+        }
+        while (headers.length && !headers[headers.length - 1].key) {
+            headers.pop();
+        }
+        if (!headers.length) {
+            return { ok: false, message: 'Required Excel headers are missing.' };
+        }
+
+        var required = [
+            { key: 'itemcode', label: 'ItemCode' },
+            { key: 'items', label: 'Items' },
+            { key: 'groupname', label: 'GroupName' },
+            { key: 'salerate', label: 'SaleRate' },
+            { key: 'doc', label: 'Doc' },
+            { key: 'currentstock', label: 'CurrentStock' }
+        ];
+        var headerMap = {};
+        var failedRows = [];
+        $.each(headers, function (index, header) {
+            if (header.key) {
+                headerMap[header.key] = header;
+            }
+        });
+
+        var missingHeaders = [];
+        $.each(required, function (index, item) {
+            if (!headerMap[item.key]) {
+                missingHeaders.push(item.label);
+            }
+        });
+        if (missingHeaders.length) {
+            failedRows.push({
+                rowNo: 1,
+                itemCode: '',
+                itemName: '',
+                reason: 'Required Excel headers missing: ' + missingHeaders.join(', ') + '.'
+            });
+            return {
+                ok: false,
+                message: 'Required Excel headers missing: ' + missingHeaders.join(', ') + '.',
+                failedRows: failedRows
+            };
+        }
+
+        var requiredKeys = {};
+        $.each(required, function (index, item) {
+            requiredKeys[item.key] = true;
+        });
+        var branchHeaders = [];
+        $.each(headers, function (index, header) {
+            if (!header.key) {
+                failedRows.push({
+                    rowNo: 1,
+                    itemCode: '',
+                    itemName: '',
+                    reason: 'Invalid Branch Qty column at column ' + header.col + '.'
+                });
+                return;
+            }
+            if (!requiredKeys[header.key]) {
+                branchHeaders.push(header);
+            }
+        });
+        if (!branchHeaders.length) {
+            failedRows.push({
+                rowNo: 1,
+                itemCode: '',
+                itemName: '',
+                reason: 'At least one Branch Qty column is required.'
+            });
+            return {
+                ok: false,
+                message: 'At least one Branch Qty column is required.',
+                failedRows: failedRows
+            };
+        }
+
+        var rows = [];
+        var rowCount = worksheet.rowCount || 0;
+        for (var rowNo = 2; rowNo <= rowCount; rowNo++) {
+            var row = worksheet.getRow(rowNo);
+            var values = {};
+            var hasAnyValue = false;
+            $.each(headers, function (index, header) {
+                var cellValue = empr_SalesQutation.GetExcelCellValue(row.getCell(header.col));
+                values[header.key || ('col' + header.col)] = cellValue;
+                if (empr_SalesQutation.TrimExcelValue(cellValue) !== '') {
+                    hasAnyValue = true;
+                }
+            });
+            if (!hasAnyValue) {
+                continue;
+            }
+            rows.push({
+                rowNo: rowNo,
+                values: values
+            });
+        }
+
+        if (!rows.length) {
+            failedRows.push({
+                rowNo: 2,
+                itemCode: '',
+                itemName: '',
+                reason: 'No item rows found in the Excel file.'
+            });
+            return {
+                ok: false,
+                message: 'No item rows found in the Excel file.',
+                failedRows: failedRows
+            };
+        }
+
+        return {
+            ok: true,
+            headers: headers,
+            headerMap: headerMap,
+            branchHeaders: branchHeaders,
+            rows: rows,
+            failedRows: failedRows
+        };
+    },
+
+    GetBranchColumnName: function (headerText) {
+        var name = empr_SalesQutation.TrimExcelValue(headerText);
+        name = name.replace(/\s*qty\s*$/i, '');
+        return $.trim(name);
+    },
+
+    ValidateExcelData: function (parsed, partyBranches) {
+        var failedRows = (parsed.failedRows || []).slice();
+        var branchHeaders = parsed.branchHeaders || [];
+        var validBranches = [];
+        var partyBranchNames = (partyBranches || []).map(function (branch) {
+            return empr_SalesQutation.TrimExcelValue(branch.branchName || branch.brancH_NAME);
+        }).filter(function (name) {
+            return name !== '';
+        });
+
+        $.each(branchHeaders, function (index, header) {
+            var branchName = empr_SalesQutation.GetBranchColumnName(header.text);
+            if (!branchName) {
+                failedRows.push({
+                    rowNo: 1,
+                    itemCode: '',
+                    itemName: header.text || '',
+                    reason: 'Invalid Branch Qty column at column ' + header.col + '.'
+                });
+                return;
+            }
+            var matched = partyBranchNames.find(function (name) {
+                return name.toLowerCase() === branchName.toLowerCase();
+            });
+            if (partyBranchNames.length && !matched) {
+                failedRows.push({
+                    rowNo: 1,
+                    itemCode: '',
+                    itemName: header.text,
+                    reason: 'Branch Qty column "' + header.text + '" is not valid for the selected party.'
+                });
+                return;
+            }
+            validBranches.push({
+                header: header,
+                branchName: matched || branchName
+            });
+        });
+
+        if (!validBranches.length) {
+            empr_SalesQutation.excelState.masters = [];
+            empr_SalesQutation.excelState.failedRows = failedRows;
+            empr_SalesQutation.excelState.canComplete = false;
+            empr_SalesQutation.SetExcelModalSize(true);
+            empr_SalesQutation.RenderExcelReview();
+            empr_SalesQutation.SetExcelStatus('No valid Branch Qty columns found.', 'error');
+            return;
+        }
+
+        var seenItemCodes = {};
+        var masters = validBranches.map(function (branch) {
+            return {
+                branchName: branch.branchName,
+                headerKey: branch.header.key,
+                items: [],
+                totalQty: 0,
+                totalAmount: 0
+            };
+        });
+
+        $.each(parsed.rows, function (index, row) {
+            var itemCodeValue = row.values.itemcode;
+            var itemNameValue = empr_SalesQutation.TrimExcelValue(row.values.items);
+            var reasons = [];
+            var itemCodeText = empr_SalesQutation.TrimExcelValue(itemCodeValue);
+            if (!itemCodeText) {
+                reasons.push('ItemCode is required.');
+            }
+            var item = itemCodeText ? empr_SalesQutation.FindExcelItem(itemCodeText) : null;
+            if (itemCodeText && !item) {
+                reasons.push('ItemCode does not exist.');
+            }
+            if (itemCodeText) {
+                var duplicateKey = item ? String(item.itemCode) : itemCodeText.toLowerCase();
+                if (seenItemCodes[duplicateKey]) {
+                    reasons.push('Duplicate ItemCode.');
+                }
+                else {
+                    seenItemCodes[duplicateKey] = true;
+                }
+            }
+
+            var rateParsed = empr_SalesQutation.ParseExcelNumber(row.values.salerate, false);
+            if (!rateParsed.ok || rateParsed.value < 0) {
+                reasons.push('SaleRate must be a valid numeric value.');
+            }
+
+            var qtyByBranch = {};
+            $.each(validBranches, function (branchIndex, branch) {
+                var qtyParsed = empr_SalesQutation.ParseExcelNumber(row.values[branch.header.key], true);
+                if (!qtyParsed.ok) {
+                    reasons.push(branch.branchName + ' Qty must be a valid numeric value.');
+                    return;
+                }
+                if (qtyParsed.empty || qtyParsed.value === 0) {
+                    qtyByBranch[branch.header.key] = null;
+                    return;
+                }
+                if (qtyParsed.value < 0) {
+                    reasons.push(branch.branchName + ' Qty must be a valid numeric value.');
+                    return;
+                }
+                qtyByBranch[branch.header.key] = qtyParsed.value;
+            });
+
+            if (reasons.length) {
+                failedRows.push({
+                    rowNo: row.rowNo,
+                    itemCode: itemCodeText,
+                    itemName: itemNameValue || (item ? item.itemName : ''),
+                    reason: reasons.join(' ')
+                });
+                return;
+            }
+
+            $.each(masters, function (masterIndex, master) {
+                var qty = qtyByBranch[master.headerKey];
+                if (qty == null || !(qty > 0)) {
+                    return;
+                }
+                if (Limit != 0 && master.items.length >= Limit) {
+                    failedRows.push({
+                        rowNo: row.rowNo,
+                        itemCode: itemCodeText,
+                        itemName: itemNameValue || item.itemName,
+                        reason: 'Item limit exceeded for ' + master.branchName + '.'
+                    });
+                    return;
+                }
+                var rate = rateParsed.value;
+                master.items.push({
+                    itemCode: item.itemCode,
+                    itemId: item.itemId,
+                    itemName: itemNameValue || item.itemName,
+                    qty: qty,
+                    rate: rate
+                });
+                master.totalQty += qty;
+                master.totalAmount += qty * rate;
+            });
+        });
+
+        masters = masters.filter(function (master) {
+            return master.items.length > 0;
+        });
+
+        empr_SalesQutation.excelState.masters = masters;
+        empr_SalesQutation.excelState.failedRows = failedRows;
+        empr_SalesQutation.excelState.canComplete = masters.length > 0;
+        empr_SalesQutation.SetExcelModalSize(true);
+        empr_SalesQutation.RenderExcelReview();
+
+        if (!masters.length) {
+            empr_SalesQutation.SetExcelStatus('Excel validated. No Master Records are ready to save.', 'error');
+            return;
+        }
+        var message = 'Excel validated. Review ' + masters.length + ' Master Record' + (masters.length > 1 ? 's' : '') + ' before Complete.';
+        if (failedRows.length) {
+            message += ' ' + failedRows.length + ' row(s) failed and will not be saved.';
+        }
+        empr_SalesQutation.SetExcelStatus(message, failedRows.length ? 'error' : 'success');
+    },
+
+    SetExcelModalSize: function (expanded) {
+        var $modal = $('#SaveQuotationModal');
+        var $dialog = $modal.find('.modal-dialog');
+        if (expanded) {
+            $modal.addClass('sq-excel-review-open');
+            $dialog.removeClass('modal-md').addClass('modal-xl');
+        }
+        else {
+            $modal.removeClass('sq-excel-review-open');
+            $dialog.removeClass('modal-xl').addClass('modal-md');
+        }
+        var partyBox = $('#PARTY_CODE').dxSelectBox('instance');
+        if (partyBox) {
+            partyBox.repaint();
+        }
+    },
+
+    RenderExcelReview: function () {
+        var masters = empr_SalesQutation.excelState.masters || [];
+        var failedRows = empr_SalesQutation.excelState.failedRows || [];
+        var totalItems = 0;
+        $.each(masters, function (index, master) {
+            totalItems += master.items.length;
+        });
+
+        var html = '<div class="sq-excel-summary">';
+        html += '<span>Master Records: <strong>' + masters.length + '</strong></span>';
+        html += '<span>Valid Items: <strong>' + totalItems + '</strong></span>';
+        html += '<span>Failed Rows: <strong>' + failedRows.length + '</strong></span>';
+        html += '</div>';
+
+        html += '<h6 class="sq-excel-section-title">Master Records</h6>';
+        if (!masters.length) {
+            html += '<p class="sq-empty">No Master Records to save.</p>';
+        }
+        else {
+            $.each(masters, function (index, master) {
+                html += '<div class="sq-excel-master">';
+                html += '<div class="sq-excel-master-head">';
+                html += '<span>' + empr_SalesQutation.EscapeHtml(master.branchName) + '</span>';
+                html += '<span>Items: ' + master.items.length + ' | Qty: ' + master.totalQty + ' | Amount: ' + master.totalAmount.toFixed(2) + '</span>';
+                html += '</div>';
+                html += '<div class="sq-excel-table-wrap"><table class="table table-sm sq-excel-table"><thead><tr>';
+                html += '<th>ItemCode</th><th>Items</th><th>Qty</th><th>SaleRate</th><th>Amount</th>';
+                html += '</tr></thead><tbody>';
+                $.each(master.items, function (itemIndex, item) {
+                    var amount = (parseFloat(item.qty) || 0) * (parseFloat(item.rate) || 0);
+                    html += '<tr>';
+                    html += '<td>' + empr_SalesQutation.EscapeHtml(item.itemId || item.itemCode) + '</td>';
+                    html += '<td>' + empr_SalesQutation.EscapeHtml(item.itemName) + '</td>';
+                    html += '<td>' + item.qty + '</td>';
+                    html += '<td>' + (parseFloat(item.rate) || 0).toFixed(2) + '</td>';
+                    html += '<td>' + amount.toFixed(2) + '</td>';
+                    html += '</tr>';
+                });
+                html += '</tbody></table></div></div>';
+            });
+        }
+
+        html += '<h6 class="sq-excel-section-title">Failed Rows</h6>';
+        if (!failedRows.length) {
+            html += '<p class="sq-empty">No failed rows.</p>';
+        }
+        else {
+            html += '<div class="sq-excel-table-wrap"><table class="table table-sm sq-excel-table sq-excel-failed"><thead><tr>';
+            html += '<th>Excel Row</th><th>ItemCode</th><th>Items</th><th>Failed Reason</th>';
+            html += '</tr></thead><tbody>';
+            $.each(failedRows, function (index, row) {
+                html += '<tr>';
+                html += '<td>' + empr_SalesQutation.EscapeHtml(row.rowNo) + '</td>';
+                html += '<td>' + empr_SalesQutation.EscapeHtml(row.itemCode) + '</td>';
+                html += '<td>' + empr_SalesQutation.EscapeHtml(row.itemName) + '</td>';
+                html += '<td class="sq-excel-reason">' + empr_SalesQutation.EscapeHtml(row.reason) + '</td>';
+                html += '</tr>';
+            });
+            html += '</tbody></table></div>';
+        }
+
+        $('#sqExcelReview').html(html).show();
+        empr_SalesQutation.RefreshExcelModalFooter();
+    },
+
+    GetExcelDataToSave: function () {
+        var partyCode = parseInt($("#partyhidden").val(), 10);
+        var actCode = parseInt($("#acthidden").val(), 10);
+        if (isNaN(partyCode)) {
+            partyCode = null;
+        }
+        if (isNaN(actCode)) {
+            actCode = 0;
+        }
+        var vDate = $("#V_DATE").val();
+        var remarks = $("#REMARKS").val() || '';
+        var aStatus = 'Y';
+        var astatusBox = $('#ASTATUS').dxSelectBox('instance');
+        if (astatusBox) {
+            aStatus = astatusBox.option('value') || 'Y';
+        }
+        var records = [];
+        $.each(empr_SalesQutation.excelState.masters || [], function (index, master) {
+            var masterRemarks = remarks;
+            if (masterRemarks) {
+                masterRemarks = masterRemarks + ' - ' + master.branchName;
+            }
+            else {
+                masterRemarks = master.branchName;
+            }
+            var details = [];
+            $.each(master.items, function (itemIndex, item) {
+                details.push({
+                    ITEM_CODE: item.itemCode,
+                    QTY: item.qty,
+                    RATE: item.rate,
+                    BARCODE: ''
+                });
+            });
+            if (!details.length) {
+                return;
+            }
+            records.push({
+                Master: {
+                    TRAN_ID: null,
+                    V_DATE: vDate,
+                    VOUCHER_NO: '',
+                    PARTY_CODE: partyCode,
+                    ACT_CODE: actCode,
+                    REMARKS: masterRemarks,
+                    ASTATUS: aStatus
+                },
+                Detail: details
+            });
+        });
+        return records;
+    },
+
+    CompleteExcelUpload: function () {
+        if (empr_SalesQutation.excelSaving) {
+            return;
+        }
+        if (Permissions != "Admin") {
+            if (!Permissions.r_ADD) {
+                empr_helper.notify("You are not allowed to add new record !", 2);
+                return;
+            }
+        }
+        if (!empr_SalesQutation.ValidatePartySelection()) {
+            return;
+        }
+        if (!empr_SalesQutation.excelState.canComplete || !(empr_SalesQutation.excelState.masters || []).length) {
+            empr_helper.notify("Please upload and validate an Excel file first.", 2);
+            return;
+        }
+        var vDate = $("#V_DATE").val();
+        if (!vDate) {
+            empr_helper.notify("Transaction date is required.", 2);
+            return;
+        }
+
+        var records = empr_SalesQutation.GetExcelDataToSave();
+        if (!records.length) {
+            empr_helper.notify("No valid Master Records to save.", 2);
+            return;
+        }
+
+        empr_SalesQutation.excelSaving = true;
+        $('#BtnExcelComplete').prop('disabled', true);
+        empr_SalesQutation.SetExcelStatus('Saving Master Records...', '');
+        $.ajax({
+            type: 'POST',
+            url: '/SalesQutation/SaveExcelBatch',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(records),
+            cache: false,
+            success: function (data) {
+                ajaxHelper.isSessionExpired(data);
+                empr_SalesQutation.excelSaving = false;
+                $('#BtnExcelComplete').prop('disabled', false);
+                if (typeof data === 'string') {
+                    empr_helper.notify(data, 2);
+                    empr_SalesQutation.SetExcelStatus(data, 'error');
+                    return;
+                }
+                empr_helper.notify(data.msg, data.msgType);
+                if (data.msgType == 1) {
+                    $('#SaveQuotationModal').modal('hide');
+                    empr_SalesQutation.ResetForm();
+                    setTimeout(function () {
+                        $('#SaveQuotationModal').modal('show');
+                    }, 2500);
+                }
+                else {
+                    empr_SalesQutation.SetExcelStatus(data.msg || 'Unable to save Excel data.', 'error');
+                }
+            },
+            error: function () {
+                empr_SalesQutation.excelSaving = false;
+                $('#BtnExcelComplete').prop('disabled', false);
+                empr_SalesQutation.SetExcelStatus('Unable to save Excel data. No records were saved.', 'error');
+                empr_helper.notify('Unable to save Excel data. No records were saved.', 2);
+            }
+        });
+    }
 }

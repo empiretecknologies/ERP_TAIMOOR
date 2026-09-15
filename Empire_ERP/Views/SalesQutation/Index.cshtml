@@ -24,6 +24,41 @@
             font-size: 12px;
         }
 
+        .sq-toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .sq-party-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .sq-party-display .sq-party-label {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 32px;
+            color: #1f2a37;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .sq-party-name {
+            max-width: 280px;
+            height: 32px;
+            font-size: 12px;
+            background-color: #f3f5f7;
+            flex: 1;
+        }
+
         .sq-hidden {
             position: absolute;
             left: -9999px;
@@ -287,6 +322,7 @@
         .sq-item-rate {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 6px;
             margin: 0;
         }
@@ -309,6 +345,8 @@
             font-weight: 600;
             margin: 0;
             color: #5b6773;
+            text-align: left;
+            flex-shrink: 0;
         }
 
         .sq-rate-input {
@@ -317,6 +355,33 @@
             border: 1px solid #d5dde4;
             border-radius: 4px;
             text-align: right;
+            margin-left: auto;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--theme-blue);
+            padding: 0 6px;
+        }
+
+        .sq-item-barcode {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 4px 0 0;
+        }
+
+        .sq-item-barcode label {
+            font-size: 11px;
+            font-weight: 600;
+            margin: 0;
+            color: #5b6773;
+        }
+
+        .sq-barcode-input {
+            width: 100%;
+            min-width: 0;
+            height: 26px;
+            border: 1px solid #d5dde4;
+            border-radius: 4px;
             font-size: 12px;
             font-weight: 600;
             color: var(--theme-blue);
@@ -508,6 +573,210 @@
             overflow: visible;
         }
 
+        #SaveQuotationModal.sq-excel-review-open .modal-body {
+            max-height: calc(100vh - 180px);
+            overflow-y: auto;
+        }
+
+        #BtnUploadFile {
+            font-size: 12px;
+        }
+
+        .sq-excel-upload {
+            display: none;
+            margin-top: 8px;
+            padding: 10px;
+            background: #f3f5f7;
+            border: 1px solid #e5e9ee;
+            border-radius: 8px;
+        }
+
+        .sq-excel-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1f2a37;
+            margin-bottom: 8px;
+        }
+
+        .sq-excel-drop {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 110px;
+            padding: 14px 12px;
+            background: #fff;
+            border: 1px dashed #c5dce9;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .sq-excel-drop:hover,
+        .sq-excel-drop.sq-excel-dragover {
+            border-color: var(--theme-blue);
+            background: #f4f9fc;
+        }
+
+        .sq-excel-drop i {
+            color: var(--theme-blue);
+            font-size: 22px;
+        }
+
+        .sq-excel-drop-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1f2a37;
+            margin: 0;
+        }
+
+        .sq-excel-drop-hint {
+            font-size: 11px;
+            color: #6b7785;
+            margin: 0;
+        }
+
+        .sq-excel-file-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--theme-blue);
+            margin: 0;
+            word-break: break-all;
+        }
+
+        .sq-excel-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 4px;
+        }
+
+        .sq-excel-status {
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #5b6773;
+        }
+
+        .sq-excel-status.sq-excel-error {
+            color: #dc3545;
+        }
+
+        .sq-excel-status.sq-excel-success {
+            color: #0CC27E;
+        }
+
+        .sq-excel-review {
+            margin-top: 10px;
+        }
+
+        .sq-excel-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1f2a37;
+            margin-bottom: 10px;
+        }
+
+        .sq-excel-summary strong {
+            color: var(--theme-blue);
+        }
+
+        .sq-excel-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #1f2a37;
+            margin: 0 0 8px;
+        }
+
+        .sq-excel-master {
+            background: #fff;
+            border: 1px solid #e5e9ee;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .sq-excel-master-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px 10px;
+            background: #e8f2f8;
+            border-bottom: 1px solid #c5dce9;
+            font-size: 12px;
+            font-weight: 700;
+            color: #1f2a37;
+        }
+
+        .sq-excel-table-wrap {
+            overflow-x: auto;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .sq-excel-table {
+            width: 100%;
+            margin: 0;
+            font-size: 11px;
+        }
+
+        .sq-excel-table th {
+            background: #f3f5f7;
+            color: #1f2a37;
+            font-weight: 700;
+            white-space: nowrap;
+            padding: 6px 8px;
+            border-color: #e5e9ee;
+        }
+
+        .sq-excel-table td {
+            padding: 6px 8px;
+            border-color: #eef2f5;
+            color: #1f2a37;
+            vertical-align: top;
+        }
+
+        .sq-excel-failed td {
+            color: #dc3545;
+        }
+
+        .sq-excel-reason {
+            font-weight: 600;
+            color: #dc3545;
+        }
+
+        @@media (max-width: 575px) {
+            .sq-excel-drop {
+                min-height: 96px;
+            }
+
+            .sq-excel-master-head {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        #PARTY_CODE.sq-party-invalid .dx-texteditor,
+        #PARTY_CODE.sq-party-invalid .dx-texteditor.dx-editor-outlined,
+        #PARTY_CODE.sq-party-invalid .dx-dropdowneditor {
+            border-color: #dc3545 !important;
+        }
+
+        #PARTY_CODE.sq-party-invalid .dx-texteditor.dx-state-hover,
+        #PARTY_CODE.sq-party-invalid .dx-texteditor.dx-state-focused,
+        #PARTY_CODE.sq-party-invalid .dx-texteditor.dx-state-active {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 1px #dc3545 !important;
+        }
+
         @@media (max-width: 991px) {
             .sq-page {
                 height: auto;
@@ -606,6 +875,10 @@
         }
 
         @@media (max-width: 575px) {
+            .sq-toolbar {
+                flex-wrap: wrap;
+            }
+
             .sq-items-head {
                 flex-direction: column;
                 align-items: stretch;
@@ -621,7 +894,20 @@
             }
 
             .sq-item-list {
-                height: calc((92px + 8px + 32px + 4px + 26px + 4px + 14px + 10px) * 3 + 12px * 2 + 10px);
+                height: calc((92px + 8px + 32px + 4px + 26px + 4px + 26px + 4px + 14px + 10px) * 3 + 12px * 2 + 10px);
+            }
+
+            .sq-toolbar-left {
+                width: 100%;
+            }
+
+            .sq-party-display {
+                width: 100%;
+            }
+
+            .sq-party-name {
+                max-width: none;
+                flex: 1;
             }
 
             .sq-footer {
@@ -642,10 +928,17 @@
 
 <div class="sq-page Record">
     <div class="sq-toolbar">
-        <button type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal"
-                data-bs-target=".bs-example-modal-xl" id="BtnQuickSearch">
-            <i class="fa fa-search"></i> Quick Search
-        </button>
+        <div class="sq-toolbar-left">
+            <button type="button" class="btn btn-light btn-search waves-effect waves-light" data-bs-toggle="modal"
+                    data-bs-target=".bs-example-modal-xl" id="BtnQuickSearch">
+                <i class="fa fa-search"></i> Quick Search
+            </button>
+            <div class="sq-party-display">
+                <label class="form-label sq-party-label" for="PARTY_NAME_DISPLAY">Party</label>
+                <input class="form-control sq-party-name" id="PARTY_NAME_DISPLAY" type="text" readonly placeholder="Party Name" autocomplete="off">
+                <button type="button" class="btn btn-light" id="BtnChangeParty">Change Party</button>
+            </div>
+        </div>
         <div>
             <button class="btn btn-danger btn-delete" id="BtnDelete" style="display:none"><i class="fa fa-trash"></i> Delete</button>
             <button type="button" class="btn btn-primary btn-new waves-effect waves-light" id="BtnNew">
@@ -689,7 +982,7 @@
     <div class="sq-footer">
         <div class="sq-summary" id="sqSummary">Total Items: 0 | Total Amount: 0.00</div>
         <button type="button" class="btn btn-success btn-print" id="BtnPrint" style="display:none"><i class="fa fa-print"></i> Print</button>
-        <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Next -></button>
+        <button class="btn btn-primary btn-save" id="BtnSave"><i class="fa fa-save"></i> Save</button>
     </div>
 </div>
 
@@ -697,7 +990,7 @@
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="SaveQuotationModalLabel">Save Quotation</h5>
+                <h5 class="modal-title" id="SaveQuotationModalLabel">Master Record</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -713,6 +1006,29 @@
                     <div class="col-12 mb-2">
                         <label class="form-label" for="PARTY_CODE">Party</label>
                         <div id="PARTY_CODE"></div>
+                        <button type="button" class="btn btn-light mt-2" id="BtnUploadFile">
+                            <i class="fa fa-upload"></i> Upload File
+                        </button>
+                        <div class="sq-excel-upload" id="sqExcelUpload">
+                            <div class="sq-excel-label">Excel Upload</div>
+                            <div class="sq-excel-drop" id="sqExcelDrop">
+                                <i class="fa fa-file-excel"></i>
+                                <p class="sq-excel-drop-title">Select or drop an Excel file</p>
+                                <p class="sq-excel-drop-hint">.xlsx with ItemCode, Items, GroupName, SaleRate, Doc, CurrentStock and Branch Qty columns</p>
+                                <p class="sq-excel-file-name" id="sqExcelFileName"></p>
+                                <div class="sq-excel-actions">
+                                    <button type="button" class="btn btn-light btn-sm" id="BtnSelectExcel">
+                                        <i class="fa fa-upload"></i> Choose File
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" id="BtnExcelClear" style="display:none">
+                                        Clear
+                                    </button>
+                                </div>
+                                <input type="file" id="sqExcelFile" accept=".xlsx" hidden>
+                            </div>
+                            <div class="sq-excel-status" id="sqExcelStatus"></div>
+                            <div class="sq-excel-review" id="sqExcelReview" style="display:none"></div>
+                        </div>
                     </div>
                     <div class="col-12">
                         <label class="form-label" for="REMARKS">Remarks</label>
@@ -721,7 +1037,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="BtnModalSave"><i class="fa fa-save"></i> Save</button>
+                <button type="button" class="btn btn-primary" id="BtnModalSave">Next</button>
+                <button type="button" class="btn btn-success" id="BtnExcelComplete" style="display:none">
+                    <i class="fa fa-check"></i> Complete
+                </button>
             </div>
         </div>
     </div>

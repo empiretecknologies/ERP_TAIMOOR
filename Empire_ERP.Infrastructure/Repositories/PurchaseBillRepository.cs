@@ -685,12 +685,12 @@ namespace Empire_ERP.Infrastructure.Repositories
                     -- Received carton
                     ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {detailTable} D
                             LEFT OUTER JOIN {table} M ON D.TRAN_ID = M.TRAN_ID
-                            WHERE D.PICK_ID_D = B.DT_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0) AS R_CRTN,
+                            WHERE D.PICK_ID_D = B.DT_CODE AND D.ITEM_CODE = B.ITEM_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0) AS R_CRTN,
                     -- Balance carton
                     ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {pickDetailTable} WHERE DT_CODE = B.DT_CODE), 0) - 
                     ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {detailTable} D
                             LEFT OUTER JOIN {table} M ON D.TRAN_ID = M.TRAN_ID
-                            WHERE D.PICK_ID_D = B.DT_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0) AS B_CRTN,
+                            WHERE D.PICK_ID_D = B.DT_CODE AND D.ITEM_CODE = B.ITEM_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0) AS B_CRTN,
 
 
                                                 -- Issue Qty
@@ -698,12 +698,12 @@ namespace Empire_ERP.Infrastructure.Repositories
                                                 -- Returned Qty
                                                 ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {detailTable} D
                                                         LEFT OUTER JOIN {table} M ON D.TRAN_ID = M.TRAN_ID
-                                                        WHERE D.PICK_ID_D = B.DT_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0) AS R_QTY,
+                                                        WHERE D.PICK_ID_D = B.DT_CODE AND D.ITEM_CODE = B.ITEM_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0) AS R_QTY,
                                                 -- Balance Qty
                                                 ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {pickDetailTable} WHERE DT_CODE = B.DT_CODE), 0) - 
                                                 ISNULL((SELECT SUM(ISNULL(QTY,0)) FROM {detailTable} D
                                                         LEFT OUTER JOIN {table} M ON D.TRAN_ID = M.TRAN_ID
-                                                        WHERE D.PICK_ID_D = B.DT_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0) AS B_QTY,
+                                                        WHERE D.PICK_ID_D = B.DT_CODE AND D.ITEM_CODE = B.ITEM_CODE AND D.DLT = 'T' AND M.DLT = 'T'), 0) AS B_QTY,
                                                 U.GROUP_CODE AS UNIT, U.GROUP_NAME AS UNIT_NAME, B.RATE, B.AMT,
                                                 B.PACK, B.QTY, B.WEIGHT, W.CODE AS WAREHOUSE_CODE, W.DESCR AS WAREHOUSE_NAME,
                                                 B.DT_CODE, B.DISC, B.DISC_AMT, B.ADV, B.ADV_AMT, B.TAX, B.TAX_AMT, G.GROUP_CODE AS GRADE, G.GROUP_NAME AS GRADE_NAME, B.NET_AMT,

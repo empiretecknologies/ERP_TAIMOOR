@@ -162,6 +162,25 @@ namespace Empire_ERP.Controllers
             }
         }
 
+        [HttpGet]
+        public JsonResult GetPartyLastItemRates(int partyCode, int actCode)
+        {
+            try
+            {
+                var data = _salesQutationService.GetPartyLastItemRates(partyCode, actCode, CommonHelper.GetValues(HttpContext));
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                return Json(_catchMessage);
+            }
+        }
+
         [HttpPost]
         public JsonResult Save(CustomSalesQutation modelRecord)
         {
@@ -178,6 +197,64 @@ namespace Empire_ERP.Controllers
                     _catchMessage += "<br/>" + ex.InnerException.Message;
                 }
                 return Json(_catchMessage);
+            }
+        }
+
+        [HttpGet]
+        public JsonResult GetPartyBranches(int partyCode, int actCode)
+        {
+            try
+            {
+                var data = _salesQutationService.GetPartyBranches(partyCode, actCode);
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                return Json(new { data = _catchMessage, msgType = 2 });
+            }
+        }
+
+        [HttpGet]
+        public JsonResult GetExcelItemLookup()
+        {
+            try
+            {
+                var data = _salesQutationService.GetExcelItemLookup();
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                return Json(new { data = _catchMessage, msgType = 2 });
+            }
+        }
+
+        [HttpPost]
+        [RequestSizeLimit(52428800)]
+        public JsonResult SaveExcelBatch([FromBody] List<CustomSalesQutation> modelRecords)
+        {
+            try
+            {
+                var data = _salesQutationService.SaveExcelBatch(modelRecords, CommonHelper.GetValues(HttpContext));
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                return Json(new { data = "", msg = _catchMessage, msgType = 2 });
             }
         }
 
