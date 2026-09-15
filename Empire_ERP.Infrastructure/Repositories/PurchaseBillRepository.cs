@@ -1140,7 +1140,7 @@ ORDER BY D.DT_CODE DESC";
                                     FROM {table} D
                                     LEFT OUTER JOIN TBL_ITEMSMASTER IM 
                                     ON IM.ITEM_CODE = D.ITEM_CODE 
-                                    WHERE D.DLT = 'T' AND D.BCODE = {common.Branch}  AND D.PERIOD_ID = {common.Period} AND D.TRAN_ID = {code} ORDER BY D.DT_CODE DESC";
+                                    WHERE D.DLT = 'T' AND D.BCODE = {common.Branch}  AND D.PERIOD_ID = {common.Period} AND D.TRAN_ID = {code} ORDER BY D.DT_CODE";
                         SqlCommand command = new SqlCommand(query, connection);
                         connection.Open();
                         SqlDataReader reader = command.ExecuteReader();
@@ -1325,7 +1325,7 @@ ORDER BY D.DT_CODE DESC";
                                             LEFT OUTER JOIN {pickDetail} PD ON PD.DT_CODE = D.PICK_ID_D AND PD.BCODE = D.BCODE AND PD.PERIOD_ID = D.PERIOD_ID
                                             LEFT OUTER JOIN {pickMaster} PM ON PM.TRAN_ID = PD.TRAN_ID AND PM.BCODE = PD.BCODE AND PM.PERIOD_ID = PD.PERIOD_ID
                                             LEFT OUTER JOIN TBL_MENU_BUILDER MB ON MB.ID = PM.MENU_ID
-                                            WHERE  D.DLT = 'T' AND D.TRAN_ID = '{code}' AND D.BCODE = '{common.Branch}' AND D.PERIOD_ID = '{common.Period}' ORDER BY D.DT_CODE DESC";
+                                            WHERE  D.DLT = 'T' AND D.TRAN_ID = '{code}' AND D.BCODE = '{common.Branch}' AND D.PERIOD_ID = '{common.Period}' ORDER BY D.DT_CODE";
 
 
                         SqlCommand command = new SqlCommand(query, connection);
@@ -2303,7 +2303,7 @@ ORDER BY D.DT_CODE DESC";
                 {
                     connection.Open();
                     string query = $@"SELECT * FROM {table} WHERE TRAN_ID = {record.TRAN_ID} AND DLT = 'T' AND BCODE = {common.Branch} AND PERIOD_ID = {common.Period}";
-                    string detailQuery = $@"SELECT * FROM {table2} WHERE TRAN_ID = {record.TRAN_ID} AND DLT = 'T' AND BCODE = {common.Branch} AND PERIOD_ID = {common.Period}";
+                    string detailQuery = $@"SELECT * FROM {table2} WHERE TRAN_ID = {record.TRAN_ID} AND DLT = 'T' AND BCODE = {common.Branch} AND PERIOD_ID = {common.Period} ORDER BY DT_CODE";
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataReader reader = command.ExecuteReader();
                     if (reader.Read())

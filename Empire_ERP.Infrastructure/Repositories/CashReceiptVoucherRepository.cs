@@ -438,7 +438,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                                        $"LEFT OUTER JOIN TBL_CHART B ON B.ACT_CODE = A.ACT_CODE " +
                                        $"LEFT OUTER JOIN TBL_CHART BK ON BK.ACT_CODE = A.BOOK_TYPE " +
                                        $"WHERE A.DLT = 'T' AND A.TRAN_ID = '{tranID}' AND BCODE = '{common.Branch}' " +
-                                       $"AND PERIOD_ID = '{common.Period}' ORDER BY DT_CODE DESC";
+                                       $"AND PERIOD_ID = '{common.Period}' ORDER BY DT_CODE";
                         SqlCommand command = new SqlCommand(query, connection);
                         connection.Open();
                         SqlDataReader reader = command.ExecuteReader();
@@ -1070,7 +1070,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                                     LEFT OUTER JOIN TBL_PARTY_TYPES PT ON PT.PARTY_CODE = C.PARTY_CODE AND PT.ACT_CODE = C.ACT_CODE
                                     LEFT OUTER JOIN TBL_CHART CH ON CH.ACT_CODE = C.BOOK_TYPE 
                                     WHERE C.DLT='T' AND C.TRAN_ID='{code}' AND C.BCODE='{common.Branch}' AND C.PERIOD_ID='{common.Period}'
-                                    ORDER BY C.DT_CODE DESC";
+                                    ORDER BY C.DT_CODE";
 
                     SqlCommand command = new SqlCommand(query, connection);
                     connection.Open();
@@ -1198,7 +1198,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    string query = $@"SELECT * FROM {table} WHERE TRAN_ID = {record.TRAN_ID} AND DLT = 'T' AND BCODE = {common.Branch} AND PERIOD_ID = {common.Period}";
+                    string query = $@"SELECT * FROM {table} WHERE TRAN_ID = {record.TRAN_ID} AND DLT = 'T' AND BCODE = {common.Branch} AND PERIOD_ID = {common.Period} ORDER BY DT_CODE";
                     string detailQuery = $@"SELECT * FROM {table2} WHERE TRAN_ID = {record.TRAN_ID} AND DLT = 'T' AND BCODE = {common.Branch} AND PERIOD_ID = {common.Period}";
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataReader reader = command.ExecuteReader();
@@ -1372,7 +1372,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                             ON C.ACT_CODE = A.ACT_CODE 
                             LEFT OUTER JOIN TBL_PARTY_TYPES PT
                             ON PT.ACT_CODE = A.ACT_CODE  AND PT.PARTY_CODE = A.PARTY_CODE  
-                            Where  a.BCODE =  '{common.Branch}' And a.PERIOD_ID =  '{common.Period}'   AND A.DLT = 'T' AND A.TRAN_ID = '{modelRecord.TRAN_ID}' ORDER BY A.DT_CODE DESC";
+                            Where  a.BCODE =  '{common.Branch}' And a.PERIOD_ID =  '{common.Period}'   AND A.DLT = 'T' AND A.TRAN_ID = '{modelRecord.TRAN_ID}' ORDER BY A.DT_CODE";
 
                     using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
                     {

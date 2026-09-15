@@ -1471,9 +1471,12 @@ var empr_PurchaseBill = {
         ];
 
         empr_helper.editableDxGridbindingForTransactionsVouchers('#DetailContainer', col, dataSrc, menuName, "iteM_CODE");
+        const detailGrid = $('#DetailContainer').dxDataGrid('instance');
+        detailGrid.option('sorting.mode', 'none');
+        detailGrid.option('editing.newRowPosition', 'last');
         if (dataSrc.length == 0) {
-            $('#DetailContainer').dxDataGrid('instance').addRow().done(function () {
-                $('#DetailContainer').dxDataGrid('instance').saveEditData();
+            detailGrid.addRow().done(function () {
+                detailGrid.saveEditData();
             });
         }
 
@@ -1651,8 +1654,8 @@ var empr_PurchaseBill = {
                     }
                     clonedRowData.__KEY__ = empr_PurchaseBill.GenerateKey(36);
                     clonedRowData.dT_CODE = 0;
-                    let newDataSource = [clonedRowData].concat(dataSource);
-                    gridInstance.option("dataSource", newDataSource);
+                    dataSource.push(clonedRowData);
+                    gridInstance.option("dataSource", dataSource);
                     gridInstance.refresh();
                 }
             });
@@ -1668,8 +1671,8 @@ var empr_PurchaseBill = {
                 }
                 clonedRowData.__KEY__ = empr_PurchaseBill.GenerateKey(36);
                 clonedRowData.dT_CODE = 0;
-                let newDataSource = [clonedRowData].concat(dataSource);
-                gridInstance.option("dataSource", newDataSource);
+                dataSource.push(clonedRowData);
+                gridInstance.option("dataSource", dataSource);
                 gridInstance.refresh();
             }
         }
@@ -1772,10 +1775,10 @@ var empr_PurchaseBill = {
                     disc: empr_PurchaseBill.PartyDisc
                 };
 
-                dataSource.unshift(newRow);
+                dataSource.push(newRow);
                 gridInstance.option("dataSource", dataSource);
                 gridInstance.refresh();
-                empr_helper.MoveFocusToGridWithouTab('#DetailContainer', 0, 'iteM_CODE')
+                empr_helper.MoveFocusToGridWithouTab('#DetailContainer', dataSource.length - 1, 'iteM_CODE')
             });
         }
         else {
@@ -1809,10 +1812,10 @@ var empr_PurchaseBill = {
                 disc: empr_PurchaseBill.PartyDisc
             };
 
-            dataSource.unshift(newRow);
+            dataSource.push(newRow);
             gridInstance.option("dataSource", dataSource);
             gridInstance.refresh();
-            empr_helper.MoveFocusToGridWithouTab('#DetailContainer', 0, 'iteM_CODE')
+            empr_helper.MoveFocusToGridWithouTab('#DetailContainer', dataSource.length - 1, 'iteM_CODE')
         }
         //}
     },
@@ -2606,12 +2609,6 @@ var empr_PurchaseBill = {
 
     Save: function () {
         var dataModel = empr_PurchaseBill.GetDataToSave();
-        if (dataModel.Master.TRAN_ID == 0
-            || dataModel.Master.TRAN_ID == null
-            || dataModel.Master.TRAN_ID == undefined
-            || dataModel.Master.TRAN_ID == "") {
-            dataModel.Detail.reverse();
-        }
         debugger;
         ajaxHelper.ajaxPostJsonData(dataModel, "/PurchaseBill/Save", function (data) {
             $('#BtnSave').prop('disabled', false).show();

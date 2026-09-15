@@ -486,9 +486,12 @@
             },
         ];
         empr_helper.editableDxGridbindingForTransactionsVouchers('#DetailContainer', col, dataSrc, "CashReceiptVoucher", "custoM_ACT_CODE");
+        const detailGrid = $('#DetailContainer').dxDataGrid('instance');
+        detailGrid.option('sorting.mode', 'none');
+        detailGrid.option('editing.newRowPosition', 'last');
         if (dataSrc.length == 0) {
-            $('#DetailContainer').dxDataGrid('instance').addRow().done(function () {
-                $('#DetailContainer').dxDataGrid('instance').saveEditData();
+            detailGrid.addRow().done(function () {
+                detailGrid.saveEditData();
             });
         }
 
@@ -542,10 +545,9 @@
                     }
                     //delete clonedRowData.dT_CODE;
                     clonedRowData.__KEY__ = empr_CashReceiptVoucher.GenerateKey(36);
-                    let newDataSource = [clonedRowData].concat(dataSource);
-                    //delete newDataSource[0].dT_CODE;
-                    gridInstance.option("dataSource", newDataSource); // Update the grid's dataSource
-                    gridInstance.refresh(); // Refresh the grid
+                    dataSource.push(clonedRowData);
+                    gridInstance.option("dataSource", dataSource);
+                    gridInstance.refresh();
                 }
             });
         }
@@ -572,11 +574,9 @@
                     delete clonedRowData.dT_CODE;
                 }
                 clonedRowData.__KEY__ = empr_CashReceiptVoucher.GenerateKey(36);
-                //delete clonedRowData.dT_CODE;
-                let newDataSource = [clonedRowData].concat(dataSource);
-                //delete newDataSource[0].dT_CODE;
-                gridInstance.option("dataSource", newDataSource); // Update the grid's dataSource
-                gridInstance.refresh(); // Refresh the grid
+                dataSource.push(clonedRowData);
+                gridInstance.option("dataSource", dataSource);
+                gridInstance.refresh();
             }
         }
     },
@@ -595,7 +595,7 @@
                 const gridInstance = $('#DetailContainer').dxDataGrid('instance');
                 const dataSource = gridInstance.option("dataSource");
 
-                dataSource.unshift({ __KEY__: empr_CashReceiptVoucher.GenerateKey(36), dC_TYPE: empr_CashReceiptVoucher.DC_TYPE });
+                dataSource.push({ __KEY__: empr_CashReceiptVoucher.GenerateKey(36), dC_TYPE: empr_CashReceiptVoucher.DC_TYPE });
                 gridInstance.option("dataSource", dataSource);
                 gridInstance.refresh();
             });
@@ -605,7 +605,7 @@
             const gridInstance = $('#DetailContainer').dxDataGrid('instance');
             const dataSource = gridInstance.option("dataSource");
 
-            dataSource.unshift({ __KEY__: empr_CashReceiptVoucher.GenerateKey(36), dC_TYPE: empr_CashReceiptVoucher.DC_TYPE });
+            dataSource.push({ __KEY__: empr_CashReceiptVoucher.GenerateKey(36), dC_TYPE: empr_CashReceiptVoucher.DC_TYPE });
             gridInstance.option("dataSource", dataSource);
             gridInstance.refresh();
         }
@@ -980,6 +980,9 @@
             }
 
             detailRecords = $('#DetailContainer').dxDataGrid('instance').option("dataSource");
+            if (Array.isArray(detailRecords) && detailRecords.some(item => item.key !== undefined)) {
+                detailRecords = detailRecords.flatMap(group => group.items || []);
+            }
 
             detailRecords.forEach(obj => {
                 obj.booK_TYPE = BOOK_TYPE;
@@ -1049,13 +1052,6 @@
             }
 
             if (IsValid) {
-                if ($("#Code").val() == 0
-                    || $("#Code").val() == null
-                    || $("#Code").val() == undefined
-                    || $("#Code").val() == "") {
-                    detailRecords.reverse();
-                }
-
                 detailRecords.forEach(obj => {
                     obj.TRAN_ID = $("#Code").val();
                     obj.ASTATUS = $('#ASTATUS').dxSelectBox('option', 'value');
