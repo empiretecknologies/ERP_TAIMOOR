@@ -3,11 +3,11 @@
     rowsCount: 0,
     DC_TYPE: '',
     DC_TYPE1: '',
-    isSavingProcess :false,
+    isSavingProcess: false,
 
     InitEvents: function () {
         $(document).ready(function () {
-           //console.log('account', Accounts);
+            //console.log('account', Accounts);
             empr_CashReceiptVoucher.ResetForm();
             empr_CashReceiptVoucher.InitReportTypeDDL();
             empr_CashReceiptVoucher.InitQuickSearchGrid();
@@ -36,7 +36,7 @@
 
             $('#V_DATE').blur(function () {
                 var selectedDate = $(this).val();
-               //console.log('User selected date:', selectedDate);
+                //console.log('User selected date:', selectedDate);
 
                 let gridInstance = $("#DetailContainer").dxDataGrid("instance");
                 let rowCount = gridInstance.getDataSource().items().length;
@@ -95,7 +95,7 @@
                     }
                     else if (($("#Code").val() > 0) && !Permissions.r_EDIT) {
                         empr_helper.notify("You are not allowed to edit records !", 2);
-                       //empr_CashReceiptVoucher.isSavingProcess = false;
+                        //empr_CashReceiptVoucher.isSavingProcess = false;
                         // $btn.prop('disabled', false).removeClass('inside-process');
                         setTimeout(function () {
                             $("#Loader").hide();
@@ -121,7 +121,7 @@
             });
 
             $('body').on('click', '#DetailChargesSave', function () {
-               //console.log('dataClear', dataClear);
+                //console.log('dataClear', dataClear);
                 if (Permissions != "Admin") {
                     if (!$("#Code").val() && !Permissions.r_ADD) {
                         empr_helper.notify("You are not allowed to add new record !", 2);
@@ -236,7 +236,7 @@
     },
 
     CreateGrid: function (dataSrc) {
-       //console.log('CreateGrid', dataSrc);
+        //console.log('CreateGrid', dataSrc);
         if (dataSrc.length > 0) {
             empr_CashReceiptVoucher.rowsCount = dataSrc.length - 1;
             dataSrc.forEach(item => {
@@ -259,7 +259,7 @@
                 allowExporting: false,
                 allowEditing: false,
                 cellTemplate: function (container, options) {
-                   //console.log('options', options);
+                    //console.log('options', options);
                     if (Permissions != "Admin") {
                         const copyAction = !Permissions.r_COPY
                             ? ''
@@ -283,7 +283,7 @@
                             }
                             if (options.data.partY_CODE > 0 && options.data.dT_CODE) {
                                 debugger;
-                               //console.log('options', options);
+                                //console.log('options', options);
                                 knockOffAction = `<a href="javascript:;" class="grid-action-icon" style="margin-left: 10px;" title="KnockOff" onclick="empr_CashReceiptVoucher.ShowKnockOffModal(${options.data.traN_ID},${options.data.dT_CODE},${options.data.amt},${options.data.partY_CODE},${options.data.acT_CODE},'${options.data.partY_NAME}','${options.data.booK_NAME}','${options.data.whT_RATE}')"><i class="fa fa-link"></i></a>`;
                             }
                             if (options.data.dT_CODE > 0) {
@@ -486,12 +486,9 @@
             },
         ];
         empr_helper.editableDxGridbindingForTransactionsVouchers('#DetailContainer', col, dataSrc, "CashReceiptVoucher", "custoM_ACT_CODE");
-        const detailGrid = $('#DetailContainer').dxDataGrid('instance');
-        detailGrid.option('sorting.mode', 'none');
-        detailGrid.option('editing.newRowPosition', 'last');
         if (dataSrc.length == 0) {
-            detailGrid.addRow().done(function () {
-                detailGrid.saveEditData();
+            $('#DetailContainer').dxDataGrid('instance').addRow().done(function () {
+                $('#DetailContainer').dxDataGrid('instance').saveEditData();
             });
         }
 
@@ -508,6 +505,26 @@
 
         row.whT_AMT = (amt * wht) / 100;
         row.neT_AMT = amt - row.whT_AMT;
+    },
+
+    GetRecordsInSaveSequence: function (records) {
+        if (!Array.isArray(records)) {
+            return records;
+        }
+        var existing = [];
+        var newlyAdded = [];
+        $.each(records, function (index, item) {
+            if (item.dT_CODE == '' || item.dT_CODE == null || item.dT_CODE == undefined || item.dT_CODE == 0) {
+                newlyAdded.push(item);
+            } else {
+                existing.push(item);
+            }
+        });
+        existing.sort(function (a, b) {
+            return parseInt(a.dT_CODE) - parseInt(b.dT_CODE);
+        });
+        newlyAdded.reverse();
+        return existing.concat(newlyAdded);
     },
 
 
@@ -545,9 +562,10 @@
                     }
                     //delete clonedRowData.dT_CODE;
                     clonedRowData.__KEY__ = empr_CashReceiptVoucher.GenerateKey(36);
-                    dataSource.push(clonedRowData);
-                    gridInstance.option("dataSource", dataSource);
-                    gridInstance.refresh();
+                    let newDataSource = [clonedRowData].concat(dataSource);
+                    //delete newDataSource[0].dT_CODE;
+                    gridInstance.option("dataSource", newDataSource); // Update the grid's dataSource
+                    gridInstance.refresh(); // Refresh the grid
                 }
             });
         }
@@ -574,9 +592,11 @@
                     delete clonedRowData.dT_CODE;
                 }
                 clonedRowData.__KEY__ = empr_CashReceiptVoucher.GenerateKey(36);
-                dataSource.push(clonedRowData);
-                gridInstance.option("dataSource", dataSource);
-                gridInstance.refresh();
+                //delete clonedRowData.dT_CODE;
+                let newDataSource = [clonedRowData].concat(dataSource);
+                //delete newDataSource[0].dT_CODE;
+                gridInstance.option("dataSource", newDataSource); // Update the grid's dataSource
+                gridInstance.refresh(); // Refresh the grid
             }
         }
     },
@@ -595,7 +615,7 @@
                 const gridInstance = $('#DetailContainer').dxDataGrid('instance');
                 const dataSource = gridInstance.option("dataSource");
 
-                dataSource.push({ __KEY__: empr_CashReceiptVoucher.GenerateKey(36), dC_TYPE: empr_CashReceiptVoucher.DC_TYPE });
+                dataSource.unshift({ __KEY__: empr_CashReceiptVoucher.GenerateKey(36), dC_TYPE: empr_CashReceiptVoucher.DC_TYPE });
                 gridInstance.option("dataSource", dataSource);
                 gridInstance.refresh();
             });
@@ -605,7 +625,7 @@
             const gridInstance = $('#DetailContainer').dxDataGrid('instance');
             const dataSource = gridInstance.option("dataSource");
 
-            dataSource.push({ __KEY__: empr_CashReceiptVoucher.GenerateKey(36), dC_TYPE: empr_CashReceiptVoucher.DC_TYPE });
+            dataSource.unshift({ __KEY__: empr_CashReceiptVoucher.GenerateKey(36), dC_TYPE: empr_CashReceiptVoucher.DC_TYPE });
             gridInstance.option("dataSource", dataSource);
             gridInstance.refresh();
         }
@@ -946,6 +966,7 @@
                     //    detailRecords.reverse();
                     //}
 
+                    detailRecords = empr_CashReceiptVoucher.GetRecordsInSaveSequence(detailRecords);
                     detailRecords.forEach(obj => {
                         obj.TRAN_ID = $("#Code").val();
                         obj.ASTATUS = $('#ASTATUS').dxSelectBox('option', 'value');
@@ -980,9 +1001,6 @@
             }
 
             detailRecords = $('#DetailContainer').dxDataGrid('instance').option("dataSource");
-            if (Array.isArray(detailRecords) && detailRecords.some(item => item.key !== undefined)) {
-                detailRecords = detailRecords.flatMap(group => group.items || []);
-            }
 
             detailRecords.forEach(obj => {
                 obj.booK_TYPE = BOOK_TYPE;
@@ -1052,6 +1070,7 @@
             }
 
             if (IsValid) {
+                detailRecords = empr_CashReceiptVoucher.GetRecordsInSaveSequence(detailRecords);
                 detailRecords.forEach(obj => {
                     obj.TRAN_ID = $("#Code").val();
                     obj.ASTATUS = $('#ASTATUS').dxSelectBox('option', 'value');
@@ -1109,8 +1128,8 @@
         console.log("saveinfo", detailRecords)
         //var $btn = $('#BtnSave');
         ajaxHelper.ajaxPostJsonData({ modelRecord: detailRecords }, "/CashReceiptVoucher/Save", function (data) {
-            
-            
+
+
             empr_helper.notify(data.msg, data.msgType);
 
             if (data.msgType == 1) {
@@ -1138,8 +1157,8 @@
             }
             else {
                 empr_helper.notify(data.msgError, 2);
-               //empr_CashReceiptVoucher.isSavingProcess = false;
-               // $btn.prop('disabled', false).removeClass('inside-process');
+                //empr_CashReceiptVoucher.isSavingProcess = false;
+                // $btn.prop('disabled', false).removeClass('inside-process');
             }
         }, false, true);
     },
@@ -1376,7 +1395,7 @@
     },
 
     ShowCostCenterModal: function (tranId, dtCode, desc, amt, partyCode) {
-       //console.log('partyCode', partyCode);
+        //console.log('partyCode', partyCode);
         if (amt == null || amt === undefined || amt <= 0) {
             empr_helper.notify('Amount should be greater than zero.', 2);
             return;
@@ -1444,7 +1463,7 @@
                         $('#knockOffModal').modal('show');
                     },
                     error: function (error) {
-                       //console.error('Error fetching data:', error);
+                        //console.error('Error fetching data:', error);
                     }
                 });
             }
@@ -1470,7 +1489,7 @@
 
     GetDetailCharges: function (tranId, dtCode, partyCode, actCode) {
         ajaxHelper.ajaxGetJson('/CashReceiptVoucher/GetDetailCharges?tranId=' + tranId + '&dtCode=' + dtCode + '&partyCode=' + partyCode + '&actCode=' + actCode, function (data) {
-           //console.log('GetDetailCharges', data);
+            //console.log('GetDetailCharges', data);
             debugger;
             if (data.data.msgType == 1) {
                 empr_CashReceiptVoucher.CreateDetailChargesGrid(data.data.data);
@@ -1502,7 +1521,7 @@
     //},
 
     CreateDetailChargesGrid: function (dataSrc) {
-       //console.log('CreateDetailChargesGrid', dataSrc);
+        //console.log('CreateDetailChargesGrid', dataSrc);
         if (dataSrc.length == 0) {
             daraSrc = [{ code: 0, amt: 0 }]
         }
@@ -1636,7 +1655,7 @@
                 });
                 if (!IsValid) return;
 
-               //console.log("Data after save and refresh:", GridRecords);
+                //console.log("Data after save and refresh:", GridRecords);
                 var obj = {
                     P_TRAN_ID: P_TRAN_ID,
                     P_DT_CODE: P_DT_CODE,
@@ -1649,7 +1668,7 @@
                     }
                 }, false, true);
             }).fail(function () {
-               //console.error("Failed to save changes.");
+                //console.error("Failed to save changes.");
             });
         } else {
             debugger;
@@ -1671,7 +1690,7 @@
                 }
             });
             if (!IsValid) return;
-           //console.log("No changes made, data:", GridRecords);
+            //console.log("No changes made, data:", GridRecords);
             var obj = {
                 P_TRAN_ID: P_TRAN_ID,
                 P_DT_CODE: P_DT_CODE,

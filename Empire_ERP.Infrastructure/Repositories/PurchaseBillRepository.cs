@@ -667,7 +667,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                     response.msg = "";
                     response.msgType = 1;
                 }
-                else 
+                else
                 {
                     if (!string.IsNullOrWhiteSpace(table))
                     {
@@ -825,7 +825,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                         response.msgType = 1;
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -1140,7 +1140,7 @@ ORDER BY D.DT_CODE DESC";
                                     FROM {table} D
                                     LEFT OUTER JOIN TBL_ITEMSMASTER IM 
                                     ON IM.ITEM_CODE = D.ITEM_CODE 
-                                    WHERE D.DLT = 'T' AND D.BCODE = {common.Branch}  AND D.PERIOD_ID = {common.Period} AND D.TRAN_ID = {code} ORDER BY D.DT_CODE";
+                                    WHERE D.DLT = 'T' AND D.BCODE = {common.Branch}  AND D.PERIOD_ID = {common.Period} AND D.TRAN_ID = {code} ORDER BY D.DT_CODE DESC";
                         SqlCommand command = new SqlCommand(query, connection);
                         connection.Open();
                         SqlDataReader reader = command.ExecuteReader();
@@ -1298,7 +1298,7 @@ ORDER BY D.DT_CODE DESC";
                 }
 
                 //if (!String.IsNullOrWhiteSpace(tableMaster) && !String.IsNullOrWhiteSpace(tableDetail) && !String.IsNullOrWhiteSpace(pickMaster) && !String.IsNullOrWhiteSpace(pickDetail))
-                if (!String.IsNullOrWhiteSpace(tableMaster) && !String.IsNullOrWhiteSpace(tableDetail) )
+                if (!String.IsNullOrWhiteSpace(tableMaster) && !String.IsNullOrWhiteSpace(tableDetail))
                 {
                     List<object> jsonDataResult = new List<object>();
                     using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
@@ -1325,7 +1325,7 @@ ORDER BY D.DT_CODE DESC";
                                             LEFT OUTER JOIN {pickDetail} PD ON PD.DT_CODE = D.PICK_ID_D AND PD.BCODE = D.BCODE AND PD.PERIOD_ID = D.PERIOD_ID
                                             LEFT OUTER JOIN {pickMaster} PM ON PM.TRAN_ID = PD.TRAN_ID AND PM.BCODE = PD.BCODE AND PM.PERIOD_ID = PD.PERIOD_ID
                                             LEFT OUTER JOIN TBL_MENU_BUILDER MB ON MB.ID = PM.MENU_ID
-                                            WHERE  D.DLT = 'T' AND D.TRAN_ID = '{code}' AND D.BCODE = '{common.Branch}' AND D.PERIOD_ID = '{common.Period}' ORDER BY D.DT_CODE";
+                                            WHERE  D.DLT = 'T' AND D.TRAN_ID = '{code}' AND D.BCODE = '{common.Branch}' AND D.PERIOD_ID = '{common.Period}' ORDER BY D.DT_CODE DESC";
 
 
                         SqlCommand command = new SqlCommand(query, connection);
@@ -2082,7 +2082,7 @@ ORDER BY D.DT_CODE DESC";
                                         dt = GetComm(Convert.ToInt32(modelRecord.Master.SCODE));
                                         var Tran_Id = GenerateNextId(common, command, "Commission");
                                         int CommCode = GenerateNextDetailId(common, command, "Commission");
-                                        
+
                                         foreach (DataRow row in dt.Rows)
                                         {
                                             try
@@ -2303,7 +2303,7 @@ ORDER BY D.DT_CODE DESC";
                 {
                     connection.Open();
                     string query = $@"SELECT * FROM {table} WHERE TRAN_ID = {record.TRAN_ID} AND DLT = 'T' AND BCODE = {common.Branch} AND PERIOD_ID = {common.Period}";
-                    string detailQuery = $@"SELECT * FROM {table2} WHERE TRAN_ID = {record.TRAN_ID} AND DLT = 'T' AND BCODE = {common.Branch} AND PERIOD_ID = {common.Period} ORDER BY DT_CODE";
+                    string detailQuery = $@"SELECT * FROM {table2} WHERE TRAN_ID = {record.TRAN_ID} AND DLT = 'T' AND BCODE = {common.Branch} AND PERIOD_ID = {common.Period}";
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataReader reader = command.ExecuteReader();
                     if (reader.Read())
@@ -2545,7 +2545,7 @@ ORDER BY D.DT_CODE DESC";
                             masterData.SIG3 = reader["MENU_SIG3"] == DBNull.Value ? "" : Convert.ToString(reader["MENU_SIG3"]); ;
                             masterData.SIG4 = reader["MENU_SIG4"] == DBNull.Value ? "" : Convert.ToString(reader["MENU_SIG4"]); ;
                             masterData.MENU_TERMS = reader["MENU_TERMS"] == DBNull.Value ? "" : Convert.ToString(reader["MENU_TERMS"]); ;
-                            
+
                             masterData.INVOICE_NUMBER = Convert.ToString(reader["VOUCHER_NO"]);
                             masterData.DATE = reader["V_DATE"] == DBNull.Value ? null : Convert.ToDateTime(reader["V_DATE"]).ToString("dd-MM-yyyy");
                             masterData.USER = reader["USER_NAME"] == DBNull.Value ? "" : Convert.ToString(reader["USER_NAME"]);
@@ -2817,7 +2817,7 @@ ORDER BY D.DT_CODE DESC";
 
 
                 reportData.Master = masterData;
-                
+
                 if (menuDetails.REPORT_NAME == "SaleOrder" || menuDetails.REPORT_NAME == "DeliveryChallan" || menuDetails.REPORT_NAME == "SalesInvoice" || menuDetails.REPORT_NAME == "SalesReturn")
                 {
                     reportData.Detail = reportDetailsDDJ;

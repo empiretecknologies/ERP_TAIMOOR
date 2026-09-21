@@ -666,7 +666,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                                         string detailChargesQuery = $@"SELECT isnull(SUM(AMT),0) AS AMT FROM TBL_BCHARGES WHERE P_TRAN_ID = {item.TRAN_ID} AND P_DT_CODE = {item.DT_CODE} AND P_MENU_ID = {menuID} AND DLT = 'T'";
                                         command.CommandText = detailChargesQuery;
                                         object detailChargesResult = command.ExecuteScalar();
-                                        decimal dcAmount = detailChargesResult != null ? Math.Round(Convert.ToDecimal(detailChargesResult), 2)  : 0;
+                                        decimal dcAmount = detailChargesResult != null ? Math.Round(Convert.ToDecimal(detailChargesResult), 2) : 0;
                                         //var checkAmt = dcAmount + item.AMT;
 
                                         var voucherAmt = koSumAmount - dcAmount;
@@ -807,7 +807,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                         string query = "";
                         if (string.IsNullOrEmpty(item.CODE) || item.CODE == "0")
                         {
-                            
+
                             int nextCode = GenerateNextDetailChargesCode(command, common);
 
                             query = @$"INSERT INTO TBL_BCHARGES (
@@ -1070,7 +1070,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                                     LEFT OUTER JOIN TBL_PARTY_TYPES PT ON PT.PARTY_CODE = C.PARTY_CODE AND PT.ACT_CODE = C.ACT_CODE
                                     LEFT OUTER JOIN TBL_CHART CH ON CH.ACT_CODE = C.BOOK_TYPE 
                                     WHERE C.DLT='T' AND C.TRAN_ID='{code}' AND C.BCODE='{common.Branch}' AND C.PERIOD_ID='{common.Period}'
-                                    ORDER BY C.DT_CODE";
+                                    ORDER BY C.DT_CODE DESC";
 
                     SqlCommand command = new SqlCommand(query, connection);
                     connection.Open();

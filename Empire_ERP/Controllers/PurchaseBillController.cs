@@ -747,39 +747,6 @@ namespace Empire_ERP.Controllers
                                 ReportParameter parameter31 = new ReportParameter("Disc", reportData.Master?.DISC.ToString() ?? "0");
                                 ReportParameter parameter32 = new ReportParameter("Cartage", reportData.Master?.CARTAGE);
 
-
-
-
-
-                                //ReportParameter parameter3 = new ReportParameter("BranchAddress", reportData.Master?.BRANCH_ADDRESS);
-                                //ReportParameter parameter4 = new ReportParameter("BranchPhone", reportData.Master?.BRANCH_PHONE);
-                                //ReportParameter parameter24 = new ReportParameter("Discount", Convert.ToString(reportData.Master?.DISC));
-                                //ReportParameter parameter5 = new ReportParameter("CompanyLogo", new Uri(Path.Combine(_hostingEnvironment.WebRootPath, @$"Client\Company\{reportData.Master?.COMPANY_LOGO}")).AbsoluteUri);
-                                //ReportParameter parameter6 = new ReportParameter("ShowCompanyLogo", Convert.ToString(showCompanyLogo));
-                                //ReportParameter parameter10 = new ReportParameter("PartyName", reportData.Master?.PARTY_NAME);
-                                //ReportParameter parameter11 = new ReportParameter("ActGrCode", reportData.Master?.ACT_GRCODE);
-                                //ReportParameter parameter16 = new ReportParameter("CompanyWater", new Uri(Path.Combine(_hostingEnvironment.WebRootPath, @$"Client\Company\{reportData.Master?.COMPANY_WATER}")).AbsoluteUri);
-                                //ReportParameter parameter17 = new ReportParameter("REFERENCENO", reportData.Master?.REFERENCENO);
-                                //ReportParameter parameter18 = new ReportParameter("TERM", reportData.Master?.TERM);
-                                //ReportParameter parameter19 = new ReportParameter("EDITUSERID", reportData.Master?.EDIT_USER_ID);
-                                //ReportParameter parameter20 = new ReportParameter("MENUTERMS", reportData.Master?.MENU_TERMS);
-                                //ReportParameter parameter21 = new ReportParameter("Curr", reportData.Master?.CURR);
-                                //ReportParameter parameter22 = new ReportParameter("CurrSig", reportData.Master?.CURR_SIG);
-                                //ReportParameter parameter23 = new ReportParameter("TranId", Convert.ToString(model.TRAN_ID));
-                                //ReportParameter parameter50 = new ReportParameter("Header", reportData.Master?.HEADER_NAME);
-                                //ReportParameter parameter25 = new ReportParameter("CompanyName", reportData.Master?.COMPANY_NAME);
-                                //ReportParameter parameter28 = new ReportParameter("CompanyAddress", reportData.Master?.COMPANY_ADDRESS);
-                                //ReportParameter parameter29 = new ReportParameter("CompanyPhone", reportData.Master?.COMPANY_PHONE);
-                                //ReportParameter parameter34 = new ReportParameter("Sig1", reportData.Master?.SIG1);
-                                //ReportParameter parameter35 = new ReportParameter("Sig2", reportData.Master?.SIG2);
-                                //ReportParameter parameter36 = new ReportParameter("Sig3", reportData.Master?.SIG3);
-                                //ReportParameter parameter37 = new ReportParameter("Sig4", reportData.Master?.SIG4);
-                                //ReportParameter parameter41 = new ReportParameter("InvoiceNumber", reportData.Master?.INVOICE_NUMBER);
-                                //ReportParameter parameter42 = new ReportParameter("Date", reportData.Master?.DATE);
-                                //ReportParameter parameter46 = new ReportParameter("OrderType", reportData.Master?.ORDER_TYPE);
-                                //ReportParameter parameter47 = new ReportParameter("Terms", reportData.Master?.TERMS);
-
-
                                 if(model.REPORT_NAME == "DeliveryChallan")
                                 {
                                     report.SetParameters(new ReportParameter[] { parameter1, parameter2, parameter3, parameter4, parameter5, parameter6, parameter7, parameter8, parameter9,
@@ -819,25 +786,7 @@ namespace Empire_ERP.Controllers
                                         voucherNumber = parts[^1];
                                     }
                                     file = report.Render("PDF");
-                                    //filePath = $"{prefix} - {(reportData.Master?.PARTY_NAME).Replace(" / ", " - ")} - {voucherNumber}" + ".pdf";
                                     filePath = $"{prefix} - {(reportData.Master?.PARTY_NAME)?.Replace(" / ", " - ").Replace("/", "-").Replace("\\", "-")} - {voucherNumber}.pdf";
-
-                                    //}
-                                    //else
-                                    //{
-                                    //    string partyName = reportData.Detail.Rows[0]["BuyerName"].ToString();
-                                    //    string input = reportData.Detail.Rows[0]["Voucher"].ToString();
-                                    //    string[] parts = input.Split('/');
-                                    //    string prefix = string.Empty;
-                                    //    string voucherNumber = string.Empty;
-                                    //    if (parts.Length >= 3)
-                                    //    {
-                                    //        prefix = parts[1];
-                                    //        voucherNumber = parts[^1];
-                                    //    }
-                                    //    file = report.Render("PDF");
-                                    //    filePath = $"{prefix} - {partyName.Replace("/", "-")} - {voucherNumber}" + ".pdf";
-                                    //}
 
                                     stReader.Close();
                                     stReader.Dispose();

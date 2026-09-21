@@ -572,13 +572,23 @@ var empr_UploadItemImages = {
             return;
         }
 
-        ajaxHelper.ajaxGetJson('/UploadItemImages/GetPartyBranches?partyCode=' + selectedParty.partyCode + '&actCode=' + (selectedParty.actCode || 0), function (data) {
+        $("#Loader").show();
+        $("#Loader").css('display', 'flex');
+
+        var xhr = ajaxHelper.ajaxGetJson('/UploadItemImages/GetPartyBranches?partyCode=' + selectedParty.partyCode + '&actCode=' + (selectedParty.actCode || 0), function (data) {
             if (data.msgType != 1) {
+                $("#Loader").hide();
                 empr_helper.notify(data.msg || "Unable to load party branches.", 2);
                 return;
             }
             empr_UploadItemImages.WriteExcelFile(e.component, data.data || []);
         }, false, true);
+
+        if (xhr && typeof xhr.fail === 'function') {
+            xhr.fail(function () {
+                $("#Loader").hide();
+            });
+        }
     },
 
     WriteExcelFile: function (grid, branches) {
@@ -726,7 +736,10 @@ var empr_UploadItemImages = {
                         worksheet.getCell(cell.row, cell.col).value = null;
                         worksheet.addImage(imageId, {
                             tl: { col: cell.col - 1 + 0.1, row: cell.row - 1 + 0.1 },
-                            br: { col: cell.col - 0.1, row: cell.row - 0.1 },
+                            ext: {
+                                width: Math.round((12 * 7 + 5) * 0.8),
+                                height: Math.round(55 * 96 / 72 * 0.8)
+                            },
                             editAs: 'oneCell'
                         });
                     }).catch(function () {
@@ -738,9 +751,13 @@ var empr_UploadItemImages = {
         }).then(function () {
             workbook.xlsx.writeBuffer().then(function (buffer) {
                 saveAs(new Blob([buffer], { type: 'application/octet-stream' }), exportFileName + '.xlsx');
+                $("#Loader").hide();
+            }).catch(function () {
+                $("#Loader").hide();
             });
         }).catch(function () {
             restoreHiddenColumns();
+            $("#Loader").hide();
         });
     }
 }
