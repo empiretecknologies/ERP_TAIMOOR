@@ -55,6 +55,25 @@ namespace Empire_ERP.Controllers
             }
         }
 
+        [HttpGet]
+        public JsonResult GetPartyLastItemRates(int partyCode, int actCode)
+        {
+            try
+            {
+                var data = _UploadItemImagesService.GetPartyLastItemRates(partyCode, actCode, CommonHelper.GetValues(HttpContext));
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                string _catchMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    _catchMessage += "<br/>" + ex.InnerException.Message;
+                }
+                return Json(_catchMessage);
+            }
+        }
+
 		[HttpGet]
 		public JsonResult GetItemMaster()
 		{

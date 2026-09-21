@@ -11,6 +11,7 @@ namespace Empire_ERP.Core.Interfaces
     {
 		MyHttpResponseMessage GetItemMaster( string? SDate,string? currentDate , Common common);
         MyHttpResponseMessage GetPartyBranches(int partyCode, int actCode);
+        MyHttpResponseMessage GetPartyLastItemRates(int partyCode, int actCode, Common common);
         MyHttpResponseMessage Save(List<UploadItemImages> modelRecord, Common common);
     }
 }

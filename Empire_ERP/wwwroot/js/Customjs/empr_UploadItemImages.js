@@ -123,7 +123,23 @@ var empr_UploadItemImages = {
             });
 
             // 3. Grid load karein
-            empr_UploadItemImages.CreateGrid(filteredData);
+            var selectedParty = empr_UploadItemImages.GetSelectedParty();
+            if (selectedParty) {
+                var xhr = ajaxHelper.ajaxGetJson('/UploadItemImages/GetPartyLastItemRates?partyCode=' + selectedParty.partyCode + '&actCode=' + (selectedParty.actCode || 0), function (data) {
+                    var lastItems = (data && data.msgType == 1) ? (data.data || []) : [];
+                    empr_UploadItemImages.ApplyLastRateBarcode(filteredData, lastItems);
+                    empr_UploadItemImages.CreateGrid(filteredData);
+                }, false, true);
+                if (xhr && typeof xhr.fail === 'function') {
+                    xhr.fail(function () {
+                        empr_UploadItemImages.ApplyLastRateBarcode(filteredData, []);
+                        empr_UploadItemImages.CreateGrid(filteredData);
+                    });
+                }
+            } else {
+                empr_UploadItemImages.ApplyLastRateBarcode(filteredData, []);
+                empr_UploadItemImages.CreateGrid(filteredData);
+            }
         });
 
         $('body').on('click', '#BtnSave', function () {
@@ -161,6 +177,7 @@ var empr_UploadItemImages = {
                 dataField: 'grouP_NAME', caption: 'Group Name', width: 200, allowEditing: false
             },
             { dataField: 'salE_RATE', caption: 'Sale Rate', allowEditing: false, width: 150, alignment: 'center' },
+            { dataField: 'barcode', caption: 'Barcode', allowEditing: false, width: 180, alignment: 'center' },
             {
                 dataField: 'doc',
                 caption: 'Doc',
@@ -538,6 +555,32 @@ var empr_UploadItemImages = {
             pagingEnabled: true,
             searchTimeout: 500,
         });
+    },
+
+    ApplyLastRateBarcode: function (rows, lastItems) {
+        var lastMap = {};
+        (lastItems || []).forEach(function (item) {
+            var code = item.iteM_CODE != null ? item.iteM_CODE : item.item_CODE;
+            if (code === undefined || code === null || code === '') {
+                return;
+            }
+            lastMap[String(code)] = item;
+        });
+        (rows || []).forEach(function (row) {
+            if (row.originaL_SALE_RATE === undefined) {
+                row.originaL_SALE_RATE = row.salE_RATE;
+            }
+            var last = lastMap[String(row.iteM_CODE)];
+            if (last) {
+                var lastRate = last.rate != null && last.rate !== '' ? last.rate : last.RATE;
+                row.salE_RATE = lastRate != null && lastRate !== '' ? lastRate : row.originaL_SALE_RATE;
+                row.barcode = last.barcode || last.BARCODE || '';
+            } else {
+                row.salE_RATE = row.originaL_SALE_RATE;
+                row.barcode = '';
+            }
+        });
+        return rows;
     },
 
     GetSelectedParty: function () {
