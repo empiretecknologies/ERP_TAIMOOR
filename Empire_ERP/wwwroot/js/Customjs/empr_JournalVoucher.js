@@ -1030,9 +1030,9 @@
             empr_helper.notify("Please open the bill in edit mode.", 2);
             return;
         }
-        if (!empr_JournalVoucher.ValidateDataForPrint()) {
-            return;
-        }
+        //if (!empr_JournalVoucher.ValidateDataForPrint()) {
+        //    return;
+        //}
         var dataModel = {
             TRAN_ID: TRAN_ID,
             MD_ID: MD_ID,

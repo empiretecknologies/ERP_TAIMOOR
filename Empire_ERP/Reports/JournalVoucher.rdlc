@@ -56,53 +56,6 @@
     <ReportSection>
       <Body>
         <ReportItems>
-          <Line Name="Line7">
-            <Top>0.99729in</Top>
-            <Left>5.05986in</Left>
-            <Height>0in</Height>
-            <Width>3.08917in</Width>
-            <Style>
-              <Border>
-                <Color>#055a87</Color>
-                <Style>Solid</Style>
-              </Border>
-            </Style>
-          </Line>
-          <Textbox Name="BranchPhone2">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Total  :</Value>
-                    <Style>
-                      <FontSize>11pt</FontSize>
-                      <Color>#055a87</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Right</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>BranchPhone</rd:DefaultName>
-            <Top>0.74443in</Top>
-            <Left>5.1627in</Left>
-            <Height>0.2139in</Height>
-            <Width>0.65169in</Width>
-            <ZIndex>1</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Tablix Name="Tablix2">
             <TablixBody>
               <TablixColumns>
@@ -140,6 +93,7 @@
                                 <TextRun>
                                   <Value>Account Name</Value>
                                   <Style>
+                                    <FontFamily>Tw Cen MT</FontFamily>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -177,6 +131,7 @@
                                 <TextRun>
                                   <Value>Description</Value>
                                   <Style>
+                                    <FontFamily>Tw Cen MT</FontFamily>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -214,6 +169,7 @@
                                 <TextRun>
                                   <Value>Ref/Chq #</Value>
                                   <Style>
+                                    <FontFamily>Tw Cen MT</FontFamily>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -251,6 +207,7 @@
                                 <TextRun>
                                   <Value>Ref/Chq Date</Value>
                                   <Style>
+                                    <FontFamily>Tw Cen MT</FontFamily>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -288,6 +245,7 @@
                                 <TextRun>
                                   <Value>Debit</Value>
                                   <Style>
+                                    <FontFamily>Tw Cen MT</FontFamily>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -325,6 +283,7 @@
                                 <TextRun>
                                   <Value>Credit</Value>
                                   <Style>
+                                    <FontFamily>Tw Cen MT</FontFamily>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -366,10 +325,15 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!ActName.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Tw Cen MT</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>ActName1</rd:DefaultName>
@@ -378,6 +342,7 @@
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -396,10 +361,15 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Desc.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Tw Cen MT</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Desc</rd:DefaultName>
@@ -408,6 +378,7 @@
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -426,10 +397,14 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!ChqNo.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Tw Cen MT</FontFamily>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>ChqNo</rd:DefaultName>
@@ -438,6 +413,7 @@
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -456,10 +432,14 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!ChqDate.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Tw Cen MT</FontFamily>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>ChqDate</rd:DefaultName>
@@ -468,6 +448,7 @@
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -486,7 +467,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=IIf(Fields!Debit.Value = 0, "", FormatNumber(Fields!Debit.Value, 2))</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Tw Cen MT</FontFamily>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -518,7 +501,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=IIf(Fields!Credit.Value = 0, "", FormatNumber(Fields!Credit.Value, 2))</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Tw Cen MT</FontFamily>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -569,7 +554,6 @@
             <Left>0.14248in</Left>
             <Height>0.5in</Height>
             <Width>8.03083in</Width>
-            <ZIndex>2</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -599,6 +583,7 @@
                       <TextRun>
                         <Value>=Parameters!Sig1.Value</Value>
                         <Style>
+                          <FontFamily>Tw Cen MT</FontFamily>
                           <Color>#055a87</Color>
                         </Style>
                       </TextRun>
@@ -630,7 +615,7 @@
             <Left>0.18505in</Left>
             <Height>0.51748in</Height>
             <Width>1.99953in</Width>
-            <ZIndex>3</ZIndex>
+            <ZIndex>1</ZIndex>
             <Visibility>
               <Hidden>=IIf(IsNothing(Parameters!Sig1.Value) OrElse Parameters!Sig1.Value = "", True, False)</Hidden>
             </Visibility>
@@ -663,6 +648,7 @@
                       <TextRun>
                         <Value>=Parameters!Sig2.Value</Value>
                         <Style>
+                          <FontFamily>Tw Cen MT</FontFamily>
                           <Color>#055a87</Color>
                         </Style>
                       </TextRun>
@@ -694,7 +680,7 @@
             <Left>2.36209in</Left>
             <Height>0.50155in</Height>
             <Width>1.65925in</Width>
-            <ZIndex>4</ZIndex>
+            <ZIndex>2</ZIndex>
             <Visibility>
               <Hidden>=IIf(IsNothing(Parameters!Sig2.Value) OrElse Parameters!Sig2.Value = "", True, False)</Hidden>
             </Visibility>
@@ -727,6 +713,7 @@
                       <TextRun>
                         <Value>=Parameters!Sig3.Value</Value>
                         <Style>
+                          <FontFamily>Tw Cen MT</FontFamily>
                           <Color>#055a87</Color>
                         </Style>
                       </TextRun>
@@ -758,7 +745,7 @@
             <Left>4.19816in</Left>
             <Height>0.50155in</Height>
             <Width>1.74259in</Width>
-            <ZIndex>5</ZIndex>
+            <ZIndex>3</ZIndex>
             <Visibility>
               <Hidden>=IIf(IsNothing(Parameters!Sig3.Value) OrElse Parameters!Sig3.Value = "", True, False)</Hidden>
             </Visibility>
@@ -791,6 +778,7 @@
                       <TextRun>
                         <Value>=Parameters!Sig4.Value</Value>
                         <Style>
+                          <FontFamily>Tw Cen MT</FontFamily>
                           <Color>#055a87</Color>
                         </Style>
                       </TextRun>
@@ -822,7 +810,7 @@
             <Left>6.03415in</Left>
             <Height>0.50155in</Height>
             <Width>1.99953in</Width>
-            <ZIndex>6</ZIndex>
+            <ZIndex>4</ZIndex>
             <Visibility>
               <Hidden>=IIf(IsNothing(Parameters!Sig4.Value) OrElse Parameters!Sig4.Value = "", True, False)</Hidden>
             </Visibility>
@@ -832,70 +820,6 @@
               </Border>
             </Style>
           </Rectangle>
-          <Textbox Name="InvoiceNumber5">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=FormatNumber(Sum(Fields!Credit.Value), 2)</Value>
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Right</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>InvoiceNumber</rd:DefaultName>
-            <Top>0.74443in</Top>
-            <Left>7.20148in</Left>
-            <Height>0.2139in</Height>
-            <Width>0.94755in</Width>
-            <ZIndex>7</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="InvoiceNumber6">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=FormatNumber(Sum(Fields!Debit.Value), 2)</Value>
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Right</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>InvoiceNumber</rd:DefaultName>
-            <Top>0.74443in</Top>
-            <Left>6.08624in</Left>
-            <Height>0.2139in</Height>
-            <Width>0.94755in</Width>
-            <ZIndex>8</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Textbox Name="Textbox48">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
@@ -919,7 +843,7 @@
             <Left>0.19835in</Left>
             <Height>0.2139in</Height>
             <Width>7.88632in</Width>
-            <ZIndex>9</ZIndex>
+            <ZIndex>5</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -944,6 +868,7 @@
                   <TextRun>
                     <Value>=Parameters!User.Value</Value>
                     <Style>
+                      <FontFamily>Tw Cen MT</FontFamily>
                       <Color>#055a87</Color>
                     </Style>
                   </TextRun>
@@ -958,7 +883,7 @@
             <Left>0.97465in</Left>
             <Height>0.25in</Height>
             <Width>1in</Width>
-            <ZIndex>10</ZIndex>
+            <ZIndex>6</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -978,6 +903,7 @@
                   <TextRun>
                     <Value>@Username : </Value>
                     <Style>
+                      <FontFamily>Tw Cen MT</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <Color>#055a87</Color>
                     </Style>
@@ -993,7 +919,7 @@
             <Left>0.14736in</Left>
             <Height>0.25in</Height>
             <Width>1.08606in</Width>
-            <ZIndex>11</ZIndex>
+            <ZIndex>7</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1013,6 +939,7 @@
                   <TextRun>
                     <Value>Rupees : </Value>
                     <Style>
+                      <FontFamily>Tw Cen MT</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <Color>#055a87</Color>
                     </Style>
@@ -1020,6 +947,7 @@
                   <TextRun>
                     <Value>=Code.NumberToWords(Sum(Fields!Debit.Value))</Value>
                     <Style>
+                      <FontFamily>Tw Cen MT</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <Color>#055a87</Color>
                     </Style>
@@ -1027,6 +955,7 @@
                   <TextRun>
                     <Value> ONLY</Value>
                     <Style>
+                      <FontFamily>Tw Cen MT</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <Color>#055a87</Color>
                     </Style>
@@ -1040,7 +969,7 @@
             <Left>0.13643in</Left>
             <Height>0.2139in</Height>
             <Width>8.03688in</Width>
-            <ZIndex>12</ZIndex>
+            <ZIndex>8</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1056,6 +985,137 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Rectangle Name="Rectangle2">
+            <ReportItems>
+              <Line Name="Line7">
+                <Top>0.3166in</Top>
+                <Left>4.92267in</Left>
+                <Height>0in</Height>
+                <Width>3.08917in</Width>
+                <Style>
+                  <Border>
+                    <Color>#055a87</Color>
+                    <Style>Solid</Style>
+                  </Border>
+                </Style>
+              </Line>
+              <Textbox Name="BranchPhone2">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>Total  :</Value>
+                        <Style>
+                          <FontFamily>Tw Cen MT</FontFamily>
+                          <FontSize>11pt</FontSize>
+                          <Color>#055a87</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>BranchPhone</rd:DefaultName>
+                <Top>0.06374in</Top>
+                <Left>5.02551in</Left>
+                <Height>0.2139in</Height>
+                <Width>0.65169in</Width>
+                <ZIndex>1</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="InvoiceNumber5">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=FormatNumber(Sum(Fields!Credit.Value), 2)</Value>
+                        <Style>
+                          <FontFamily>Tw Cen MT</FontFamily>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>InvoiceNumber</rd:DefaultName>
+                <Top>0.06374in</Top>
+                <Left>6.96605in</Left>
+                <Height>0.2139in</Height>
+                <Width>1.0458in</Width>
+                <ZIndex>2</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="InvoiceNumber6">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=FormatNumber(Sum(Fields!Debit.Value), 2)</Value>
+                        <Style>
+                          <FontFamily>Tw Cen MT</FontFamily>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>InvoiceNumber</rd:DefaultName>
+                <Top>0.06374in</Top>
+                <Left>5.76367in</Left>
+                <Height>0.2139in</Height>
+                <Width>1.13294in</Width>
+                <ZIndex>3</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+            </ReportItems>
+            <KeepTogether>true</KeepTogether>
+            <Top>0.70638in</Top>
+            <Left>0.13715in</Left>
+            <Height>0.38033in</Height>
+            <Width>8.02618in</Width>
+            <ZIndex>9</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Rectangle>
         </ReportItems>
         <Height>3.21463in</Height>
         <Style>
@@ -1081,6 +1141,7 @@
                       <Value>Print Date:</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
+                        <FontFamily>Tw Cen MT</FontFamily>
                         <FontWeight>Bold</FontWeight>
                         <Color>#055a87</Color>
                       </Style>
@@ -1114,6 +1175,7 @@
                       <Value>Page No:</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
+                        <FontFamily>Tw Cen MT</FontFamily>
                         <FontWeight>Bold</FontWeight>
                         <Color>#055a87</Color>
                       </Style>
@@ -1147,6 +1209,7 @@
                     <TextRun>
                       <Value>=Globals!ExecutionTime</Value>
                       <Style>
+                        <FontFamily>Tw Cen MT</FontFamily>
                         <Format>dd/MM/yyyy</Format>
                         <Color>#055a87</Color>
                       </Style>
@@ -1183,6 +1246,7 @@
                     <TextRun>
                       <Value>=Globals!PageNumber</Value>
                       <Style>
+                        <FontFamily>Tw Cen MT</FontFamily>
                         <Color>#055a87</Color>
                       </Style>
                     </TextRun>
@@ -1232,6 +1296,7 @@
                       <Value>=Parameters!Header.Value</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
+                        <FontFamily>Tw Cen MT</FontFamily>
                         <FontSize>12pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Color>White</Color>
@@ -1273,6 +1338,7 @@
                           <Value>Transaction :</Value>
                           <Style>
                             <FontStyle>Normal</FontStyle>
+                            <FontFamily>Tw Cen MT</FontFamily>
                             <FontWeight>Bold</FontWeight>
                             <Color>#055a87</Color>
                           </Style>
@@ -1306,6 +1372,7 @@
                           <Value>Description :</Value>
                           <Style>
                             <FontStyle>Normal</FontStyle>
+                            <FontFamily>Tw Cen MT</FontFamily>
                             <FontWeight>Bold</FontWeight>
                             <Color>#055a87</Color>
                           </Style>
@@ -1338,7 +1405,9 @@
                       <TextRuns>
                         <TextRun>
                           <Value>=Parameters!InvoiceNumber.Value</Value>
-                          <Style />
+                          <Style>
+                            <FontFamily>Tw Cen MT</FontFamily>
+                          </Style>
                         </TextRun>
                       </TextRuns>
                       <Style />
@@ -1370,6 +1439,7 @@
                           <Value>Approval :</Value>
                           <Style>
                             <FontStyle>Normal</FontStyle>
+                            <FontFamily>Tw Cen MT</FontFamily>
                             <FontWeight>Bold</FontWeight>
                             <Color>#055a87</Color>
                           </Style>
@@ -1404,6 +1474,7 @@
                           <Value>Date :</Value>
                           <Style>
                             <FontStyle>Normal</FontStyle>
+                            <FontFamily>Tw Cen MT</FontFamily>
                             <FontWeight>Bold</FontWeight>
                             <Color>#055a87</Color>
                           </Style>
@@ -1413,7 +1484,7 @@
                     </Paragraph>
                   </Paragraphs>
                   <rd:DefaultName>Textbox39</rd:DefaultName>
-                  <Top>0.0882in</Top>
+                  <Top>0.09511in</Top>
                   <Left>0.18355in</Left>
                   <Height>0.20833in</Height>
                   <Width>0.80054in</Width>
@@ -1436,7 +1507,9 @@
                       <TextRuns>
                         <TextRun>
                           <Value>=Parameters!Status.Value</Value>
-                          <Style />
+                          <Style>
+                            <FontFamily>Tw Cen MT</FontFamily>
+                          </Style>
                         </TextRun>
                       </TextRuns>
                       <Style />
@@ -1466,7 +1539,9 @@
                       <TextRuns>
                         <TextRun>
                           <Value>=Parameters!Date.Value</Value>
-                          <Style />
+                          <Style>
+                            <FontFamily>Tw Cen MT</FontFamily>
+                          </Style>
                         </TextRun>
                       </TextRuns>
                       <Style />
@@ -1496,7 +1571,9 @@
                       <TextRuns>
                         <TextRun>
                           <Value>=Parameters!Comment.Value</Value>
-                          <Style />
+                          <Style>
+                            <FontFamily>Tw Cen MT</FontFamily>
+                          </Style>
                         </TextRun>
                       </TextRuns>
                       <Style />
