@@ -1415,6 +1415,32 @@ namespace Empire_ERP.Infrastructure.Repositories
                                 jsonDataResult.Add(row);
                             }
                         }
+                        else if (report.ReportID == 146)
+                        {
+                            while (reader.Read())
+                            {
+                                var row = new CustomSalesInvoiceReport
+                                {
+                                    Category = reader["CATEGORY"] == DBNull.Value ? "" : Convert.ToString(reader["CATEGORY"]),
+                                    SubCategory = reader["SUB_CATEGORY"] == DBNull.Value ? "" : Convert.ToString(reader["SUB_CATEGORY"]),
+                                    Days30 = reader["30_DAYS"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["30_DAYS"]),
+                                    Days60 = reader["60_DAYS"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["60_DAYS"]),
+                                    Days90 = reader["90_DAYS"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["90_DAYS"]),
+                                    Days120 = reader["120_DAYS"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["120_DAYS"]),
+                                    Days150 = reader["150_DAYS"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["150_DAYS"]),
+                                    Days180 = reader["180_DAYS"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["180_DAYS"]),
+                                    Days210 = reader["210_DAYS"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["210_DAYS"]),
+                                    Days240 = reader["240_DAYS"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["240_DAYS"]),
+                                    Days270 = reader["270_DAYS"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["270_DAYS"]),
+                                    Days300 = reader["300_DAYS"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["300_DAYS"]),
+                                    Days330 = reader["330_DAYS"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["330_DAYS"]),
+                                    Days330Plus = reader["330_PLUS"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["330_PLUS"]),
+                                    Balance = reader["BALANCE"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["BALANCE"]),
+                                    BName = reader["B_NAME"] == DBNull.Value ? "" : Convert.ToString(reader["B_NAME"]),
+                                };
+                                jsonDataResult.Add(row);
+                            }
+                        }
 
                         reader.Close();
                     }

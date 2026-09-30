@@ -1602,6 +1602,35 @@
                 }
             ];
         }
+        else if (reportId == 146) {
+            col = [
+                { dataField: 'category', caption: 'Category' },
+                { dataField: 'subCategory', caption: 'Sub Category' },
+                {
+                    caption: "Days",
+                    alignment: "center",
+                    headerCellTemplate(container) {
+                        container.addClass("merged-header").html("<strong>Days</strong>");
+                    },
+                    columns: [
+                        { dataField: 'days30', caption: '30', dataType: 'number', width: 70 },
+                        { dataField: 'days60', caption: '60', dataType: 'number', width: 70 },
+                        { dataField: 'days90', caption: '90', dataType: 'number', width: 70 },
+                        { dataField: 'days120', caption: '120', dataType: 'number', width: 70 },
+                        { dataField: 'days150', caption: '150', dataType: 'number', width: 70 },
+                        { dataField: 'days180', caption: '180', dataType: 'number', width: 70 },
+                        { dataField: 'days210', caption: '210', dataType: 'number', width: 70 },
+                        { dataField: 'days240', caption: '240', dataType: 'number', width: 70 },
+                        { dataField: 'days270', caption: '270', dataType: 'number', width: 70 },
+                        { dataField: 'days300', caption: '300', dataType: 'number', width: 70 },
+                        { dataField: 'days330', caption: '330', dataType: 'number', width: 70 },
+                        { dataField: 'days330Plus', caption: '330+', dataType: 'number', width: 80 },
+                    ]
+                },
+                { dataField: 'balance', caption: 'Balance', dataType: 'number', width: 90 },
+                { dataField: 'bName', caption: 'Branch' },
+            ];
+        }
         //debugger;
         if ($('#ReportGridContainer').data('dxDataGrid') != undefined) {
             $('#ReportGridContainer').data('dxDataGrid').dispose();
@@ -1612,7 +1641,7 @@
         debugger;
 
         ////landscape
-        if (reportId == 138 || reportId == 60 || reportId == 137 || reportId == 59 | reportId == 61 || reportId == 62 || reportId == 63 || reportId == 65 || reportId == 125 || reportId == 145) {
+        if (reportId == 138 || reportId == 60 || reportId == 137 || reportId == 59 | reportId == 61 || reportId == 62 || reportId == 63 || reportId == 65 || reportId == 125 || reportId == 145 || reportId == 146) {
             empr_helper.DxGridBindingForReportsWithSetting_Aging('#ReportGridContainer', col, dataSrc, empr_helper.reportName, true);
             console.log('1 DxGridBindingForReportsWithSetting_Aging');
         }
@@ -1643,7 +1672,7 @@
             else {
                 empr_helper.DxGridBindingForReportsWithSetting('#ReportGridContainer', col, dataSrc, empr_helper.reportName);
             }
-            if (reportId == 138 || reportId == 60 || reportId == 137 || reportId == 59 | reportId == 61 || reportId == 62 || reportId == 63 || reportId == 65 || reportId == 125 || reportId == 145) {
+            if (reportId == 138 || reportId == 60 || reportId == 137 || reportId == 59 | reportId == 61 || reportId == 62 || reportId == 63 || reportId == 65 || reportId == 125 || reportId == 145 || reportId == 146) {
                 empr_helper.DxGridBindingForReportsWithSetting_Aging('#ReportGridContainer', col, dataSrc, empr_helper.reportName, true);
 
             }

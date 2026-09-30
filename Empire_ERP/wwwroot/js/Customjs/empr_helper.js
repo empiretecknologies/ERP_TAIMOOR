@@ -8131,6 +8131,114 @@
                         }
                     },
                     {
+                        column: "days30",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days60",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days90",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days120",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days150",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days180",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days210",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days240",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days270",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days300",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days330",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days330Plus",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
                         column: "balance",
                         summaryType: "sum",
                         displayFormat: "{0}",
@@ -10323,7 +10431,7 @@
                 if (['debit', 'credit', 'balance', 'balance2', 'amt', 'rate', 'posQty', 'disc', 'mDisc_Amt', 'tax', 'taxAmt', 'adV_TAX', 'adV_TAX_AMT', 'netAmt', 'totalBalance',
                     'stock', 'profitAndLoss', 'pAmt', 'pbRate', 'wRate', 'wAmt', 'cashTax', 'bankTax', 'partyTax', 'totalSales', 'cash', 'cardType', 'party', 'qty', 'rate', 'disc',
                     'balanced', 'totaL_QTY', 'totaL_R_PRICE', 'totaL_DISC', 'totaL_PRICE', 'totaL_WS_PRICE', 'stkT_WS_PRICE', 'totaL_EXP', 'factorY_TRANSFER', 'casH_SALE', 'banK_W_CH',
-                    'neT_PROFIT1', 'totaL_COST', 'neT_PROFIT2'].includes(column.dataField)) {
+                    'neT_PROFIT1', 'totaL_COST', 'neT_PROFIT2', 'days30', 'days60', 'days90', 'days120', 'days150', 'days180', 'days210', 'days240', 'days270', 'days300', 'days330', 'days330Plus'].includes(column.dataField)) {
                     if (value === 0) {
                         $(e.cellElement).text('');
                     } else if (value !== null && value !== undefined && !isNaN(value)) {
@@ -10511,6 +10619,126 @@
                     //},
                     {
                         column: "pPrice",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: true,
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days30",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: true,
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days60",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: true,
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days90",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: true,
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days120",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: true,
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days150",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: true,
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days180",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: true,
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days210",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: true,
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days240",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: true,
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days270",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: true,
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days300",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: true,
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days330",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        showInGroupFooter: true,
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days330Plus",
                         summaryType: "sum",
                         displayFormat: "{0}",
                         showInGroupFooter: true,
@@ -11048,6 +11276,114 @@
                     },
                     {
                         column: "amount",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days30",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days60",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days90",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days120",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days150",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days180",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days210",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days240",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days270",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days300",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days330",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: '#,##0',
+                        customizeText: function (e) {
+                            return e.value === 0 ? "" : e.value.toLocaleString('en-US');
+                        }
+                    },
+                    {
+                        column: "days330Plus",
                         summaryType: "sum",
                         displayFormat: "{0}",
                         valueFormat: '#,##0',

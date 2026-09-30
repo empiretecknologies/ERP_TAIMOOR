@@ -94,6 +94,18 @@
         public string? SubCategory { get; set; }
         public string? Desc { get; set; }
         public decimal? Balance { get; set; }
+        public decimal? Days30 { get; set; }
+        public decimal? Days60 { get; set; }
+        public decimal? Days90 { get; set; }
+        public decimal? Days120 { get; set; }
+        public decimal? Days150 { get; set; }
+        public decimal? Days180 { get; set; }
+        public decimal? Days210 { get; set; }
+        public decimal? Days240 { get; set; }
+        public decimal? Days270 { get; set; }
+        public decimal? Days300 { get; set; }
+        public decimal? Days330 { get; set; }
+        public decimal? Days330Plus { get; set; }
         public decimal? Balance2 { get; set; }
         public decimal? TotalBalance { get; set; }
         public decimal? Total { get; set; }
