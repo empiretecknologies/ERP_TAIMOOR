@@ -226,7 +226,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                                         "ASTATUS,ADD_DATE,ADD_COMPUTER_NAME,ADD_IP_ADDRESS," +
                                         "EDIT_USER_ID,EDIT_DATE,EDIT_COMPUTER_NAME,EDIT_IP_ADDRESS," +
                                         "ADD_POSTALCODE,EDIT_POSTALCODE,MENU_ID," +
-                                        "ADD_USER_ID,DLT,GRADE,ITEM_TYPE, CAT_CODE, SUB_CAT_CODE,HS_CODE)" +
+                                        "ADD_USER_ID,DLT,GRADE,ITEM_TYPE, CAT_CODE, SUB_CAT_CODE,HS_CODE,IS_IMPORTED)" +
                                         "VALUES" +
                                         "('" + newItemCode + "','" + modelRecord.ITEM_ID + "','" + modelRecord.COLOR + "','" + modelRecord.SIZE + "','" + modelRecord.ITEM_NAME + "','" + modelRecord.ITEM_SHORT_NAME + "','" + modelRecord.BITYPE + "','" + modelRecord.BARCODE + "','" + modelRecord.WEIGHT + "'," +
                                         "'" + modelRecord.REMARKS + "','" + modelRecord.GROUP_CODE + "','" + modelRecord.IUNIT_CODE + "','" + modelRecord.PACK + "','" + modelRecord.PUNIT_CODE + "','" + modelRecord.SALE_RATE + "'," +
@@ -234,7 +234,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                                         "'" + modelRecord.ASTATUS + "','" + CommonService.GetDateTime("Pakistan Standard Time") + "','" + Computer + "','" + Ip + "'," +
                                         "'" + common.Username + "','" + CommonService.GetDateTime("Pakistan Standard Time") + "','" + Computer + "','" + Ip + "'," +
                                         "'" + Postal + "','" + Postal + "','" + common.MenuID + "'," +
-                                        "'" + common.Username + "','T','" + modelRecord.GRADE + "','" + modelRecord.ITEM_TYPE + "','" + modelRecord.CAT_CODE + "','" + modelRecord.SUB_CAT_CODE + "','" + modelRecord.HS_CODE + "')";
+                                        "'" + common.Username + "','T','" + modelRecord.GRADE + "','" + modelRecord.ITEM_TYPE + "','" + modelRecord.CAT_CODE + "','" + modelRecord.SUB_CAT_CODE + "','" + modelRecord.HS_CODE + "','" + modelRecord.IS_IMPORTED + "')";
                                 command.CommandText = query;
                                 command.ExecuteNonQuery();
 
@@ -300,6 +300,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                                             ITEM_MINI = '" + modelRecord.ITEM_MIN + @"',
                                             IPIC = '" + modelRecord.IPIC + @"',
                                             ASTATUS = '" + modelRecord.ASTATUS + @"',
+                                            IS_IMPORTED = '" + modelRecord.IS_IMPORTED + @"',
                                             EDIT_USER_ID = '" + common.Username + @"',
                                             EDIT_DATE = '" + CommonService.GetDateTime("Pakistan Standard Time") + @"',
                                             EDIT_COMPUTER_NAME = '" + Computer + @"',
@@ -992,7 +993,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                         //                LEFT OUTER JOIN TBL_ITEM_ATT AI ON AI.ITEM_CODE = IT.ITEM_CODE AND AI.DLT = 'T'
                         //                WHERE IT.DLT = 'T' AND IT.ITEM_CODE = '{code}'";
 
-                        string query = $@"SELECT IT.WEIGHT,IT.BARCODE_TYPE,IT.BARCODE,IT.COLOR,IT.SIZE, IT.HS_CODE, IT.ITEM_CODE,IT.ITEM_ID,IT.ITEM_NAME,IT.ITEM_SHORT_NAME,IT.REMARKS,IT.GROUP_CODE,IT.IUNIT_CODE,IT.PACK,IT.PUNIT_CODE,IT.SALE_RATE,
+                        string query = $@"SELECT IT.WEIGHT,IT.BARCODE_TYPE,IT.BARCODE,IT.IS_IMPORTED,IT.COLOR,IT.SIZE, IT.HS_CODE, IT.ITEM_CODE,IT.ITEM_ID,IT.ITEM_NAME,IT.ITEM_SHORT_NAME,IT.REMARKS,IT.GROUP_CODE,IT.IUNIT_CODE,IT.PACK,IT.PUNIT_CODE,IT.SALE_RATE,
                                         IT.PURCHASE_RATE,IT.SALESTAX,IT.ITAX_STATUS,
                                         IT.ITEM_MAX,IT.ITEM_MINI,IT.IPIC,IT.GRADE,IT.ASTATUS,IT.ITEM_TYPE,
 										CAT_CODE, SUB_CAT_CODE, GRADE, FABRIC, SEASON, STYLE
@@ -1026,6 +1027,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                                 ITAX_STATUS = reader["ITAX_STATUS"] == DBNull.Value ? 0 : Convert.ToInt32(reader["ITAX_STATUS"]),
                                 ITEM_MAX = reader["ITEM_MAX"] == DBNull.Value ? 0 : Convert.ToDouble(reader["ITEM_MAX"]),
                                 ITEM_MIN = reader["ITEM_MINI"] == DBNull.Value ? 0 : Convert.ToInt32(reader["ITEM_MINI"]),
+                                IS_IMPORTED = reader["IS_IMPORTED"] == DBNull.Value ? 0 : Convert.ToInt32(reader["IS_IMPORTED"]),
                                 IPIC = Convert.ToString(reader["IPIC"]),
                                 GRADE = reader["GRADE"] == DBNull.Value ? 0 : Convert.ToInt32(reader["GRADE"]),
                                 ASTATUS = Convert.ToString(reader["ASTATUS"]),

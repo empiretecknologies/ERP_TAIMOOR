@@ -853,6 +853,7 @@ var empr_ItemMaster = {
                 $('#SIZE').dxSelectBox('instance').option("value", response.size);
                 $("#ID").val(response.id)
                 $("#HS_CODE").val(response.hS_CODE)
+                $("#IS_IMPORTED").prop('checked', response.iS_IMPORTED == 1 || response.iS_IMPORTED == true);
                 $("#Code").val(response.iteM_CODE)
                 $("#ITEM_ID").val(response.iteM_ID)
                 $("#ADD_USER_ID").val(response.adD_USER_ID)
@@ -1119,6 +1120,7 @@ var empr_ItemMaster = {
         var Discount = $("#Discount").val();
         var Size = $("#sizesingle_hidden").val();
         var BLabel = $("#label_hidden").val();
+        var Is_Imported = $("#IS_IMPORTED").val();
         var modelRecord = {
             CODE: CODE,
             ITEM_CODE: ITEM_CODE,
@@ -1133,7 +1135,8 @@ var empr_ItemMaster = {
             WSALE: WholeSale,
             RRATE: Retail,
             DRATE: Discount,
-            BLABEL: BLabel
+            BLABEL: BLabel,
+            IS_IMPORTED: Is_Imported
         }
         return modelRecord;
     },
@@ -1316,6 +1319,7 @@ var empr_ItemMaster = {
         var ITEM_TYPE = $('#ITEM_TYPE').dxSelectBox('instance').option('value');
         var COLOR = $('#COLOR').dxSelectBox('instance').option('value');
         var SIZE = $('#SIZE').dxSelectBox('instance').option('value');
+        var IS_IMPORTED = $("#IS_IMPORTED").is(':checked') ? 1 : 0;
         //var CAT_CODE = $('#CAT_CODE').dxSelectBox('instance').option('value');
         //var SUB_CAT_CODE = $('#SUB_CAT_CODE').dxSelectBox('instance').option('value');
         var modelRecord = {
@@ -1343,7 +1347,8 @@ var empr_ItemMaster = {
             COLOR: COLOR,
             SIZE: SIZE,
             BITYPE: BITYPE,
-            BARCODE: BARCODE
+            BARCODE: BARCODE,
+            IS_IMPORTED: IS_IMPORTED
             //CAT_CODE: CAT_CODE,
             //SUB_CAT_CODE: SUB_CAT_CODE
         }
@@ -1524,6 +1529,7 @@ var empr_ItemMaster = {
         $("#displayExpr_package").val('');
         $("#grade_hidden").val('');
         $("#displayExpr_grade").val('');
+        $("#IS_IMPORTED").prop('checked', true);
 
         empr_ItemMaster.InitUnitDDL();
         empr_ItemMaster.InitPackageDDL();

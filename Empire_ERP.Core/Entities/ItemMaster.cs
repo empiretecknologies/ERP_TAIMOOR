@@ -19,6 +19,7 @@ namespace Empire_ERP.Core.Entities
         public int? GROUP_CODE { get; set; }
         public int? IUNIT_CODE { get; set; }
         public int? SIZE { get; set; }
+        public int? IS_IMPORTED { get; set; }
         public int? COLOR { get; set; }
         public string? PACK { get; set; }
         public int? PUNIT_CODE { get; set; }
