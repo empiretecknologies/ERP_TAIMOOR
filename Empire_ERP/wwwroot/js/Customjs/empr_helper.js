@@ -10285,7 +10285,9 @@
                     const requestGrids = grids.map(g => {
                         const grid = g.instance;
 
-                        const visibleCols = grid.getVisibleColumns().map(c => ({
+                        const visibleCols = grid.getVisibleColumns().filter(function (c) {
+                            return c.dataField;
+                        }).map(c => ({
                             dataField: c.dataField,
                             caption: c.caption || c.dataField
                         }));
@@ -10325,7 +10327,8 @@
                             GroupColumnsCap: groupColsCap,
                             GroupColumns: groupCols,
                             Totals: totals,
-                            IsLandscape: isLandscape
+                            IsLandscape: isLandscape,
+                            ColumnOrder: visibleCols.map(function (col) { return col.caption; }).filter(function (cap) { return cap; })
                         };
                     });
 

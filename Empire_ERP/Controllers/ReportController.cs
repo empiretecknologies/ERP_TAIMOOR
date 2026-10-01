@@ -65,7 +65,7 @@ namespace Empire_ERP.Controllers
 
                 // Build from every row's keys so a missing group field on row 1
                 // cannot leave later group columns as DBNull on that row.
-                DataTable dt = BuildGridDataTable(flatList, gridReq.GroupColumnsCap);
+                DataTable dt = BuildGridDataTable(flatList, gridReq.GroupColumnsCap, gridReq.ColumnOrder);
 
                 if (dt == null || dt.Rows.Count == 0)
                     continue;
@@ -916,11 +916,20 @@ namespace Empire_ERP.Controllers
             }
         }
 
-        DataTable BuildGridDataTable(List<Dictionary<string, object>> rows, List<string> groupColumns)
+        DataTable BuildGridDataTable(List<Dictionary<string, object>> rows, List<string> groupColumns, List<string> columnOrder)
         {
             DataTable dt = new DataTable();
             if (rows == null || rows.Count == 0)
                 return dt;
+
+            if (columnOrder != null)
+            {
+                foreach (var col in columnOrder)
+                {
+                    if (!string.IsNullOrEmpty(col) && !dt.Columns.Contains(col))
+                        dt.Columns.Add(col, typeof(string));
+                }
+            }
 
             foreach (var row in rows)
             {
@@ -1228,6 +1237,7 @@ namespace Empire_ERP.Controllers
 
         public string GridTitle { get; set; }
         public List<string> GroupColumnsCap { get; set; } = new();
+        public List<string> ColumnOrder { get; set; } = new();
     }
 
     public class PDFRequest
