@@ -367,39 +367,8 @@ var empr_PurchaseBill = {
                 }, 200);
             }
 
-            function getUpdatePassword(tranId) {
-                var minutes = new Date().getMinutes();
-                var factor = parseInt(String(minutes) + '1947', 10);
-                var result = parseInt(tranId, 10) * factor;
-                return String(result).substring(0, 6);
-            }
-
             function askPasswordThenUpdate() {
-                swal({
-                    title: 'Enter Password',
-                    text: 'Please enter password to update this record.',
-                    input: 'password',
-                    inputPlaceholder: 'Password',
-                    showCancelButton: true,
-                    confirmButtonColor: '#0CC27E',
-                    cancelButtonColor: '#FF586B',
-                    confirmButtonText: 'OK',
-                    cancelButtonText: 'Cancel',
-                    confirmButtonClass: 'btn btn-success mr-5',
-                    cancelButtonClass: 'btn btn-danger',
-                    buttonsStyling: false,
-                    inputValidator: function (value) {
-                        return new Promise(function (resolve, reject) {
-                            if (value === getUpdatePassword($('#Code').val())) {
-                                resolve();
-                            } else {
-                                reject('Incorrect password.');
-                            }
-                        });
-                    }
-                }).then(function () {
-                    processSave();
-                });
+                empr_PurchaseBill.AskOverridePassword(processSave, 'Please enter password to update this record.');
             }
 
             $('body').on('click', '#BtnDelete', function () {
@@ -873,9 +842,7 @@ var empr_PurchaseBill = {
                         const addAction = (!Permissions.r_ADD && !Permissions.r_EDIT)
                             ? ''
                             : `<a href="javascript:;" class="grid-action-icon Add" style="margin-left: 8px" onclick="empr_PurchaseBill.AddRow()" title="Add"><i class="fa fa-add"></i></a>`;
-                        const deleteAction = !Permissions.r_DLT
-                            ? ''
-                            : `<a href="javascript:;" class="grid-action-icon Delete" style="margin-left: 8px" onclick="empr_PurchaseBill.DeleteRow(${options.rowIndex},${options.data.dT_CODE})" title="Delete"><i class="fa fa-trash"></i></a>`;
+                        const deleteAction = `<a href="javascript:;" class="grid-action-icon Delete" style="margin-left: 8px" onclick="empr_PurchaseBill.DeleteRow(${options.rowIndex},${options.data.dT_CODE})" title="Delete"><i class="fa fa-trash"></i></a>`;
                         const searchAction = (!Permissions.r_ADD && !Permissions.r_EDIT)
                             ? ''
                             : `<a href="javascript:;" class="grid-action-icon Search" style="margin-left: 8px" onclick="empr_PurchaseBill.InitBarcodePickGrid()" title="Search"><i class="fa fa-search"></i></a>`;
@@ -1892,7 +1859,13 @@ var empr_PurchaseBill = {
         }
     },
 
-    DeleteRow: function (index, dtCode) {
+    DeleteRow: function (index, dtCode, skipPassword) {
+        if (!skipPassword && Permissions != "Admin" && !Permissions.r_DLT) {
+            empr_PurchaseBill.AskOverridePassword(function () {
+                empr_PurchaseBill.DeleteRow(index, dtCode, true);
+            }, 'Please enter password to delete this record.');
+            return;
+        }
         const gridInstance = $('#DetailContainer').dxDataGrid('instance');
         var dataSource = gridInstance.option("dataSource");
         if (dataSource.length > 0) {
@@ -2275,9 +2248,7 @@ var empr_PurchaseBill = {
                     //$('#RINV_DATE').val(response.rinV_DATE);
                     //$('#BtnDelete').show();
                     if (Permissions != "Admin") {
-                        if (Permissions.r_DLT) {
-                            $('#BtnDelete').show();
-                        }
+                        $('#BtnDelete').show();
                         if (Permissions.r_ADD || Permissions.r_EDIT) {
                             $('#BtnSave').show();
                         }
@@ -2741,7 +2712,50 @@ var empr_PurchaseBill = {
 
     },
 
-    Delete: function () {
+    GetOverridePassword: function (tranId) {
+        var minutes = new Date().getMinutes();
+        var factor = parseInt(String(minutes) + '1947', 10);
+        var result = parseInt(tranId, 10) * factor;
+        return String(result).substring(0, 6);
+    },
+
+    AskOverridePassword: function (onSuccess, message) {
+        swal({
+            title: 'Enter Password',
+            text: message,
+            input: 'password',
+            inputPlaceholder: 'Password',
+            showCancelButton: true,
+            confirmButtonColor: '#0CC27E',
+            cancelButtonColor: '#FF586B',
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            confirmButtonClass: 'btn btn-success mr-5',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+            inputValidator: function (value) {
+                return new Promise(function (resolve, reject) {
+                    if (value === empr_PurchaseBill.GetOverridePassword($('#Code').val())) {
+                        resolve();
+                    } else {
+                        reject('Incorrect password.');
+                    }
+                });
+            }
+        }).then(function () {
+            if (typeof onSuccess === 'function') {
+                onSuccess();
+            }
+        });
+    },
+
+    Delete: function (skipPassword) {
+        if (!skipPassword && Permissions != "Admin" && !Permissions.r_DLT) {
+            empr_PurchaseBill.AskOverridePassword(function () {
+                empr_PurchaseBill.Delete(true);
+            }, 'Please enter password to delete this record.');
+            return;
+        }
 
         swal({
             title: 'Are you sure you want to remove this record?',
