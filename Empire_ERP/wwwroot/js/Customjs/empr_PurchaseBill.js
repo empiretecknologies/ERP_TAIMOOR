@@ -329,8 +329,12 @@ var empr_PurchaseBill = {
 
                     }
                     else if (($("#Code").val() > 0) && !Permissions.r_EDIT) {
-                        empr_helper.notify("You are not allowed to edit records !", 2);
-                        $('#BtnSave').prop('disabled', false).show();
+                        if (Permissions.r_ADD) {
+                            askPasswordThenUpdate();
+                        } else {
+                            empr_helper.notify("You are not allowed to edit records !", 2);
+                            $('#BtnSave').prop('disabled', false).show();
+                        }
                         //setTimeout(function () {
                         //    $("#Loader").hide();
                         //}, 500);
@@ -361,6 +365,41 @@ var empr_PurchaseBill = {
                     }, 500);
 
                 }, 200);
+            }
+
+            function getUpdatePassword(tranId) {
+                var minutes = new Date().getMinutes();
+                var factor = parseInt(String(minutes) + '1947', 10);
+                var result = parseInt(tranId, 10) * factor;
+                return String(result).substring(0, 6);
+            }
+
+            function askPasswordThenUpdate() {
+                swal({
+                    title: 'Enter Password',
+                    text: 'Please enter password to update this record.',
+                    input: 'password',
+                    inputPlaceholder: 'Password',
+                    showCancelButton: true,
+                    confirmButtonColor: '#0CC27E',
+                    cancelButtonColor: '#FF586B',
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonClass: 'btn btn-success mr-5',
+                    cancelButtonClass: 'btn btn-danger',
+                    buttonsStyling: false,
+                    inputValidator: function (value) {
+                        return new Promise(function (resolve, reject) {
+                            if (value === getUpdatePassword($('#Code').val())) {
+                                resolve();
+                            } else {
+                                reject('Incorrect password.');
+                            }
+                        });
+                    }
+                }).then(function () {
+                    processSave();
+                });
             }
 
             $('body').on('click', '#BtnDelete', function () {
@@ -2239,7 +2278,7 @@ var empr_PurchaseBill = {
                         if (Permissions.r_DLT) {
                             $('#BtnDelete').show();
                         }
-                        if (Permissions.r_EDIT) {
+                        if (Permissions.r_ADD || Permissions.r_EDIT) {
                             $('#BtnSave').show();
                         }
                         else {
@@ -2690,7 +2729,7 @@ var empr_PurchaseBill = {
         $('#V_DATE').val(todayDate);
         $('#RINV_DATE').val(todayDate);
         if (Permissions != "Admin") {
-            if (Permissions.r_ADD) {
+            if (Permissions.r_ADD || Permissions.r_EDIT) {
                 $('#BtnSave').show();
             } else {
                 $('#BtnSave').hide();
