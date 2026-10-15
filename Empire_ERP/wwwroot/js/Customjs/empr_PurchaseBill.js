@@ -1633,6 +1633,26 @@ var empr_PurchaseBill = {
         }, 500);
     },
 
+    GetRecordsInSaveSequence: function (records) {
+        if (!Array.isArray(records)) {
+            return records;
+        }
+        var existing = [];
+        var newlyAdded = [];
+        $.each(records, function (index, item) {
+            if (item.dT_CODE == '' || item.dT_CODE == null || item.dT_CODE == undefined || item.dT_CODE == 0) {
+                newlyAdded.push(item);
+            } else {
+                existing.push(item);
+            }
+        });
+        existing.sort(function (a, b) {
+            return parseInt(a.dT_CODE) - parseInt(b.dT_CODE);
+        });
+        newlyAdded.reverse();
+        return existing.concat(newlyAdded);
+    },
+
     CloneRow: function (index) {
         //if (empr_PurchaseBill.pickIds.length > 0) {
         //    empr_helper.notify("Cannot clone row on return data.", 2);
@@ -2617,12 +2637,7 @@ var empr_PurchaseBill = {
 
     Save: function () {
         var dataModel = empr_PurchaseBill.GetDataToSave();
-        if (dataModel.Master.TRAN_ID == 0
-            || dataModel.Master.TRAN_ID == null
-            || dataModel.Master.TRAN_ID == undefined
-            || dataModel.Master.TRAN_ID == "") {
-            dataModel.Detail.reverse();
-        }
+        dataModel.Detail = empr_PurchaseBill.GetRecordsInSaveSequence(dataModel.Detail);
         debugger;
         ajaxHelper.ajaxPostJsonData(dataModel, "/PurchaseBill/Save", function (data) {
             $('#BtnSave').prop('disabled', false).show();
