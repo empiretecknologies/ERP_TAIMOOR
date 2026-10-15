@@ -779,39 +779,25 @@ var empr_ItemMaster = {
                 caption: 'Item ID',
                 visible: false,
             },
-            //{
-            //    dataField: 'adD_USER_ID',
-            //    caption: 'Created By',
-            //    visible: false,
-            //},
-            //{
-            //    dataField: 'adD_DATE',
-            //    caption: 'Created Date',
-            //    dataType: 'date',
-            //    visible: false,
-            //    format: 'dd-MM-yyy'
-            //},
-            //{
-            //    dataField: 'adD_COMPUTER_NAME',
-            //    caption: 'Created Computer',
-            //    visible: false,
-            //},
-            //{
-            //    dataField: 'adD_IP_ADDRESS',
-            //    caption: 'Created IP',
-            //    visible: false,
-            //},
             {
-                dataField: 'ediT_USER_ID',
-                caption: 'Created By',
-                visible: false,
+                dataField: 'adD_DATE',
+                caption: 'ADD_DATE',
+                dataType: 'date',
+                format: 'dd-MM-yyy'
             },
             {
                 dataField: 'ediT_DATE',
-                caption: 'Create Date',
+                caption: 'EDIT_DATE',
                 dataType: 'date',
-                visible: false,
                 format: 'dd-MM-yyy'
+            },
+            {
+                dataField: 'adD_USER_ID',
+                caption: 'ADD_USER',
+            },
+            {
+                dataField: 'ediT_USER_ID',
+                caption: 'EDIT_USER',
             },
             //{
             //    dataField: 'ediT_COMPUTER_NAME',
