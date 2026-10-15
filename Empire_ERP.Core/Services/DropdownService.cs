@@ -5476,17 +5476,17 @@ namespace Empire_ERP.Core.Services
             using (SqlConnection conn = new SqlConnection(new SQLService().getconnstring()))
             {
                 string query = "";
-                if (roleId > 0)
-                {
-                    if (showSelected == 1)
-                        query = $"SELECT PARTY_CODE,PARTY_NAME,ACT_CODE, REGION, PARTY_TYPE_CODE FROM TBL_PARTY_TYPES WHERE DLT = 'T' AND ASTATUS = 'Y' AND PARTY_CODE IN (SELECT RMENU_ID FROM TBL_ROLE WHERE R_BCODE = {Convert.ToInt32(branchId)} AND MODULE_ID = 6 AND ROLE_ID = {roleId}) AND ACT_CODE IN (SELECT ACT_CODE FROM TBL_ROLE WHERE R_BCODE = {Convert.ToInt32(branchId)} AND MODULE_ID = 6 AND ROLE_ID = {roleId})";
-                    else
-                        query = $"SELECT PARTY_CODE,PARTY_NAME,ACT_CODE, REGION, PARTY_TYPE_CODE FROM TBL_PARTY_TYPES WHERE DLT = 'T' AND ASTATUS = 'Y' AND PARTY_CODE NOT IN (SELECT RMENU_ID FROM TBL_ROLE WHERE R_BCODE = {Convert.ToInt32(branchId)} AND MODULE_ID = 6 AND ROLE_ID = {roleId}) AND ACT_CODE NOT IN (SELECT ACT_CODE FROM TBL_ROLE WHERE R_BCODE = {Convert.ToInt32(branchId)} AND MODULE_ID = 6 AND ROLE_ID = {roleId})";
-                }
-                else
-                {
+                //if (roleId > 0)
+                //{
+                //    if (showSelected == 1)
+                //        query = $"SELECT PARTY_CODE,PARTY_NAME,ACT_CODE, REGION, PARTY_TYPE_CODE FROM TBL_PARTY_TYPES WHERE DLT = 'T' AND ASTATUS = 'Y' AND PARTY_CODE IN (SELECT RMENU_ID FROM TBL_ROLE WHERE R_BCODE = {Convert.ToInt32(branchId)} AND MODULE_ID = 6 AND ROLE_ID = {roleId}) AND ACT_CODE IN (SELECT ACT_CODE FROM TBL_ROLE WHERE R_BCODE = {Convert.ToInt32(branchId)} AND MODULE_ID = 6 AND ROLE_ID = {roleId})";
+                //    else
+                //        query = $"SELECT PARTY_CODE,PARTY_NAME,ACT_CODE, REGION, PARTY_TYPE_CODE FROM TBL_PARTY_TYPES WHERE DLT = 'T' AND ASTATUS = 'Y' AND PARTY_CODE NOT IN (SELECT RMENU_ID FROM TBL_ROLE WHERE R_BCODE = {Convert.ToInt32(branchId)} AND MODULE_ID = 6 AND ROLE_ID = {roleId}) AND ACT_CODE NOT IN (SELECT ACT_CODE FROM TBL_ROLE WHERE R_BCODE = {Convert.ToInt32(branchId)} AND MODULE_ID = 6 AND ROLE_ID = {roleId})";
+                //}
+                //else
+                //{
                     query = "SELECT PARTY_CODE,PARTY_NAME,ACT_CODE, REGION, PARTY_TYPE_CODE FROM TBL_PARTY_TYPES WHERE DLT = 'T' AND ASTATUS = 'Y'";
-                }
+                //}
                 using (SqlCommand command = new SqlCommand(query, conn))
                 {
                     conn.Open();

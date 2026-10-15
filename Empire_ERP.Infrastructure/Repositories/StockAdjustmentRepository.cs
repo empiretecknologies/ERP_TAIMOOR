@@ -203,7 +203,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                             {
                                 DT_CODE = reader["DT_CODE"] == DBNull.Value ? string.Empty : Convert.ToString(reader["DT_CODE"]),
                                 ITEM_CODE = reader["ITEM_CODE"] == DBNull.Value ? 0 : Convert.ToInt32(reader["ITEM_CODE"]),
-                                QTY = reader["QTY"] == DBNull.Value ? "0" : Convert.ToString(reader["QTY"]), 
+                                QTY = reader["QTY"] == DBNull.Value ? "0" : Convert.ToString(reader["QTY"]),
                                 UNIT = reader["UNIT"] == DBNull.Value ? 0 : Convert.ToInt32(reader["UNIT"]),
                                 QTY2 = reader["QTY2"] == DBNull.Value ? "0" : Convert.ToString(reader["QTY2"]),
                                 BAL_QTY = reader["BAL_QTY"] == DBNull.Value ? "0" : Convert.ToString(reader["BAL_QTY"]),
@@ -957,8 +957,8 @@ namespace Empire_ERP.Infrastructure.Repositories
         public MyHttpResponseMessage GetDataForPrintReport(RDLCReport modelRecord, DataTable dataTable, CustomMenuDetail menuDetails, Company currentCompany, Branch currentBranch, Common common)
         {
             MyHttpResponseMessage response = new MyHttpResponseMessage();
-            StockAdjustmentForPrint masterData = new StockAdjustmentForPrint();
-            CustomStockAdjustmentForPrintReport reportData = new CustomStockAdjustmentForPrintReport();
+            StockTransferForPrint masterData = new StockTransferForPrint();
+            CustomStockTransferForPrintReport reportData = new CustomStockTransferForPrintReport();
             try
             {
                 var Menu = _menuRepository.GetMenu(common.MenuID);
@@ -980,70 +980,34 @@ namespace Empire_ERP.Infrastructure.Repositories
                 masterData.MENU_SIG2 = String.IsNullOrWhiteSpace(menuDetails.MENU_SIG2) ? true : false;
                 masterData.MENU_SIG3 = String.IsNullOrWhiteSpace(menuDetails.MENU_SIG3) ? true : false;
                 masterData.MENU_SIG4 = String.IsNullOrWhiteSpace(menuDetails.MENU_SIG4) ? true : false;
-                if (menuDetails.MD_ID == 68)
-                {
 
-                    string query = $@"
-                                SELECT 
-                                    M.V_DATE,
-                                    M.TRAN_ID,
-                                    M.VOUCHER_NO,
-                                    M.REF,
-                                    M.REMARKS,
-                                     CASE 
-                                            WHEN M.ASTATUS = 'Y' THEN 'Active' 
-                                            ELSE 'In-Active' 
-                                        END AS ASTATUS,
-
-	                                CASE 
-                                        WHEN M.AM = 'A' THEN 'AUTO' 
-                                        ELSE 'MANUAL' 
-                                    END AS AM,
-                                    D.ITEM_CODE,
-                                    D.QTY,
-                                    D.QTY2,
-                                    D.BAL_QTY,
-                                    IM.ITEM_NAME,
-                                    D.DT_DESC,
-                                    C.GROUP_NAME  AS COLOR,
-	                                S.GROUP_NAME AS SIZE,
-	                                U.GROUP_NAME AS UNIT 
-                                FROM TBL_STKA_MASTER M
-                                LEFT JOIN TBL_STKA_DETAIL D 
-                                    ON D.TRAN_ID = M.TRAN_ID
-                                    AND D.BCODE = M.BCODE
-                                LEFT JOIN TBL_ITEMSMASTER IM WITH (NOLOCK)
-                                    ON IM.ITEM_CODE = D.ITEM_CODE
-                                LEFT JOIN TBL_COLOR C WITH (NOLOCK)
-                                    ON C.GROUP_CODE = D.COLOR
-                                LEFT JOIN TBL_SIZE S WITH (NOLOCK)
-                                    ON S.GROUP_CODE = D.SIZE
-                                LEFT JOIN TBL_UNIT U 
-	                                ON U.GROUP_CODE =D.UNIT
-                                WHERE 
-                                    M.DLT = 'T'
-                                    AND M.BCODE = '1'
-                                    AND M.PERIOD_ID = '1'
-                                    AND M.TRAN_ID = {modelRecord.TRAN_ID}";
                 using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
                 {
-                    //string query = $"SELECT M.V_DATE, M.VOUCHER_NO, M.REF, M.REMARKS, BF.B_NAME AS BranchFrom, BF.B_ADDRESS AS BranchFromAdr, " +
+                    //string quefry = $"SELECT M.V_DATE, M.VOUCHER_NO, M.REF, M.REMARKS, BF.B_NAME AS BranchFrom, BF.B_ADDRESS AS BranchFromAdr, " +
                     //    $"BT.B_NAME AS BranchTo, BT.B_ADDRESS AS BranchToAdr, CASE WHEN M.ASTATUS = 'Y' THEN 'Active' ELSE 'In-Active' END AS ASTATUS, " +
                     //    $"CASE WHEN M.AM = 'A' THEN 'AUTO' ELSE 'MANUAL' END AS AM FROM {tableMaster} M " +
                     //    $"LEFT JOIN TBL_BRANCH BF ON BF.BCODE = M.BCODE " +
                     //    $"LEFT JOIN TBL_BRANCH BT ON BT.BCODE = M.TBCODE " +
                     //    $"WHERE M.DLT = 'T' AND M.BCODE = '{common.Branch}' AND M.PERIOD_ID = '{common.Period}' AND M.TRAN_ID = {modelRecord.TRAN_ID}";
+
+                    string query = $@"SELECT M.V_DATE, M.VOUCHER_NO, M.REF, M.REMARKS, BF.B_NAME AS BranchFrom, BF.B_ADDRESS AS BranchFromAdr,
+                                        CASE WHEN M.ASTATUS = 'Y' THEN 'Active' ELSE 'In-Active' END AS ASTATUS, CASE WHEN M.AM = 'A' 
+                                        THEN 'AUTO' ELSE 'MANUAL' END AS AM 
+                                        FROM TBL_STKA_MASTER M 
+                                        LEFT JOIN TBL_BRANCH BF ON BF.BCODE = M.BCODE 
+                                        WHERE M.DLT = 'T' AND M.BCODE = '{common.Branch}' AND M.PERIOD_ID = '{common.Period}' AND M.TRAN_ID = {modelRecord.TRAN_ID}";
+
                     SqlCommand command = new SqlCommand(query, connection);
                     connection.Open();
                     SqlDataReader reader = command.ExecuteReader();
-                    while (reader.Read())
+                    if (reader.Read())
                     {
                         masterData.V_DATE = reader["V_DATE"] == DBNull.Value ? null : Convert.ToDateTime(reader["V_DATE"]);
                         masterData.VOUCHER_NO = Convert.ToString(reader["VOUCHER_NO"]);
                         masterData.REF = Convert.ToString(reader["REF"]);
                         masterData.REMARKS = Convert.ToString(reader["REMARKS"]);
-                        //masterData.BRANCH_FROM_NAME = Convert.ToString(reader["BranchFrom"]);
-                        //masterData.BRANCH_FROM_ADDRESS = Convert.ToString(reader["BranchFromAdr"]);
+                        masterData.BRANCH_FROM_NAME = Convert.ToString(reader["BranchFrom"]);
+                        masterData.BRANCH_FROM_ADDRESS = Convert.ToString(reader["BranchFromAdr"]);
                         //masterData.BRANCH_TO_NAME = Convert.ToString(reader["BranchTo"]);
                         //masterData.BRANCH_TO_ADDRESS = Convert.ToString(reader["BranchToAdr"]);
                         masterData.ASTATUS = Convert.ToString(reader["ASTATUS"]);
@@ -1052,102 +1016,38 @@ namespace Empire_ERP.Infrastructure.Repositories
                     reader.Close();
                 }
 
-             
-                    using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
-                    {
-                        //string query = $"SELECT D.QTY, D.QTY2, D.BAL_QTY, B.BARCODE, IM.ITEM_NAME, IM.ITEM_ID, C.GROUP_NAME AS COLOR, " +
-                        //               $"S.GROUP_NAME AS SIZE, IMG.GROUP_NAME AS 'GROUP', IMC.GROUP_NAME AS CATEGORY, " +
-                        //               $"IMSC.GROUP_NAME AS SUBCATEGORY FROM {tableDetail} D " +
-                        //               $"LEFT JOIN TBL_BARCODE B WITH (NOLOCK) ON B.CODE = D.ITEM_CODE " +
-                        //               $"LEFT JOIN TBL_COLOR C WITH (NOLOCK) ON B.COLOR = C.GROUP_CODE " +
-                        //               $"LEFT JOIN TBL_SIZE S WITH (NOLOCK) ON B.SIZE = S.GROUP_CODE " +
-                        //               $"LEFT JOIN TBL_ITEMSMASTER IM WITH (NOLOCK) ON B.ITEM_CODE = IM.ITEM_CODE " +
-                        //               $"LEFT JOIN TBL_ITEMSGROUP IMG WITH (NOLOCK) ON IMG.GROUP_CODE = IM.GROUP_CODE " +
-                        //               $"LEFT JOIN TBL_CATEGORY IMC WITH (NOLOCK) ON IMC.GROUP_CODE = IM.CAT_CODE " +
-                        //               $"LEFT JOIN TBL_SUB_CATEGORY IMSC WITH (NOLOCK) ON IMSC.GROUP_CODE = IM.SUB_CAT_CODE " +
-                        //               $"WHERE D.DLT = 'T' AND B.DLT = 'T' AND B.ASTATUS= 'Y' AND IM.DLT = 'T' AND D.BCODE = '{common.Branch}' " +
-                                       //$"AND D.PERIOD_ID = '{common.Period}' AND D.TRAN_ID = {modelRecord.TRAN_ID}";
-                        SqlCommand command = new SqlCommand(query, connection);
-                        connection.Open();
-                        SqlDataReader reader = command.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            DataRow dataRow = dataTable.NewRow();
-                            dataRow["DesignNo"] = Convert.ToString(reader["ITEM_NAME"]);
-                            //dataRow["DesignNo"] = Convert.ToString(reader["ITEM_ID"]);
-                            dataRow["Qty1"] = Convert.ToString(reader["QTY"]);
-                            dataRow["Unit"] = Convert.ToString(reader["UNIT"]);
-                            dataRow["Color"] = Convert.ToString(reader["COLOR"]);
-                            dataRow["Size"] = Convert.ToString(reader["SIZE"]);
-                            dataRow["Desc"] = Convert.ToString(reader["DT_DESC"]);
-                            dataTable.Rows.Add(dataRow);
-                        }
-                        reader.Close();
-                    }
-                }
-                else if (menuDetails.MD_ID == 12)
+                using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
                 {
-                    using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
+                    string query = $@"SELECT D.QTY,  IM.ITEM_NAME, D.DT_DESC AS REMARKS,  
+                                    IMG.GROUP_NAME AS 'GROUP',U.GROUP_NAME AS UNIT
+                                    FROM {tableDetail} D 
+                                    LEFT JOIN TBL_ITEMSMASTER IM WITH (NOLOCK) ON D.ITEM_CODE = IM.ITEM_CODE 
+                                    LEFT JOIN TBL_ITEMSGROUP IMG WITH (NOLOCK) ON IMG.GROUP_CODE = IM.GROUP_CODE  
+                                    LEFT JOIN TBL_UNIT U ON U.GROUP_CODE =D.UNIT
+                                    WHERE D.DLT = 'T' AND IM.DLT = 'T' AND D.BCODE = '{common.Branch}' AND D.PERIOD_ID = '{common.Period}' AND D.TRAN_ID = {modelRecord.TRAN_ID}";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
                     {
-                        string query = $"SELECT IM.ITEM_NAME AS Item, IM.PURCHASE_RATE AS RATE, IM.GROUP_CODE, SUM(D.BAL_QTY) AS BAL_QTY, IG.GROUP_NAME FROM {tableDetail} D " +
-                            $"LEFT JOIN TBL_ITEMSMASTER IM ON IM.ITEM_CODE = D.ITEM_CODE " +
-                            $"LEFT OUTER JOIN TBL_STKTR_DETAIL STKR ON STKR.DT_CODE = D.PICK_ID AND STKR.BCODE = D.BCODE AND STKR.PERIOD_ID = D.PERIOD_ID " +
-                            $"LEFT OUTER JOIN TBL_ITEMSGROUP IG ON IG.GROUP_CODE = STKR.ITEM_GROUP " +
-                            $"WHERE D.DLT = 'T' AND D.BCODE = '{common.Branch}' AND D.PERIOD_ID = '{common.Period}' AND D.TRAN_ID = {modelRecord.TRAN_ID} GROUP BY IM.ITEM_NAME, IM.PURCHASE_RATE, IG.GROUP_NAME, IM.GROUP_CODE";
-                        SqlCommand command = new SqlCommand(query, connection);
-                        connection.Open();
-                        SqlDataReader reader = command.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            DataRow dataRow = dataTable.NewRow();
-                            dataRow["BalQty"] = Convert.ToInt32(reader["BAL_QTY"]);
-                            dataRow["Qty1"] = reader["RATE"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["RATE"]);
-                            //dataRow["Color"] = _commonService.ToAccountingFormat(Convert.ToDecimal(reader["BalQty"]));
-                            dataRow["Category"] = Convert.ToString(reader["Item"]);
-                            dataRow["Group"] = Convert.ToString(reader["GROUP_NAME"]);
-                            dataRow["DesignNo"] = Convert.ToInt32(reader["GROUP_CODE"]);
-                            dataTable.Rows.Add(dataRow);
-                        }
-                        reader.Close();
+
+                        DataRow dataRow = dataTable.NewRow();
+                        dataRow["Qty1"] = Convert.ToString(reader["QTY"]);
+                        dataRow["DesignNo"] = Convert.ToString(reader["ITEM_NAME"]);
+                        dataRow["Remarks"] = Convert.ToString(reader["REMARKS"]);
+                        dataRow["Group"] = Convert.ToString(reader["GROUP"]);
+                        dataRow["Unit"] = Convert.ToString(reader["UNIT"]);
+                        //dataRow["Size"] = Convert.ToString(reader["SIZE"]);
+                        //dataRow["Color"] = Convert.ToString(reader["COLOR"]);
+                        //dataRow["Qty2"] = Convert.ToString(reader["QTY2"]);
+                        //dataRow["BalQty"] = Convert.ToString(reader["BAL_QTY"]);
+                        //dataRow["Category"] = Convert.ToString(reader["CATEGORY"]);
+                        //dataRow["SubCategory"] = Convert.ToString(reader["SUBCATEGORY"]);
+                        dataTable.Rows.Add(dataRow);
                     }
+                    reader.Close();
                 }
-                else
-                {
-                    using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
-                    {
-                        string query = $"SELECT IM.ITEM_NAME AS Item, IG.GROUP_CODE, SUM(D.BAL_QTY) AS BAL_QTY, IG.GROUP_NAME FROM {tableDetail} D " +
-                            $"LEFT JOIN TBL_ITEMSMASTER IM ON IM.ITEM_CODE = D.ITEM_CODE " +
-                            $"LEFT OUTER JOIN TBL_STKTR_DETAIL STKR ON STKR.DT_CODE = D.PICK_ID AND STKR.BCODE = D.BCODE AND STKR.PERIOD_ID = D.PERIOD_ID " +
-                            $"LEFT OUTER JOIN TBL_ITEMSGROUP IG ON IG.GROUP_CODE = STKR.ITEM_GROUP " +
-                            $"WHERE D.DLT = 'T' AND D.BCODE = '{common.Branch}' AND D.PERIOD_ID = '{common.Period}' AND D.TRAN_ID = {modelRecord.TRAN_ID} GROUP BY IM.ITEM_NAME, IG.GROUP_NAME, IG.GROUP_CODE";
 
-                        SqlCommand command = new SqlCommand(query, connection);
-                        connection.Open();
-                        SqlDataReader reader = command.ExecuteReader();
-
-                        // Dictionary to store unique groups and their series numbers
-                        Dictionary<string, int> groupSeries = new Dictionary<string, int>();
-                        int seriesCounter = 1;
-
-                        while (reader.Read())
-                        {
-                            DataRow dataRow = dataTable.NewRow();
-                            dataRow["BalQty"] = Convert.ToInt32(reader["BAL_QTY"]);
-                            dataRow["Category"] = Convert.ToString(reader["Item"]);
-                            dataRow["Group"] = Convert.ToString(reader["GROUP_NAME"]);
-                            string groupName = Convert.ToString(reader["GROUP_NAME"]);
-                            if (!groupSeries.ContainsKey(groupName))
-                            {
-                                groupSeries[groupName] = seriesCounter;
-                                seriesCounter++;
-                            }
-                            //dataRow["DesignNo"] = Convert.ToInt32(reader["GROUP_CODE"]);
-                            dataRow["DesignNo"] = groupSeries[groupName];
-                            dataTable.Rows.Add(dataRow);
-                        }
-                        reader.Close();
-                    }
-                }
 
                 reportData.Master = masterData;
                 reportData.Detail = dataTable;

@@ -700,10 +700,18 @@ var empr_UploadItemImages = {
             });
         }
 
+        var exportSelectedOnly = false;
+        try {
+            exportSelectedOnly = (grid.getSelectedRowsData() || []).length > 0;
+        } catch (ex) {
+            exportSelectedOnly = false;
+        }
+
         DevExpress.excelExporter.exportDataGrid({
             component: grid,
             worksheet: worksheet,
             autoFilterEnabled: true,
+            selectedRowsOnly: exportSelectedOnly,
             customizeCell: function (options) {
                 const gridCell = options.gridCell;
                 const excelCell = options.excelCell;

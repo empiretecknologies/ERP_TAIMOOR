@@ -208,7 +208,7 @@
                                           <Value xml:space="preserve">  </Value>
                                           <Style>
                                             <FontFamily>Tw Cen MT</FontFamily>
-                                            <FontSize>9pt</FontSize>
+                                            <FontSize>11pt</FontSize>
                                             <FontWeight>Bold</FontWeight>
                                             <Color>#2a4899</Color>
                                           </Style>
@@ -217,7 +217,7 @@
                                           <Value>=Parameters!InvoiceNumber.Value</Value>
                                           <Style>
                                             <FontFamily>Tw Cen MT</FontFamily>
-                                            <FontSize>9pt</FontSize>
+                                            <FontSize>11pt</FontSize>
                                             <FontWeight>Bold</FontWeight>
                                             <Color>#055a87</Color>
                                           </Style>
@@ -252,7 +252,7 @@
                                           <Value>Invoice No :</Value>
                                           <Style>
                                             <FontFamily>Tw Cen MT</FontFamily>
-                                            <FontSize>9pt</FontSize>
+                                            <FontSize>11pt</FontSize>
                                             <FontWeight>Bold</FontWeight>
                                             <Color>#055a87</Color>
                                           </Style>
@@ -289,7 +289,7 @@
                                           <Value>Invoice Date </Value>
                                           <Style>
                                             <FontFamily>Tw Cen MT</FontFamily>
-                                            <FontSize>9pt</FontSize>
+                                            <FontSize>11pt</FontSize>
                                             <FontWeight>Bold</FontWeight>
                                             <Color>#055a87</Color>
                                           </Style>
@@ -298,7 +298,7 @@
                                           <Value>:</Value>
                                           <Style>
                                             <FontFamily>Tw Cen MT</FontFamily>
-                                            <FontSize>9pt</FontSize>
+                                            <FontSize>11pt</FontSize>
                                             <FontWeight>Bold</FontWeight>
                                             <Color>#2a4899</Color>
                                           </Style>
@@ -335,7 +335,7 @@
                                           <Value>=Parameters!Date.Value</Value>
                                           <Style>
                                             <FontFamily>Tw Cen MT</FontFamily>
-                                            <FontSize>9pt</FontSize>
+                                            <FontSize>11pt</FontSize>
                                           </Style>
                                         </TextRun>
                                       </TextRuns>
@@ -368,7 +368,7 @@
                                           <Value>Party Name  :</Value>
                                           <Style>
                                             <FontFamily>Tw Cen MT</FontFamily>
-                                            <FontSize>9pt</FontSize>
+                                            <FontSize>11pt</FontSize>
                                             <FontWeight>Bold</FontWeight>
                                             <Color>#055a87</Color>
                                           </Style>
@@ -406,7 +406,7 @@
                                           <Value>=Parameters!Party.Value</Value>
                                           <Style>
                                             <FontFamily>tw Cen MT</FontFamily>
-                                            <FontSize>9pt</FontSize>
+                                            <FontSize>11pt</FontSize>
                                           </Style>
                                         </TextRun>
                                       </TextRuns>
@@ -439,7 +439,7 @@
                                           <Value>Ref :</Value>
                                           <Style>
                                             <FontFamily>Tw Cen MT</FontFamily>
-                                            <FontSize>9pt</FontSize>
+                                            <FontSize>11pt</FontSize>
                                             <FontWeight>Bold</FontWeight>
                                             <Color>#055a87</Color>
                                           </Style>
@@ -477,7 +477,7 @@
                                           <Value>=Parameters!Comment.Value</Value>
                                           <Style>
                                             <FontFamily>tw Cen MT</FontFamily>
-                                            <FontSize>9pt</FontSize>
+                                            <FontSize>11pt</FontSize>
                                           </Style>
                                         </TextRun>
                                       </TextRuns>
@@ -557,7 +557,7 @@
                                       <Style>
                                         <FontStyle>Normal</FontStyle>
                                         <FontFamily>Tw Cen MT</FontFamily>
-                                        <FontSize>12pt</FontSize>
+                                        <FontSize>15pt</FontSize>
                                         <FontWeight>Bold</FontWeight>
                                         <Color>White</Color>
                                       </Style>
@@ -610,7 +610,6 @@
                           </Style>
                         </Rectangle>
                         <ColSpan>8</ColSpan>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell />
@@ -637,7 +636,7 @@
                                   <Value>Sno</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -676,7 +675,7 @@
                                   <Value>Barcode</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -715,7 +714,7 @@
                                   <Value>Item</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -754,7 +753,7 @@
                                   <Value>Color</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -793,7 +792,7 @@
                                   <Value>Unit</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -832,7 +831,7 @@
                                   <Value>Qty</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -871,7 +870,7 @@
                                   <Value>Rate</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -910,7 +909,7 @@
                                   <Value>Amt</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                     <FontWeight>SemiBold</FontWeight>
                                     <Color>White</Color>
                                   </Style>
@@ -954,7 +953,7 @@
                                   <Value>=RowNumber(Nothing)</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -990,7 +989,7 @@
                                   <Value>=Fields!Barcode.Value</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1026,7 +1025,7 @@
                                   <Value>=Fields!Item.Value</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1062,7 +1061,7 @@
                                   <Value>=Fields!Grade.Value</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1098,7 +1097,7 @@
                                   <Value>=Fields!Unit.Value</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1134,7 +1133,7 @@
                                   <Value>=Fields!Qty.Value</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1170,7 +1169,7 @@
                                   <Value>=Fields!Rate.Value</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1206,7 +1205,7 @@
                                   <Value>=Format(Fields!ExStax.Value, "N2")</Value>
                                   <Style>
                                     <FontFamily>Tw Cen MT</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1280,7 +1279,7 @@
                     <Value>=Parameters!MenuTerms.Value</Value>
                     <Style>
                       <FontFamily>Tw Cen MT</FontFamily>
-                      <FontSize>12pt</FontSize>
+                      <FontSize>13pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1642,7 +1641,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>InvoiceNumber</rd:DefaultName>
-            <Top>2.85416in</Top>
+            <Top>2.86666in</Top>
             <Left>6.19085in</Left>
             <Height>0.2139in</Height>
             <Width>0.92778in</Width>
@@ -1673,7 +1672,7 @@
                     <Value>=FormatNumber(Sum(Fields!Qty.Value), 0)</Value>
                     <Style>
                       <FontFamily>Tw Cen MT</FontFamily>
-                      <FontSize>9pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
                     </Style>
@@ -1685,10 +1684,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>InvoiceNumber</rd:DefaultName>
-            <Top>2.85554in</Top>
-            <Left>5.50431in</Left>
+            <Top>2.85416in</Top>
+            <Left>5.47931in</Left>
             <Height>0.2139in</Height>
-            <Width>0.68654in</Width>
+            <Width>0.71154in</Width>
             <ZIndex>4</ZIndex>
             <Style>
               <Border>
@@ -1716,7 +1715,7 @@
                     <Value>=FormatNumber(Sum(Fields!ExStax.Value), 0)</Value>
                     <Style>
                       <FontFamily>Tw Cen MT</FontFamily>
-                      <FontSize>9pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
                     </Style>
@@ -1728,7 +1727,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>InvoiceNumber</rd:DefaultName>
-            <Top>2.85554in</Top>
+            <Top>2.85416in</Top>
             <Left>7.13035in</Left>
             <Height>0.2139in</Height>
             <Width>1.03859in</Width>
@@ -1819,6 +1818,7 @@
                   <TextRun>
                     <Value>=Parameters!Cartage.Value</Value>
                     <Style>
+                      <FontSize>12pt</FontSize>
                       <Color>=IIF(Parameters!Balance.Value &lt; 0, "Red", "Black")</Color>
                     </Style>
                   </TextRun>
@@ -1915,12 +1915,15 @@
                   <TextRun>
                     <Value xml:space="preserve"> </Value>
                     <Style>
+                      <FontSize>12pt</FontSize>
                       <Color>=IIF(Parameters!Balance.Value &lt; 0, "Red", "Black")</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
                     <Value>=FormatNumber(Sum(Fields!ExStax.Value) - Parameters!Disc.Value + Parameters!Cartage.Value, 0)</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>12pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2014,7 +2017,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=FormatNumber(Sum(Fields!ExStax.Value) - CDbl(Parameters!Disc.Value) + CDbl(Parameters!Balance.Value) + CDbl(Parameters!Cartage.Value), 0)</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>12pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2108,7 +2113,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=Parameters!Disc.Value</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>12pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2207,6 +2214,7 @@
     FormatNumber(Parameters!Balance.Value, 0)
 )</Value>
                     <Style>
+                      <FontSize>12pt</FontSize>
                       <Color>=IIF(Parameters!Balance.Value &lt; 0, "Red", "Black")</Color>
                     </Style>
                   </TextRun>

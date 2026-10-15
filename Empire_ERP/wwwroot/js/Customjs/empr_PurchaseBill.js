@@ -1860,7 +1860,8 @@ var empr_PurchaseBill = {
     },
 
     DeleteRow: function (index, dtCode, skipPassword) {
-        if (!skipPassword && Permissions != "Admin" && !Permissions.r_DLT) {
+        debugger;
+        if (!skipPassword && Permissions != "Admin" && !Permissions.r_DLT && dtCode != 0) {
             empr_PurchaseBill.AskOverridePassword(function () {
                 empr_PurchaseBill.DeleteRow(index, dtCode, true);
             }, 'Please enter password to delete this record.');

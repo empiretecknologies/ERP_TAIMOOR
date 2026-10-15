@@ -534,14 +534,13 @@ namespace Empire_ERP.Controllers
             {
                 if (model != null && model.TRAN_ID > 0 && model.MD_ID > 0)
                 {
-
                     Reports.Datasets.BarcodeReportDataset.StockTransferPrintReportDataTable reportDetails = new Reports.Datasets.BarcodeReportDataset.StockTransferPrintReportDataTable();
                     var responseMessage = _stockAdjustmentService.GetDataForPrintReport(model, reportDetails, CommonHelper.GetValues(HttpContext));
                     if (responseMessage.msgType != 1)
                     {
                         return "";
                     }
-                    var reportData = (CustomStockAdjustmentForPrintReport)responseMessage.data;
+                    var reportData = (CustomStockTransferForPrintReport)responseMessage.data;
                     Reports.Datasets.BarcodeReportDataset.StockReportDataTable data = new Reports.Datasets.BarcodeReportDataset.StockReportDataTable();
                     using (LocalReport report = new LocalReport())
                     {
@@ -561,16 +560,16 @@ namespace Empire_ERP.Controllers
                                 {
                                     showCompanyLogo = false;
                                 }
-                                //ReportParameter parameter1 = new ReportParameter("TransferFrom", reportData.Master?.BRANCH_FROM_NAME);
-                                //ReportParameter parameter2 = new ReportParameter("TransferFromAddress", reportData.Master?.BRANCH_FROM_ADDRESS);
+                                ReportParameter parameter1 = new ReportParameter("TransferFrom", reportData.Master?.BRANCH_FROM_NAME);
+                                ReportParameter parameter2 = new ReportParameter("TransferFromAddress", reportData.Master?.BRANCH_FROM_ADDRESS);
                                 ReportParameter parameter3 = new ReportParameter("CompanyName", reportData.Master?.COMPANY_NAME);
                                 ReportParameter parameter4 = new ReportParameter("Header", reportData.Master?.HEADER_NAME);
                                 ReportParameter parameter5 = new ReportParameter("TransactionDate", reportData.Master?.V_DATE?.ToString("dd/MM/yyyy"));
                                 ReportParameter parameter6 = new ReportParameter("VoucherNo", reportData.Master?.VOUCHER_NO);
                                 ReportParameter parameter7 = new ReportParameter("Type", reportData.Master?.STOCK_TYPE);
                                 ReportParameter parameter8 = new ReportParameter("Status", reportData.Master?.ASTATUS);
-                                //ReportParameter parameter9 = new ReportParameter("TransferTo", reportData.Master?.BRANCH_TO_NAME);
-                                //ReportParameter parameter10 = new ReportParameter("TransferToAddress", reportData.Master?.BRANCH_TO_ADDRESS);
+                                ReportParameter parameter9 = new ReportParameter("TransferTo", reportData.Master?.BRANCH_TO_NAME);
+                                ReportParameter parameter10 = new ReportParameter("TransferToAddress", reportData.Master?.BRANCH_TO_ADDRESS);
                                 ReportParameter parameter11 = new ReportParameter("Reference", reportData.Master?.REF);
                                 ReportParameter parameter12 = new ReportParameter("Description", reportData.Master?.REMARKS);
                                 ReportParameter parameter13 = new ReportParameter("CompanyAddress", reportData.Master?.COMPANY_ADDRESS);
@@ -582,7 +581,7 @@ namespace Empire_ERP.Controllers
                                 ReportParameter parameter19 = new ReportParameter("ShowSignature4", Convert.ToString(reportData.Master?.MENU_SIG4));
                                 ReportParameter parameter20 = new ReportParameter("ShowCompanyLogo", Convert.ToString(showCompanyLogo));
 
-                                report.SetParameters(new ReportParameter[] {parameter3, parameter4, parameter5, parameter6, parameter7, parameter8, parameter11, parameter12, parameter13, parameter14, parameter15, parameter16, parameter17, parameter18, parameter19, parameter20 });
+                                report.SetParameters(new ReportParameter[] { parameter1, parameter2, parameter3, parameter4, parameter5, parameter6, parameter7, parameter8, parameter9, parameter10, parameter11, parameter12, parameter13, parameter14, parameter15, parameter16, parameter17, parameter18, parameter19, parameter20 });
                                 report.Refresh();
                                 report.DataSources.Add(new ReportDataSource() { Name = "StockPrintReportDataSet", Value = reportData.Detail });
                                 byte[] file;

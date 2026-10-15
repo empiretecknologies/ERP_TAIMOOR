@@ -805,7 +805,15 @@
                             totals[s.column] = grid.getTotalSummaryValue(s.column);
                         });
 
-                        const data = (grid.option("dataSource") || []).map(row => {
+                        let exportRows = grid.option("dataSource") || [];
+                        try {
+                            const selectedRows = grid.getSelectedRowsData() || [];
+                            if (selectedRows.length > 0) {
+                                exportRows = selectedRows;
+                            }
+                        } catch (err) {
+                        }
+                        const data = (exportRows || []).map(row => {
                             const filteredRow = {};
                             visibleCols.forEach(col => {
                                 filteredRow[col.caption] = row[col.dataField];

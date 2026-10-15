@@ -1293,11 +1293,11 @@
             valid = false;
             return valid;
         }
-        //if (data.Master.TBCODE == '') {
-        //    empr_helper.notify("Please select branch to.", 2);
-        //    valid = false;
-        //    return valid;
-        //}
+        if (data.Master.TBCODE == '') {
+            empr_helper.notify("Please select branch to.", 2);
+            valid = false;
+            return valid;
+        }
         //if (data.Master.AM == '') {
         //    empr_helper.notify("Please select auto/manual", 2);
         //    valid = false;

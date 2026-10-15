@@ -67,9 +67,10 @@ namespace Empire_ERP.Controllers
             try
             {
                 var common = CommonHelper.GetValues(HttpContext);
-                var data = common.RoleType == "A"
-                    ? DropdownService.GetAccountsForAccountingReport(false, 0, common.Branch, 0)
-                    : DropdownService.GetAccountsForAccountingReport(false, common.RoleID, common.Branch, common.ShowSelected);
+                //var data = common.RoleType == "A"
+                //    ? DropdownService.GetAccountsForAccountingReport(false, 0, common.Branch, 0)
+                //    : DropdownService.GetAccountsForAccountingReport(false, common.RoleID, common.Branch, common.ShowSelected);
+                var data = DropdownService.GetAccountsForAccountingReport(false, 0, common.Branch, 0);
                 //var data = DropdownService.GetAccountsForAccountingReport(false);
                 return Json(new { data = data, msgType = 1 });
             }
