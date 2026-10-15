@@ -10353,6 +10353,7 @@
                         data: JSON.stringify({
                             CompanyName: empr_helper.companyName,
                             ReportName: empr_helper.reportName,
+                            ReportId: Number(empr_helper.reportId) || 0,
                             lastDate: empr_helper.lastDate || null,
                             lastAmount: empr_helper.lastAmt || null,
                             From: empr_helper.formatDateTopdf(empr_helper.fromDate),

@@ -16,11 +16,13 @@ namespace Empire_ERP.Controllers
 {
     public class ReportController : Controller
     {
+        private bool _skipBalanceTotal;
 
         [HttpPost]
         [Consumes("application/json")]
         public IActionResult GeneratePDF([FromBody] PDFRequest request)
         {
+            _skipBalanceTotal = request.ReportId == 88;
             BaseColor themeColor = new BaseColor(0x05, 0x5A, 0x87);
 
             MemoryStream stream = new MemoryStream();
@@ -433,7 +435,7 @@ namespace Empire_ERP.Controllers
         {
             return new[] { "Amount", "Debit", "Credit", "Balance", "Total", "Qty","Due Year", "Net Amount", "Disc Amt", "Disc %", "Remaining", "Advance",
                          "Tax Amt " ,"Bill Amount", "Recieved Amt ", "Tax" ,"Commission Value" , "Commission %","Discount","Quantity","Due Month","Due Days","0 To 15",
-                "16 To 30","31 To 45","46 To 60","61 To 90","91 To 120","120 Plus","Balance"}
+                "16 To 30","31 To 45","46 To 60","61 To 90","91 To 120","120 Plus","Balance","Stock In","Stock Out"}
                    .Any(x => col.ToLower().Contains(x.ToLower()));
         }
 
@@ -487,10 +489,15 @@ namespace Empire_ERP.Controllers
             HashSet<string> totalColumns = IslastDate
                 ? new HashSet<string> { "Debit", "Credit", "Amount", "Due Amount", "NetAmount", "Qty", "Disc Amt", "Disc %" , "Remaining", "Advance", "Tax Amt" ,
                     "Bill Amount", "Recieved Amt ", "Tax", "Commission Value", "Commission %", "Discount" ,"Total Amount","0 To 15",
-                "16 To 30","31 To 45","46 To 60","61 To 90","91 To 120","120 Plus"}
+                "16 To 30","31 To 45","46 To 60","61 To 90","91 To 120","120 Plus","Stock In","Stock Out"}
                 : new HashSet<string> { "Debit", "Credit", "Amount", "Due Amount", "Description", "Net Amount", "Qty", "Disc Amt", "Disc %" , "Remaining",
                     "Advance","Tax %", "Tax Amt", "Bill Amount", "Recieved Amt","Commission Value", "Commission %","Discount","Quantity","Total Amount","0 To 15",
-                "16 To 30","31 To 45","46 To 60","61 To 90","91 To 120","120 Plus","Balance" };
+                "16 To 30","31 To 45","46 To 60","61 To 90","91 To 120","120 Plus","Balance","Stock In","Stock Out" };
+
+            if (_skipBalanceTotal)
+            {
+                totalColumns.Remove("Balance");
+            }
 
             BaseFont bf = BaseFont.CreateFont(
                 @"C:\Windows\Fonts\arialbd.ttf",
@@ -1252,6 +1259,7 @@ namespace Empire_ERP.Controllers
         public Dictionary<string, decimal>? Totals2 { get; set; }
         public string? CompanyName { get; set; }
         public string? ReportName { get; set; }
+        public int? ReportId { get; set; }
         public DateTime? lastDate { get; set; }
         public decimal? lastAmount { get; set; }
         public string? From { get; set; }

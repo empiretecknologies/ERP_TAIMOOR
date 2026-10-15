@@ -315,6 +315,7 @@
         console.log("InitReportGrid dataSrc", dataSrc)
 
         console.log(reportId)
+        empr_helper.reportId = reportId;
         var col = [];
         var detailColumns = [];
         let serialNumber = 0;
