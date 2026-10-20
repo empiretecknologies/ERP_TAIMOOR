@@ -1313,7 +1313,7 @@
             valid = false;
             return valid;
         }
-        if (data.Master.TBCODE == '') {
+        if (data.Master.TBCODE == '' || data.Master.TBCODE == null || data.Master.TBCODE == undefined || data.Master.TBCODE == 0) {
             empr_helper.notify("Please select branch to.", 2);
             valid = false;
             return valid;
