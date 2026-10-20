@@ -925,6 +925,18 @@ var empr_SaleTaxInvoice = {
                 return valid;
             }
 
+            if (item.rate == "" || item.rate == null || item.rate == undefined || item.rate <= 0) {
+                empr_helper.notify("Please enter correct Rate at Line No " + (index + 1), 2);
+                valid = false;
+                return valid;
+            }
+
+            if (item.amt == "" || item.amt == null || item.amt == undefined || item.amt <= 0) {
+                empr_helper.notify("Please enter correct Amount at Line No " + (index + 1), 2);
+                valid = false;
+                return valid;
+            }
+
             if (item.fbR_TYPE == 0 || item.fbR_TYPE == null || item.fbR_TYPE == undefined) {
                 empr_helper.notify("Please Select FBR Type on Line No " + (index + 1), 2);
                 valid = false;

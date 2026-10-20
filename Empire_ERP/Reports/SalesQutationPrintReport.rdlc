@@ -823,8 +823,8 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox8</rd:DefaultName>
-              <Top>0.7632in</Top>
-              <Left>0.34063in</Left>
+              <Top>1.01319in</Top>
+              <Left>3.21511in</Left>
               <Height>0.20972in</Height>
               <Width>0.77083in</Width>
               <Style>
@@ -856,8 +856,8 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox8</rd:DefaultName>
-              <Top>0.98264in</Top>
-              <Left>0.34063in</Left>
+              <Top>1.01319in</Top>
+              <Left>1.71563in</Left>
               <Height>0.20972in</Height>
               <Width>0.66667in</Width>
               <ZIndex>1</ZIndex>
@@ -891,9 +891,9 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>ExecutionTime</rd:DefaultName>
-              <Top>0.75695in</Top>
-              <Left>1.12952in</Left>
-              <Height>0.22986in</Height>
+              <Top>1.01319in</Top>
+              <Left>4.004in</Left>
+              <Height>0.20972in</Height>
               <Width>0.98402in</Width>
               <ZIndex>2</ZIndex>
               <Style>
@@ -926,10 +926,10 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox12</rd:DefaultName>
-              <Top>0.99098in</Top>
-              <Left>1.07118in</Left>
-              <Height>0.20139in</Height>
-              <Width>0.64632in</Width>
+              <Top>1.01319in</Top>
+              <Left>2.35868in</Left>
+              <Height>0.20972in</Height>
+              <Width>0.33799in</Width>
               <ZIndex>3</ZIndex>
               <Style>
                 <Border>
@@ -1340,109 +1340,21 @@
                 </RightBorder>
               </Style>
             </Rectangle>
-            <Textbox Name="BranchName">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>=Parameters!CompanyName.Value</Value>
-                      <Style>
-                        <FontFamily>Tw Cen MT</FontFamily>
-                        <FontSize>16pt</FontSize>
-                        <FontWeight>Bold</FontWeight>
-                        <Color>#055a87</Color>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Center</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>BranchName</rd:DefaultName>
-              <Top>0.10688in</Top>
-              <Left>0.14845in</Left>
-              <Height>0.25in</Height>
-              <Width>7.9396in</Width>
+            <Image Name="Image2">
+              <Source>External</Source>
+              <Value>=Parameters!CompanyLogo.Value</Value>
+              <Sizing>Fit</Sizing>
+              <Top>0.07902in</Top>
+              <Left>0.14479in</Left>
+              <Height>0.83418in</Height>
+              <Width>0.96523in</Width>
               <ZIndex>7</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
                 </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
               </Style>
-            </Textbox>
-            <Textbox Name="BranchAddress">
-              <CanGrow>true</CanGrow>
-              <CanShrink>true</CanShrink>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>=Parameters!CompanyAddress.Value</Value>
-                      <Style>
-                        <FontFamily>Tw Cen MT</FontFamily>
-                        <Color>#055a87</Color>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Center</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>BranchAddress</rd:DefaultName>
-              <Top>0.37076in</Top>
-              <Left>0.14847in</Left>
-              <Height>0.125in</Height>
-              <Width>7.9396in</Width>
-              <ZIndex>8</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <VerticalAlign>Middle</VerticalAlign>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-              </Style>
-            </Textbox>
-            <Textbox Name="BranchPhone4">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>=Parameters!CompanyPhone.Value</Value>
-                      <Style>
-                        <FontFamily>Tw Cen MT</FontFamily>
-                        <Color>#055a87</Color>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Center</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>BranchPhone</rd:DefaultName>
-              <Top>0.51661in</Top>
-              <Left>0.16236in</Left>
-              <Height>0.125in</Height>
-              <Width>7.92571in</Width>
-              <ZIndex>9</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-              </Style>
-            </Textbox>
+            </Image>
           </ReportItems>
           <Style>
             <Border>

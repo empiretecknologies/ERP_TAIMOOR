@@ -2061,14 +2061,20 @@ var empr_PurchaseOrder = {
                 return valid;
             }
 
+            if (item.rate == "" || item.rate == null || item.rate == undefined || item.rate <= 0) {
+                empr_helper.notify("Please enter correct Rate at Line No " + (index + 1), 2);
+                valid = false;
+                return valid;
+            }
+
             if (item.qtY2 != "" && item.qtY2 != null && item.qtY2 != undefined && item.qtY2 < 0) {
                 empr_helper.notify("Please enter correct item quantity2 at index " + index, 2);
                 valid = false;
                 return valid;
             }
 
-            if (item.amt == "" || item.amt == null || item.amt == undefined) {
-                empr_helper.notify("Invalid Amount at line No " + (index + 1), 2);
+            if (item.amt == "" || item.amt == null || item.amt == undefined || item.amt <= 0) {
+                empr_helper.notify("Please enter correct Amount at Line No " + (index + 1), 2);
                 valid = false;
                 return valid;
             }

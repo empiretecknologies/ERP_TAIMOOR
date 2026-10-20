@@ -585,8 +585,7 @@ namespace Empire_ERP.Infrastructure.Repositories
                     List<SalesOrderPickData> jsonDataResult = new List<SalesOrderPickData>();
                     using (SqlConnection connection = new SqlConnection(new SQLService().getconnstring()))
                     {
-                        string pickQuery = @"
-                        SELECT
+                        string pickQuery = $@"SELECT
                             M.TRAN_ID,
                             D.DT_CODE,
                             D.ITEM_CODE,
@@ -608,16 +607,14 @@ namespace Empire_ERP.Infrastructure.Repositories
                         LEFT OUTER JOIN TBL_ITEMSMASTER I
                             ON I.ITEM_CODE = D.ITEM_CODE
                         WHERE M.DLT = 'T'
-                          AND M.BCODE = @BCODE
-                          AND M.PERIOD_ID = @PERIOD_ID
+                          AND M.BCODE = {common.Branch}
+                          AND M.PERIOD_ID = {common.Period}
                           AND M.ASTATUS = 'Y'
-                          AND M.PARTY_CODE = @PARTY_CODE
+                          AND M.PARTY_CODE = {partyCode}
+                          AND M.ACT_CODE = {actCode}
                         ORDER BY M.TRAN_ID DESC, D.DT_CODE DESC";
 
                         SqlCommand command = new SqlCommand(pickQuery, connection);
-                        command.Parameters.AddWithValue("@BCODE", common.Branch);
-                        command.Parameters.AddWithValue("@PERIOD_ID", common.Period);
-                        command.Parameters.AddWithValue("@PARTY_CODE", partyCode);
                         connection.Open();
                         SqlDataReader reader = command.ExecuteReader();
                         while (reader.Read())
@@ -1891,9 +1888,9 @@ ORDER BY D.DT_CODE DESC";
                                     item.AMT = amt;
                                     item.NET_AMT = amt;
 
-                                    if (item.RATE > 0 && (item.AMT == null || item.AMT == 0))
+                                    if ((item.QTY == null || item.QTY == 0) || (item.RATE == null || item.RATE == 0) || (item.AMT == null || item.AMT == 0))
                                     {
-                                        response.msg = "Something went wrong";
+                                        response.msg = "Quantity, Rate, or Amount cannot be zero or empty.";
                                         response.msgType = 2;
                                         return response;
                                     }

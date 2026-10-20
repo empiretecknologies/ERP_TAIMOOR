@@ -615,6 +615,8 @@ var empr_PurchaseBill = {
         //selectionMode = "multiple";
         col = [
             { dataField: 'id', caption: 'Code', visible: false, },
+            { dataField: 'v_DATE', caption: 'Date', allowEditing: false, },
+            { dataField: 'voucheR_NO', caption: 'transaction#', allowEditing: false, },
             { dataField: 'iteM_NAME', caption: 'Item', allowEditing: false, },
             { dataField: 'qty', caption: 'Qty', allowEditing: false, },
             { dataField: 'rate', caption: 'Rate', allowEditing: false, },
@@ -627,6 +629,7 @@ var empr_PurchaseBill = {
     },
 
     CreatePickDetailGrid: function (dataSrc) {
+        debugger;
         console.log('PickData', dataSrc);
         var col = [];
         var updatedData = [];
@@ -2593,17 +2596,17 @@ var empr_PurchaseBill = {
                 return valid;
             }
 
-            //if (item.rate <= 0) {
-            //    empr_helper.notify("Please enter correct Rate at Line No " + (index + 1), 2);
-            //    valid = false;
-            //    return valid;
-            //}
+            if (item.rate == "" || item.rate == null || item.rate == undefined || item.rate <= 0) {
+                empr_helper.notify("Please enter correct Rate at Line No " + (index + 1), 2);
+                valid = false;
+                return valid;
+            }
 
-            //if (item.amt <= 0) {
-            //    empr_helper.notify("Amount is null Something Went Wrong" + (index + 1), 2);
-            //    valid = false;
-            //    return valid;
-            //}
+            if (item.amt == "" || item.amt == null || item.amt == undefined || item.amt <= 0) {
+                empr_helper.notify("Please enter correct Amount at Line No " + (index + 1), 2);
+                valid = false;
+                return valid;
+            }
 
             if (item.qtY2 != "" && item.qtY2 != null && item.qtY2 != undefined && item.qtY2 < 0) {
                 empr_helper.notify("Please enter correct item quantity2 at Line No " + (index + 1), 2);

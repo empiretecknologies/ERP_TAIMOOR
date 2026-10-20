@@ -1240,13 +1240,15 @@ var empr_SalesQutation = {
             dataModel.Detail.reverse();
         }
         ajaxHelper.ajaxPostJsonData(dataModel, "/SalesQutation/Save", function (data) {
+            debugger;
             empr_helper.notify(data.msg, data.msgType);
             if (data.msgType == 1) {
                 $('#SaveQuotationModal').modal('hide');
-                empr_SalesQutation.ResetForm();
-                setTimeout(function () {
-                    $('#SaveQuotationModal').modal('show');
-                }, 2500);
+                empr_SalesQutation.GetSalesQutationByCode(data.data.code);
+                //empr_SalesQutation.ResetForm();
+                //setTimeout(function () {
+                //    $('#SaveQuotationModal').modal('show');
+                //}, 2500);
             }
         }, false, true);
     },

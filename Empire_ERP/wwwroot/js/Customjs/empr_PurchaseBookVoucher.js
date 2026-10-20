@@ -628,8 +628,20 @@
                         console.log("Account at index " + index + " has empty type.");
                     }
 
-                    if (item.amt == "" || item.amt == null || item.amt == undefined) {
-                        empr_helper.notify("Please enter rate at index " + index, 2);
+                    if (item.qty == "" || item.qty == null || item.qty == undefined || item.qty <= 0) {
+                        empr_helper.notify("Please enter correct Qty at index " + index, 2);
+                        IsValid = false;
+                        return false;
+                    }
+
+                    if (item.rate == "" || item.rate == null || item.rate == undefined || item.rate <= 0) {
+                        empr_helper.notify("Please enter correct Rate at index " + index, 2);
+                        IsValid = false;
+                        return false;
+                    }
+
+                    if (item.amt == "" || item.amt == null || item.amt == undefined || item.amt <= 0) {
+                        empr_helper.notify("Please enter correct Amount at index " + index, 2);
                         IsValid = false;
                         return false;
                         console.log("Account at index " + index + " has empty amount.");
@@ -742,8 +754,20 @@
                     console.log("Account at index " + index + " has empty type.");
                 }
 
-                if (item.amt == "" || item.amt == null || item.amt == undefined) {
-                    empr_helper.notify("Please enter rate at index " + index, 2);
+                if (item.qty == "" || item.qty == null || item.qty == undefined || item.qty <= 0) {
+                    empr_helper.notify("Please enter correct Qty at index " + index, 2);
+                    IsValid = false;
+                    return false;
+                }
+
+                if (item.rate == "" || item.rate == null || item.rate == undefined || item.rate <= 0) {
+                    empr_helper.notify("Please enter correct Rate at index " + index, 2);
+                    IsValid = false;
+                    return false;
+                }
+
+                if (item.amt == "" || item.amt == null || item.amt == undefined || item.amt <= 0) {
+                    empr_helper.notify("Please enter correct Amount at index " + index, 2);
                     IsValid = false;
                     return false;
                     console.log("Account at index " + index + " has empty amount.");
