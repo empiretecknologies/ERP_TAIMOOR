@@ -1948,108 +1948,12 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Line Name="Line14">
-            <Top>4.56616in</Top>
-            <Left>5.10408in</Left>
-            <Height>0in</Height>
-            <Width>3.08917in</Width>
-            <ZIndex>14</ZIndex>
-            <Style>
-              <Border>
-                <Color>#055a87</Color>
-                <Style>Solid</Style>
-              </Border>
-            </Style>
-          </Line>
-          <Line Name="Line15">
-            <Top>4.85512in</Top>
-            <Left>5.10408in</Left>
-            <Height>0in</Height>
-            <Width>3.08917in</Width>
-            <ZIndex>15</ZIndex>
-            <Style>
-              <Border>
-                <Color>#055a87</Color>
-                <Style>Solid</Style>
-              </Border>
-            </Style>
-          </Line>
-          <Textbox Name="BranchPhone7">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Total Amount :</Value>
-                    <Style>
-                      <FontSize>11pt</FontSize>
-                      <Color>#055a87</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Right</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>BranchPhone</rd:DefaultName>
-            <Top>4.59394in</Top>
-            <Left>4.67906in</Left>
-            <Height>0.25in</Height>
-            <Width>2.0075in</Width>
-            <ZIndex>16</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="InvoiceNumber9">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=FormatNumber(Sum(Fields!ExStax.Value) - CDbl(Parameters!Disc.Value) + CDbl(Parameters!Balance.Value) + CDbl(Parameters!Cartage.Value), 0)</Value>
-                    <Style>
-                      <FontSize>12pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>InvoiceNumber</rd:DefaultName>
-            <Top>4.58005in</Top>
-            <Left>6.68656in</Left>
-            <Height>0.26118in</Height>
-            <Width>1.50669in</Width>
-            <ZIndex>17</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Line Name="Line16">
             <Top>3.14095in</Top>
             <Left>5.10408in</Left>
             <Height>0in</Height>
             <Width>3.08917in</Width>
-            <ZIndex>18</ZIndex>
+            <ZIndex>14</ZIndex>
             <Style>
               <Border>
                 <Color>#055a87</Color>
@@ -2062,7 +1966,7 @@
             <Left>5.10408in</Left>
             <Height>0in</Height>
             <Width>3.08917in</Width>
-            <ZIndex>19</ZIndex>
+            <ZIndex>15</ZIndex>
             <Style>
               <Border>
                 <Color>#055a87</Color>
@@ -2094,7 +1998,7 @@
             <Left>4.67906in</Left>
             <Height>0.25in</Height>
             <Width>2.0075in</Width>
-            <ZIndex>20</ZIndex>
+            <ZIndex>16</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2128,108 +2032,7 @@
             <Left>6.68656in</Left>
             <Height>0.26118in</Height>
             <Width>1.50669in</Width>
-            <ZIndex>21</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Line Name="Line18">
-            <Top>4.21053in</Top>
-            <Left>5.09545in</Left>
-            <Height>0in</Height>
-            <Width>3.08917in</Width>
-            <ZIndex>22</ZIndex>
-            <Style>
-              <Border>
-                <Color>#055a87</Color>
-                <Style>Solid</Style>
-              </Border>
-            </Style>
-          </Line>
-          <Line Name="Line19">
-            <Top>4.49949in</Top>
-            <Left>5.09545in</Left>
-            <Height>0in</Height>
-            <Width>3.08917in</Width>
-            <ZIndex>23</ZIndex>
-            <Style>
-              <Border>
-                <Color>#055a87</Color>
-                <Style>Solid</Style>
-              </Border>
-            </Style>
-          </Line>
-          <Textbox Name="BranchPhone8">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Previous Balance :</Value>
-                    <Style>
-                      <FontSize>11pt</FontSize>
-                      <Color>#055a87</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Right</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>BranchPhone</rd:DefaultName>
-            <Top>4.23831in</Top>
-            <Left>4.67043in</Left>
-            <Height>0.25in</Height>
-            <Width>2.0075in</Width>
-            <ZIndex>24</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="InvoiceNumber11">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=IIf(
-    Parameters!Balance.Value &lt; 0,
-    "(" &amp; FormatNumber(Parameters!Balance.Value * -1, 0) &amp; ")",
-    FormatNumber(Parameters!Balance.Value, 0)
-)</Value>
-                    <Style>
-                      <FontSize>12pt</FontSize>
-                      <Color>=IIF(Parameters!Balance.Value &lt; 0, "Red", "Black")</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>InvoiceNumber</rd:DefaultName>
-            <Top>4.22442in</Top>
-            <Left>6.67793in</Left>
-            <Height>0.26118in</Height>
-            <Width>1.50669in</Width>
-            <ZIndex>25</ZIndex>
+            <ZIndex>17</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>

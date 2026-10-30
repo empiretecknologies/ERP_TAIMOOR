@@ -1353,17 +1353,17 @@
                 console.log("Item at index " + index + " has empty Quantity.");
             }
 
-            if (item.rate == "" || item.rate == null || item.rate == undefined || item.rate <= 0) {
-                empr_helper.notify("Please enter correct Rate at index " + index, 2);
-                valid = false;
-                return valid;
-            }
+            //if (item.rate == "" || item.rate == null || item.rate == undefined || item.rate <= 0) {
+            //    empr_helper.notify("Please enter correct Rate at index " + index, 2);
+            //    valid = false;
+            //    return valid;
+            //}
 
-            if (item.amt == "" || item.amt == null || item.amt == undefined || item.amt <= 0) {
-                empr_helper.notify("Please enter correct Amount at index " + index, 2);
-                valid = false;
-                return valid;
-            }
+            //if (item.amt == "" || item.amt == null || item.amt == undefined || item.amt <= 0) {
+            //    empr_helper.notify("Please enter correct Amount at index " + index, 2);
+            //    valid = false;
+            //    return valid;
+            //}
 
             if (item.qtY2 != "" && item.qtY2 != null && item.qtY2 != undefined && item.qtY2 < 0) {
                 empr_helper.notify("Please enter correct item quantity2 at index " + index, 2);

@@ -261,11 +261,11 @@ var empr_ItemOpening = {
         var valid = true;
         var data = empr_ItemOpening.GetDataToSave();
 
-        if (data.RATE == '') {
-            empr_helper.notify("Rate is required.", 2);
-            valid = false;
-            return valid;
-        }
+        //if (data.RATE == '') {
+        //    empr_helper.notify("Rate is required.", 2);
+        //    valid = false;
+        //    return valid;
+        //}
 
         if (data.QTY == '') {
             empr_helper.notify("Quantity is required.", 2);
