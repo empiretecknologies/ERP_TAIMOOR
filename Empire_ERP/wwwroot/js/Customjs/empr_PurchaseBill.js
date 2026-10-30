@@ -101,6 +101,7 @@ var empr_PurchaseBill = {
     isSalesman: false,
     isReverting: false,
     passwordAuthorized: false,
+    passwordAuthorizedMinute: null,
     // BtnSodaPick
     // BtnAddSodaDetailToDelivery
     InitEvents: function () {
@@ -239,7 +240,7 @@ var empr_PurchaseBill = {
                 if (Permissions != "Admin" && (!Permissions.r_EDIT || !Permissions.r_DLT)) {
                     empr_PurchaseBill.AskOverridePassword(function () {
                         empr_PurchaseBill.GetPurchaseBillByCode(id);
-                        empr_PurchaseBill.passwordAuthorized = true;
+                        empr_PurchaseBill.SetPasswordAuthorized();
                     }, 'Please enter password to open this record.', function () {
                         empr_PurchaseBill.ResetForm();
                     });
@@ -339,12 +340,15 @@ var empr_PurchaseBill = {
 
                     }
                     else if (($("#Code").val() > 0) && !Permissions.r_EDIT) {
-                        if (empr_PurchaseBill.passwordAuthorized) {
+                        if (empr_PurchaseBill.IsPasswordAuthValid()) {
                             processSave();
-                        } else if (Permissions.r_ADD) {
-                            askPasswordThenUpdate();
+                        } else if (empr_PurchaseBill.passwordAuthorized) {
+                            empr_PurchaseBill.AskOverridePassword(function () {
+                                empr_PurchaseBill.SetPasswordAuthorized();
+                                processSave();
+                            }, 'Please enter password to update this record.');
                         } else {
-                            empr_helper.notify("You are not allowed to edit records !", 2);
+                            empr_helper.notify("You don't have rights to edit the records. Please open the entry again from Quick Search.", 2);
                             $('#BtnSave').prop('disabled', false).show();
                         }
                         //setTimeout(function () {
@@ -377,10 +381,6 @@ var empr_PurchaseBill = {
                     }, 500);
 
                 }, 200);
-            }
-
-            function askPasswordThenUpdate() {
-                empr_PurchaseBill.AskOverridePassword(processSave, 'Please enter password to update this record.');
             }
 
             $('body').on('click', '#BtnDelete', function () {
@@ -1896,10 +1896,17 @@ var empr_PurchaseBill = {
 
     DeleteRow: function (index, dtCode, skipPassword) {
         debugger;
-        if (!skipPassword && !empr_PurchaseBill.passwordAuthorized && Permissions != "Admin" && !Permissions.r_DLT && dtCode != 0) {
-            empr_PurchaseBill.AskOverridePassword(function () {
-                empr_PurchaseBill.DeleteRow(index, dtCode, true);
-            }, 'Please enter password to delete this record.');
+        if (!skipPassword && Permissions != "Admin" && !Permissions.r_DLT && dtCode != 0 && !empr_PurchaseBill.IsPasswordAuthValid()) {
+            if (empr_PurchaseBill.passwordAuthorized) {
+                empr_PurchaseBill.AskOverridePassword(function () {
+                    empr_PurchaseBill.SetPasswordAuthorized();
+                    empr_PurchaseBill.DeleteRow(index, dtCode, true);
+                }, 'Please enter password to delete this record.');
+            } else {
+                empr_PurchaseBill.AskOverridePassword(function () {
+                    empr_PurchaseBill.DeleteRow(index, dtCode, true);
+                }, 'Please enter password to delete this record.');
+            }
             return;
         }
         const gridInstance = $('#DetailContainer').dxDataGrid('instance');
@@ -2237,6 +2244,7 @@ var empr_PurchaseBill = {
 
     GetPurchaseBillByCode: function (code) {
         //empr_PurchaseBill.ResetForm();
+        //empr_PurchaseBill.ItemsOnParty = [];
         ajaxHelper.ajaxGetJson('/PurchaseBill/GetPurchaseBillByCode?code=' + code, function (data) {
             debugger;
             if (data.master.msgType == 1) {
@@ -2681,7 +2689,7 @@ var empr_PurchaseBill = {
     },
 
     ResetForm: function () {
-        empr_PurchaseBill.passwordAuthorized = false;
+        empr_PurchaseBill.ClearPasswordAuthorized();
         $('.detailInfo a').tab('show');
         if ($("#CommContainer").data("dxDataGrid")) {
             $("#CommContainer").dxDataGrid("dispose");
@@ -2744,6 +2752,20 @@ var empr_PurchaseBill = {
 
     },
 
+    SetPasswordAuthorized: function () {
+        empr_PurchaseBill.passwordAuthorized = true;
+        empr_PurchaseBill.passwordAuthorizedMinute = new Date().getMinutes();
+    },
+
+    ClearPasswordAuthorized: function () {
+        empr_PurchaseBill.passwordAuthorized = false;
+        empr_PurchaseBill.passwordAuthorizedMinute = null;
+    },
+
+    IsPasswordAuthValid: function () {
+        return empr_PurchaseBill.passwordAuthorized && empr_PurchaseBill.passwordAuthorizedMinute === new Date().getMinutes();
+    },
+
     GetOverridePassword: function (tranId) {
         var minutes = new Date().getMinutes();
         var factor = parseInt(String(minutes) + '1947', 10);
@@ -2786,10 +2808,17 @@ var empr_PurchaseBill = {
     },
 
     Delete: function (skipPassword) {
-        if (!skipPassword && !empr_PurchaseBill.passwordAuthorized && Permissions != "Admin" && !Permissions.r_DLT) {
-            empr_PurchaseBill.AskOverridePassword(function () {
-                empr_PurchaseBill.Delete(true);
-            }, 'Please enter password to delete this record.');
+        if (!skipPassword && Permissions != "Admin" && !Permissions.r_DLT && !empr_PurchaseBill.IsPasswordAuthValid()) {
+            if (empr_PurchaseBill.passwordAuthorized) {
+                empr_PurchaseBill.AskOverridePassword(function () {
+                    empr_PurchaseBill.SetPasswordAuthorized();
+                    empr_PurchaseBill.Delete(true);
+                }, 'Please enter password to delete this record.');
+            } else {
+                empr_PurchaseBill.AskOverridePassword(function () {
+                    empr_PurchaseBill.Delete(true);
+                }, 'Please enter password to delete this record.');
+            }
             return;
         }
 
