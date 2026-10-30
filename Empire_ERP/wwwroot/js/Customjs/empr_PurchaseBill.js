@@ -100,6 +100,7 @@ var empr_PurchaseBill = {
     PartyDisc: 0,
     isSalesman: false,
     isReverting: false,
+    passwordAuthorized: false,
     // BtnSodaPick
     // BtnAddSodaDetailToDelivery
     InitEvents: function () {
@@ -235,7 +236,16 @@ var empr_PurchaseBill = {
                 $('#Code').val(id);
                 $('.modal').modal('hide');
                 empr_helper.selectedBill = id;
-                empr_PurchaseBill.GetPurchaseBillByCode(id);
+                if (Permissions != "Admin" && (!Permissions.r_EDIT || !Permissions.r_DLT)) {
+                    empr_PurchaseBill.AskOverridePassword(function () {
+                        empr_PurchaseBill.GetPurchaseBillByCode(id);
+                        empr_PurchaseBill.passwordAuthorized = true;
+                    }, 'Please enter password to open this record.', function () {
+                        empr_PurchaseBill.ResetForm();
+                    });
+                } else {
+                    empr_PurchaseBill.GetPurchaseBillByCode(id);
+                }
             });
 
             $('body').on('click', '.elm_copy', function () {
@@ -329,7 +339,9 @@ var empr_PurchaseBill = {
 
                     }
                     else if (($("#Code").val() > 0) && !Permissions.r_EDIT) {
-                        if (Permissions.r_ADD) {
+                        if (empr_PurchaseBill.passwordAuthorized) {
+                            processSave();
+                        } else if (Permissions.r_ADD) {
                             askPasswordThenUpdate();
                         } else {
                             empr_helper.notify("You are not allowed to edit records !", 2);
@@ -1884,7 +1896,7 @@ var empr_PurchaseBill = {
 
     DeleteRow: function (index, dtCode, skipPassword) {
         debugger;
-        if (!skipPassword && Permissions != "Admin" && !Permissions.r_DLT && dtCode != 0) {
+        if (!skipPassword && !empr_PurchaseBill.passwordAuthorized && Permissions != "Admin" && !Permissions.r_DLT && dtCode != 0) {
             empr_PurchaseBill.AskOverridePassword(function () {
                 empr_PurchaseBill.DeleteRow(index, dtCode, true);
             }, 'Please enter password to delete this record.');
@@ -2224,7 +2236,7 @@ var empr_PurchaseBill = {
     },
 
     GetPurchaseBillByCode: function (code) {
-        empr_PurchaseBill.ResetForm();
+        //empr_PurchaseBill.ResetForm();
         ajaxHelper.ajaxGetJson('/PurchaseBill/GetPurchaseBillByCode?code=' + code, function (data) {
             debugger;
             if (data.master.msgType == 1) {
@@ -2646,13 +2658,13 @@ var empr_PurchaseBill = {
             $('#BtnSave').prop('disabled', false).show();
             empr_helper.notify(data.msg, data.msgType);
             if (data.msgType == 1) {
-                if (dataModel.Master.TRAN_ID == 0
-                    || dataModel.Master.TRAN_ID == null
-                    || dataModel.Master.TRAN_ID == undefined) {
-                    $('#Code').val(data.data.code);
-                    empr_helper.selectedBill = data.data.code;
-                    $('#VOUCHER_NO').val(data.data.voucherNo);
-                }
+                //if (dataModel.Master.TRAN_ID == 0
+                //    || dataModel.Master.TRAN_ID == null
+                //    || dataModel.Master.TRAN_ID == undefined) {
+                //    $('#Code').val(data.data.code);
+                //    empr_helper.selectedBill = data.data.code;
+                //    $('#VOUCHER_NO').val(data.data.voucherNo);
+                //}
                 debugger;
                 if (dataClear == 1) {
                     empr_PurchaseBill.GetPurchaseBillByCode(data.data.code);
@@ -2669,6 +2681,7 @@ var empr_PurchaseBill = {
     },
 
     ResetForm: function () {
+        empr_PurchaseBill.passwordAuthorized = false;
         $('.detailInfo a').tab('show');
         if ($("#CommContainer").data("dxDataGrid")) {
             $("#CommContainer").dxDataGrid("dispose");
@@ -2738,7 +2751,7 @@ var empr_PurchaseBill = {
         return String(result).substring(0, 6);
     },
 
-    AskOverridePassword: function (onSuccess, message) {
+    AskOverridePassword: function (onSuccess, message, onCancel) {
         swal({
             title: 'Enter Password',
             text: message,
@@ -2765,11 +2778,15 @@ var empr_PurchaseBill = {
             if (typeof onSuccess === 'function') {
                 onSuccess();
             }
+        }, function () {
+            if (typeof onCancel === 'function') {
+                onCancel();
+            }
         });
     },
 
     Delete: function (skipPassword) {
-        if (!skipPassword && Permissions != "Admin" && !Permissions.r_DLT) {
+        if (!skipPassword && !empr_PurchaseBill.passwordAuthorized && Permissions != "Admin" && !Permissions.r_DLT) {
             empr_PurchaseBill.AskOverridePassword(function () {
                 empr_PurchaseBill.Delete(true);
             }, 'Please enter password to delete this record.');
