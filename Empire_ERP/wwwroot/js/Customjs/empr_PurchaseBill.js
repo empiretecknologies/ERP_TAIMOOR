@@ -100,6 +100,7 @@ var empr_PurchaseBill = {
     PartyDisc: 0,
     isSalesman: false,
     isReverting: false,
+    isApplyingPartyFromGet: false,
     passwordAuthorized: false,
     passwordAuthorizedMinute: null,
     // BtnSodaPick
@@ -2068,6 +2069,14 @@ var empr_PurchaseBill = {
     //    }, false, true);
     //},
 
+    LoadPartyItems: function (partyCode, actCode) {
+        if (!partyCode || !actCode) {
+            return;
+        }
+        empr_PurchaseBill.ItemsOnParty = [];
+        empr_PurchaseBill.ItemsBehalfOnParty(partyCode, actCode);
+    },
+
     ItemsBehalfOnParty: function (PARTY_CODE, ACT_CODE) {
         ajaxHelper.ajaxGetJson('/PurchaseBill/ItemsBehalfOnParty?partyCode=' + PARTY_CODE + '&actCode=' + ACT_CODE, function (data) {
             if (data.length > 0) {
@@ -2249,6 +2258,8 @@ var empr_PurchaseBill = {
             debugger;
             if (data.master.msgType == 1) {
                 var masterData = data.master.data;
+                var partyCodeForItems = null;
+                var actCodeForItems = null;
                 console.log('edit Data', data);
                 if (masterData.length == 1) {
                     debugger;
@@ -2260,12 +2271,16 @@ var empr_PurchaseBill = {
                     var filteredData = $.grep(PartyType, function (item) {
                         return item.partyCode === response.partY_CODE && item.accountCode === response.acT_CODE;
                     });
-                    //empr_PurchaseBill.ItemsBehalfOnParty(filteredData[0].partyCode, filteredData[0].accountCode);
 
                     $('#Code').val(response.id);
                     $('#ASTATUS').dxSelectBox('instance').option('value', response.astatus);
+                    empr_PurchaseBill.isApplyingPartyFromGet = true;
                     $('#PARTY_CODE').dxSelectBox('instance').option('value', filteredData[0].key);
                     $('#partyhidden').val(filteredData[0].partyCode);
+                    $('#acthidden').val(filteredData[0].accountCode);
+                    empr_PurchaseBill.isApplyingPartyFromGet = false;
+                    partyCodeForItems = filteredData[0].partyCode;
+                    actCodeForItems = filteredData[0].accountCode;
                     $('#Currency').dxSelectBox('instance').option('value', response.curR_CODE);
                     $('#Rate').val(response.crate);
                     $('#REF').val(response.ref);
@@ -2322,6 +2337,7 @@ var empr_PurchaseBill = {
                 else {
                     empr_helper.notify(data.detail.msg, data.detail.msgType);
                 }
+                empr_PurchaseBill.LoadPartyItems(partyCodeForItems, actCodeForItems);
                 if (data.printData.msgType == 1) {
                     //setTimeout(function () {
                     empr_PurchaseBill.CreateItemPrintGrid(data.printData.data);
@@ -2967,7 +2983,7 @@ var empr_PurchaseBill = {
 
     OnPartyChange: function (d) {
         // 1. Agar hum khud value revert kar rahe hain, toh event ko yahin rok dein
-        if (empr_PurchaseBill.isReverting) {
+        if (empr_PurchaseBill.isReverting || empr_PurchaseBill.isApplyingPartyFromGet) {
             return;
         }
 
@@ -3049,8 +3065,7 @@ var empr_PurchaseBill = {
 
 
 
-            empr_PurchaseBill.ItemsOnParty = [];
-            empr_PurchaseBill.ItemsBehalfOnParty(filteredData[0].partyCode, filteredData[0].accountCode);
+            empr_PurchaseBill.LoadPartyItems(filteredData[0].partyCode, filteredData[0].accountCode);
             var rinvDate = $('#RINV_DATE').val();
             let result = empr_PurchaseBill.calculateDue(rinvDate, filteredData[0].paymentTerms);
 
